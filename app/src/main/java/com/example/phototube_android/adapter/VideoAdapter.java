@@ -15,9 +15,11 @@ import com.example.phototube_android.VideoActivity;
 import com.example.phototube_android.entities.Video;
 
 import java.util.List;
+
+
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
-    private List<Video> videos;
-    private Context context;
+    private final List<Video> videos;
+    private final Context context;
 
     public VideoAdapter(Context context, List<Video> videos) {
         this.context = context;
@@ -33,23 +35,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
-        Video video = videos.get(position);
-        holder.videoName.setText(video.getVideoName());
-        holder.author.setText(video.getAuthor());
-        // Set the image from drawable resource
-        holder.picture.setImageResource(video.getImageResourceId());  // Correctly reference the image resource
+        Video currentVideo = videos.get(position);
+        holder.videoNameTextView.setText(currentVideo.getVideoName());
+        holder.authorTextView.setText(currentVideo.getAuthor());
+        holder.image.setImageResource(currentVideo.getImageResourceId());
 
-      /*  holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, VideoActivity.class);
-            intent.putExtra("videoPath", video.getFilePath()); // Ensure 'getFilePath' method exists in Video class
-            context.startActivity(intent);
-        });*/
-
-        // Set click listener if needed
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, VideoActivity.class);
-            intent.putExtra("videoName", video.getVideoName());
-            intent.putExtra("author", video.getAuthor());
+            intent.putExtra("videoName", currentVideo.getVideoName());
+            intent.putExtra("author", currentVideo.getAuthor());
+            intent.putExtra("videoResource", currentVideo.getVideoResourceId());
             context.startActivity(intent);
         });
     }
@@ -60,15 +55,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     static class VideoViewHolder extends RecyclerView.ViewHolder {
-        ImageView picture;
-        TextView author;
-        TextView videoName;
+        final TextView videoNameTextView;
+        final TextView authorTextView;
+        final ImageView image;
 
-        public VideoViewHolder(@NonNull View itemView) {
+        VideoViewHolder(View itemView) {
             super(itemView);
-            picture = itemView.findViewById(R.id.image);
-            author = itemView.findViewById(R.id.author);
-            videoName = itemView.findViewById(R.id.videoName);
+            videoNameTextView = itemView.findViewById(R.id.videoName);
+            authorTextView = itemView.findViewById(R.id.author);
+            image = itemView.findViewById(R.id.image);
         }
     }
 }
