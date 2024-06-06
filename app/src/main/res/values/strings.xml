@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">PhotoTube_Android</string>
+    <string name="password">logInPassword</string>
+    <string name="username">logInUsername\n</string>
+    <string name="login">Login\n</string>
+    <string name="loginpage">Login</string>
+    <string name="Login">Login</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
 </resources>
