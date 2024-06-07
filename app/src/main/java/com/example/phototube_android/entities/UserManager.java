@@ -1,8 +1,15 @@
 package com.example.phototube_android.entities;
 
+import android.content.Intent;
+
+import com.example.phototube_android.LoginActivity;
+import com.example.phototube_android.MainActivity;
+
 public class UserManager {
     // Static instance of UserManager
     private static UserManager instance;
+    private boolean isLoggedIn = false;
+
     // Instance variable to hold User object
     private User user;
 
@@ -25,5 +32,18 @@ public class UserManager {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void login() {
+        isLoggedIn = true;
+    }
+
+    public void logout() {
+        isLoggedIn = false;
     }
 }

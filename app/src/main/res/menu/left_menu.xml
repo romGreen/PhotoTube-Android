@@ -43,13 +43,24 @@
                 android:icon="@drawable/baseline_airplay_24"
                 android:title="Liked videos" />
             <item
-                android:id="@+id/login"
+                android:id="@+id/nav_login"
                 android:icon="@drawable/baseline_airplay_24"
                 android:title="@string/Login" />
             <item
-                android:id="@+id/register"
+                android:id="@+id/nav_register"
                 android:icon="@drawable/baseline_airplay_24"
                 android:title="Register" />
+            <item
+                android:id="@+id/nav_add_video"
+                android:icon="@drawable/baseline_add_24"
+                android:title="Add video" />
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_action_name"
+                android:title="Logout"
+                android:visible="false"/>
+
             <item
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/baseline_airplay_24"

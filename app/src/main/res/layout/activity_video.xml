@@ -9,7 +9,9 @@
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="260dp"
+        android:layout_gravity="center_horizontal"
+         />
 
     <!-- TextView for video name below the video -->
     <TextView

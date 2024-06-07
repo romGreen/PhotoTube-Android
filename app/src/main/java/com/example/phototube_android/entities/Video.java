@@ -2,15 +2,15 @@ package com.example.phototube_android.entities;
 public class Video {
     private String name;
     private String author;
-    private int imageResourceId;
-    private int videoResourceId;  // Resource ID for the video file
+    private String imagePath;
+    private String videoPath;  // Resource ID for the video file
 
     // Constructor
-    public Video(String name, String author, int imageResourceId, int videoResourceId) {
+    public Video(String name, String author, String imagePath, String videoPath) {
         this.name = name;
         this.author = author;
-        this.imageResourceId = imageResourceId;
-        this.videoResourceId = videoResourceId;
+        this.imagePath = imagePath;
+        this.videoPath = videoPath;
     }
 
     // Getter and setter methods
@@ -22,12 +22,12 @@ public class Video {
         return author;
     }
 
-    public int getImageResourceId() {
-        return imageResourceId;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public int getVideoResourceId() {
-        return videoResourceId;
+    public String getVideoPath() {
+        return videoPath;
     }
 
     public void setName(String name) {
@@ -38,11 +38,11 @@ public class Video {
         this.author = author;
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
-    public void setVideoResourceId(int videoResourceId) {
-        this.videoResourceId = videoResourceId;
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 }
