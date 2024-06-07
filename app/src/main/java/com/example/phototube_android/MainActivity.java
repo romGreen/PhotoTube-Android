@@ -2,11 +2,15 @@ package com.example.phototube_android;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserManager;
@@ -24,6 +32,10 @@ import com.google.android.material.navigation.NavigationView;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import android.graphics.Bitmap;
@@ -95,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onQueryTextChange(String newText) {
                 videoAdapter.getFilter().filter(newText);
+                videoAdapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -105,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //func to add video
     public static void addVideoToList(Video video) {
         videoList.add(video);
+        videoAdapter.getFilteredVideoList().add(video);
         videoAdapter.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
@@ -116,34 +130,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        updateBottomNavigationUser();
+        if (UserManager.getInstance().isLoggedIn()) {
+            //String imageUri = UserManager.getInstance().getUser().getImageUri();
+            updateUserImage();
+        }
     }
-
-    private void updateBottomNavigationUser() {
-        boolean isLoggedIn = UserManager.getInstance().isLoggedIn();
-        Menu menu = bottomNavigationView.getMenu();
-        MenuItem userItem = menu.findItem(R.id.navigation_user);
-
-        if (isLoggedIn && userItem != null) {
+    public void updateUserImage() {
+        if (UserManager.getInstance().isLoggedIn()) {
             User user = UserManager.getInstance().getUser();
             if (user != null) {
-                userItem.setVisible(true);
-                userItem.setTitle(user.getFirstName());
+                Uri imageUri = Uri.parse(user.getImageUri());
+                MenuItem userItem = bottomNavigationView.getMenu().findItem(R.id.navigation_user);
 
-                // Load the image as a Bitmap from the local file path
-                Bitmap bitmap = BitmapFactory.decodeFile(user.getImageUri());
-                if (bitmap != null) {
-                    // Convert the bitmap to a drawable
-                    Resources res = getResources();
-                    BitmapDrawable iconDrawable = new BitmapDrawable(res, bitmap);
-                    userItem.setIcon(iconDrawable);
+                if (userItem != null) {
+                    userItem.setVisible(true);
+                    // Update the title with the user's name
+                    userItem.setTitle(user.getFirstName());
+
+                    // Load the image with Glide and set it as the icon
+                    Glide.with(this)
+                            .load(imageUri)
+                            .circleCrop()  // Optional: if you want the image in a circle
+                            .into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    userItem.setIcon(resource);
+                                    userItem.setVisible(true);
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+                            });
                 }
             }
-        } else if (userItem != null) {
-            userItem.setVisible(false);
         }
     }
 
+
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        Bitmap bitmap = null;
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) inputStream.close();
+        } catch (FileNotFoundException e) {
+            Log.e("MainActivity", "File not found for URI: " + uri, e);
+        } catch (IOException e) {
+            Log.e("MainActivity", "Error closing InputStream.", e);
+        }
+        return bitmap;
+    }
 
 
     @Override
