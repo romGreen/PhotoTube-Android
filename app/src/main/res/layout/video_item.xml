@@ -16,39 +16,37 @@
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:foreground="@drawable/image_foreground" />  <!-- Custom drawable for rounded corners -->
 
     <TextView
         android:id="@+id/videoName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#55000000"
+        android:background="@drawable/text_background"
         android:gravity="center"
-        android:padding="2dp"
+        android:padding="4dp"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/image"
-        app:layout_constraintEnd_toStartOf="@+id/author"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/image"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintEnd_toEndOf="@id/image"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/image" />
+
 
     <!-- Author text view aligned to end, next to video name -->
     <TextView
         android:id="@+id/author"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#DDDDDD"
+        android:textSize="16sp"
+        android:textColor="#CCCCCC"
         android:gravity="center"
-        android:background="#55000000"
-        android:padding="2dp"
-        app:layout_constraintStart_toEndOf="@id/videoName"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/image"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        app:layout_constraintBottom_toBottomOf="@id/videoName"
+        android:background="@drawable/text_background" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

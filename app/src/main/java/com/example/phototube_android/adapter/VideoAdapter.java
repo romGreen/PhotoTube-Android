@@ -33,6 +33,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     }
 
+    public List<Video> getVideoList() {
+        return this.videos;
+    }
+    public List<Video> getFilteredVideoList() {
+        return filteredVideoList;
+    }
+
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,7 +49,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
-        Video currentVideo = videos.get(position);
+        Video currentVideo = filteredVideoList.get(position);
         holder.videoNameTextView.setText(currentVideo.getVideoName());
         holder.authorTextView.setText(currentVideo.getAuthor());
         //holder.image.setImageResource(currentVideo.getImagePath());
@@ -52,6 +59,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, VideoActivity.class);
+            intent.putExtra("videoId", currentVideo.getId());
             intent.putExtra("videoName", currentVideo.getVideoName());
             intent.putExtra("author", currentVideo.getAuthor());
             intent.putExtra("videoResource", currentVideo.getVideoPath());
@@ -61,7 +69,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public int getItemCount() {
-        return videos.size();
+        return filteredVideoList.size();
     }
 
     static class VideoViewHolder extends RecyclerView.ViewHolder {
@@ -76,6 +84,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             image = itemView.findViewById(R.id.image);
         }
     }
+
 
     // Filter logic
     public Filter getFilter() {

@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="BottomNavigationView.TextAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/yellow</item>
+        <!-- Customize further based on your design requirements -->
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:inputType">textPersonName</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">#AAAAAA</item> <!-- Lighter gray for hints -->
+        <item name="android:background">@drawable/edit_text_background</item>
+    </style>
+
+
+</resources>

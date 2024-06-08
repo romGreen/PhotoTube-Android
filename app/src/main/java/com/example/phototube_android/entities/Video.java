@@ -1,16 +1,25 @@
 package com.example.phototube_android.entities;
 public class Video {
+    private int id;
     private String name;
     private String author;
     private String imagePath;
     private String videoPath;  // Resource ID for the video file
 
     // Constructor
-    public Video(String name, String author, String imagePath, String videoPath) {
+    public Video(int id, String name, String author, String imagePath, String videoPath) {
         this.name = name;
         this.author = author;
         this.imagePath = imagePath;
         this.videoPath = videoPath;
+        this.id = id;
+    }
+
+    public void setId (int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
     }
 
     // Getter and setter methods

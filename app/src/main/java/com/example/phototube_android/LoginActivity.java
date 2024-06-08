@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
                 // login user - important!!!!
                 UserManager.getInstance().login();
 
-
                 // Login success
                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 

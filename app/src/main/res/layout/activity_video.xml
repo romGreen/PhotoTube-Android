@@ -42,6 +42,29 @@
         android:textSize="20sp"
         android:layout_marginTop="16dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Add a comment..."
+            android:inputType="textMultiLine"/>
+
+        <Button
+            android:id="@+id/submitCommentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"/>
+
+    </LinearLayout>
+
+
     <!-- ScrollView for comments content -->
     <ScrollView
         android:layout_width="match_parent"
@@ -51,8 +74,9 @@
             android:id="@+id/commentsContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User comments will appear here."
             android:padding="8dp" />
+
+
     </ScrollView>
 
 </LinearLayout>
