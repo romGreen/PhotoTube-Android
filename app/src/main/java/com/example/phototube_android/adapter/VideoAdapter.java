@@ -59,6 +59,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, VideoActivity.class);
+            intent.putExtra("videoId", currentVideo.getId());
             intent.putExtra("videoName", currentVideo.getVideoName());
             intent.putExtra("author", currentVideo.getAuthor());
             intent.putExtra("videoResource", currentVideo.getVideoPath());

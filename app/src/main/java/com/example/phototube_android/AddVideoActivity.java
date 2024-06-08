@@ -16,6 +16,7 @@ import com.example.phototube_android.R;
 import com.example.phototube_android.entities.Video;
 
 public class AddVideoActivity extends Activity {
+    private static int counterId = 11;
 
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int VIDEO_PICK_CODE = 1001;
@@ -63,7 +64,8 @@ public class AddVideoActivity extends Activity {
     }
 
     private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
-        Video newVideo = new Video(videoName, author, imagePath, videoPath);
+        Video newVideo = new Video(counterId, videoName, author, imagePath, videoPath);
+        counterId++;
         MainActivity.addVideoToList(newVideo); // Ensure this method accepts Video objects
         Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Close this activity

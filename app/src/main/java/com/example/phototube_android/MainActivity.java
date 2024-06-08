@@ -1,6 +1,7 @@
 package com.example.phototube_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -86,11 +87,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         videoList = new ArrayList<>();
         // Example of adding videos with local drawable resources
-        videoList.add(new Video("Play 1", "Narcos", resourceToString(R.drawable.pic1), resourceToString(R.raw.play1)));
-        videoList.add(new Video("Play 2", "Narcos", resourceToString(R.drawable.photo2), resourceToString(R.raw.play2)));
-        videoList.add(new Video("Play 3", "Narcos", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
-        videoList.add(new Video("Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
-        videoList.add(new Video("Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
+        videoList.add(new Video(1,"Play 1", "Narcos", resourceToString(R.drawable.pic1), resourceToString(R.raw.play1)));
+        videoList.add(new Video(2, "Play 2", "Narcos", resourceToString(R.drawable.photo2), resourceToString(R.raw.play2)));
+        videoList.add(new Video(3, "Play 3", "Narcos", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
+        videoList.add(new Video(4,"Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
+        videoList.add(new Video(5, "Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
 
         // setup adapter
         videoAdapter = new VideoAdapter(this, videoList);
@@ -111,6 +112,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+    }
+
+    private void resetComments() {
+        SharedPreferences prefs = getSharedPreferences("VideoComments", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();  // This will clear all data stored in "VideoComments" SharedPreferences
+        editor.apply();
     }
 
 
@@ -168,22 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-    private Bitmap getBitmapFromUri(Uri uri) {
-        Bitmap bitmap = null;
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            if (inputStream != null) inputStream.close();
-        } catch (FileNotFoundException e) {
-            Log.e("MainActivity", "File not found for URI: " + uri, e);
-        } catch (IOException e) {
-            Log.e("MainActivity", "Error closing InputStream.", e);
-        }
-        return bitmap;
-    }
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -210,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         UserManager.getInstance().setUser(null);
 
         // Navigate back to LoginActivity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        /*Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
-
+*/
         // Finish MainActivity so that the user can't go back to it
         finish();
     }
@@ -254,6 +246,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
        // drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

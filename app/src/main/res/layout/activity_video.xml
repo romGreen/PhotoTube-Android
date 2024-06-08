@@ -74,7 +74,6 @@
             android:id="@+id/commentsContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User comments will appear here."
             android:padding="8dp" />
 
 
