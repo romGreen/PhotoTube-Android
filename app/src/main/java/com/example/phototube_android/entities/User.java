@@ -21,7 +21,6 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.imageUri = imageUri;
-        this.id = id;
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.phototube_android;
 
+import static com.example.phototube_android.MainActivity.videoAdapter;
 import static com.example.phototube_android.MainActivity.videoList;
 import static com.example.phototube_android.adapter.VideoAdapter.*;
 
@@ -18,6 +19,7 @@ import com.example.phototube_android.MainActivity.*;
 import com.example.phototube_android.R;
 import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.Video;
+import com.example.phototube_android.entities.VideoListManager;
 
 public class AddVideoActivity extends Activity {
     private static int counterId = 11;
@@ -71,7 +73,7 @@ public class AddVideoActivity extends Activity {
     private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
         Video newVideo = new Video(counterId, videoName, author, imagePath, videoPath);
         counterId++;
-        MainActivity.addVideoToList(newVideo);
+        videoAdapter.addVideoToList(newVideo);
         Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Close this activity
     }

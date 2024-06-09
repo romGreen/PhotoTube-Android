@@ -1,11 +1,16 @@
 package com.example.phototube_android.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phototube_android.R;
@@ -43,18 +48,35 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment currentComment = comments.get(position);
+
+        holder.usernameTextView.setText(currentComment.getUsername() + ": ");
         holder.commentTextView.setText(currentComment.getCommentText());
 
         holder.editButton.setOnClickListener(v -> {
             // Trigger edit comment logic, possibly through a dialog
-            editComment(position);
+            showEditCommentDialog(position);
         });
 
         holder.deleteButton.setOnClickListener(v -> {
             // Remove comment from the list
             removeComment(position);
         });
+
+        holder.commentTextView.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Full Comment");
+
+            final TextView fullCommentTextView = new TextView(context);
+            fullCommentTextView.setText(currentComment.getCommentText());
+            fullCommentTextView.setPadding(16, 16, 16, 16);
+            builder.setView(fullCommentTextView);
+
+            builder.setPositiveButton("Close", null);
+            builder.show();
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -66,10 +88,26 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         notifyItemInserted(comments.size() - 1);
     }
 
-    public void editComment(int position) {
-        // Assuming you get new text from a dialog, you update the comment
-        comments.get(position).setCommentText("Edited Comment Text");
-        notifyItemChanged(position);
+    public void showEditCommentDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = mInflater.inflate(R.layout.dialog_edit_comment, null);
+        builder.setView(dialogView);
+
+        EditText editCommentEditText = dialogView.findViewById(R.id.edit_comment_edit_text);
+        ImageButton saveEditButton = dialogView.findViewById(R.id.save_edit_button);
+
+        editCommentEditText.setText(comments.get(position).getCommentText());
+
+        AlertDialog dialog = builder.create();
+
+        saveEditButton.setOnClickListener(v -> {
+            String editedCommentText = editCommentEditText.getText().toString();
+            comments.get(position).setCommentText(editedCommentText);
+            notifyItemChanged(position);
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     public void removeComment(int position) {
@@ -78,14 +116,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     }
 
     static class CommentViewHolder extends RecyclerView.ViewHolder {
-        TextView commentTextView;
-        Button editButton, deleteButton;
+        TextView commentTextView, usernameTextView;
+        ImageButton editButton, deleteButton;
 
         CommentViewHolder(View itemView) {
             super(itemView);
+            usernameTextView = itemView.findViewById(R.id.usernameTextView);
             commentTextView = itemView.findViewById(R.id.commentTextView);
-            editButton = itemView.findViewById(R.id.editButton);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
+            editButton = itemView.findViewById(R.id.edit_Comment_Button);
+            deleteButton = itemView.findViewById(R.id.delete_Comment_Button);
         }
     }
 }

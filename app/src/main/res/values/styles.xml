@@ -15,5 +15,8 @@
         <item name="android:background">@drawable/edit_text_background</item>
     </style>
 
-
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here -->
+        <item name="android:windowFullscreen">false</item>
+    </style>
 </resources>

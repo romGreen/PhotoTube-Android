@@ -36,10 +36,12 @@
         android:id="@+id/commentsLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Comments"
-        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:singleLine="false"
+        android:text="@string/comments"
         android:textSize="20sp"
-        android:layout_marginTop="16dp" />
+        android:textStyle="bold"
+        />
 
     <!-- RecyclerView for displaying comments -->
     <androidx.recyclerview.widget.RecyclerView
@@ -47,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp" />
+        android:padding="0dp" />
 
     <!-- EditText and Button for adding new comments -->
     <LinearLayout
@@ -61,14 +63,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Add a comment..."
+            android:hint="@string/add_a_comment"
             android:inputType="textMultiLine"
             android:minHeight="48dp" />
 
-        <Button
-            android:id="@+id/submitCommentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Post" />
+
+        <ImageButton
+            android:id="@+id/sumbit_Comment_Button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="15dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/upload_image"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_comment" />
+
     </LinearLayout>
 </LinearLayout>
