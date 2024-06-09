@@ -36,16 +36,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     }
 
-    public List<Video> getVideoList() {
-        return this.videos;
-    }
+
     public List<Video> getFilteredVideoList() {
         return filteredVideoList;
     }
 
     //func to add video
     public void addVideoToList(Video video) {
-        videoList.add(video);
+        videos.add(video);
         this.getFilteredVideoList().add(video);
         this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }

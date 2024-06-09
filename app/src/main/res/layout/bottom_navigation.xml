@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="?android:attr/windowBackground">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:id="@+id/login_section">
 
         <ImageView
             android:id="@+id/user_image_view"
@@ -19,7 +21,7 @@
             android:layout_height="30dp"
             android:layout_marginBottom="4dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_person" />
+            android:src="@drawable/ic_login" />
 
         <TextView
             android:id="@+id/user_name_view"
@@ -32,11 +34,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/add_video_section"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="30dp"
@@ -53,12 +57,39 @@
             android:textSize="12sp"
             android:gravity="center" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:id="@+id/register_section">
+
+        <ImageView
+            android:id="@+id/register_icon_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_register" />
+
+        <TextView
+            android:id="@+id/register_icon_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_navbar"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:gravity="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/home_section">
 
         <ImageView
             android:layout_width="30dp"

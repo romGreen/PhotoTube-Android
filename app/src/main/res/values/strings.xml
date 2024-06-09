@@ -27,5 +27,8 @@
     <string name="username_login">Enter username</string>
     <string name="youtube_image">youtube</string>
     <string name="camera_img">Camera\n</string>
+    <string name="comments"><u>Comments</u></string>
+    <string name="add_a_comment">Add a comment...</string>
+    <string name="register_navbar">Register</string>
 
 </resources>

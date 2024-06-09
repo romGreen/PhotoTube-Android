@@ -19,20 +19,13 @@ public class Video {
         this.imagePath = imagePath;
         this.videoPath = videoPath;
         this.id = id;
-        this.comments = new ArrayList<>();
+        this.comments = CommentListManager.getInstance().getCommentsForVideo(id);
 
     }
     public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-    }
 
     public void setId (int id) {
         this.id = id;
