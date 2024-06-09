@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">PhotoTube_Android</string>
-    <string name="password">logInPassword</string>
-    <string name="username">logInUsername\n</string>
 
     <string name="Login">Login</string>
     <string name="home">Home</string>
@@ -13,12 +11,21 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
     <string name="re_enter_password">Re-enter Password</string>
-    <string name="password_hitn">Password</string>
-    <string name="email_hiny">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
     <string name="username_hint">Username</string>
     <string name="last_name_hint">Last Name</string>
     <string name="first_name_hint">First Name</string>
     <string name="notifications">notifications</string>
     <string name="shorts">shorts\n</string>
     <string name="title_home">home</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="subscriptions">Subscriptions</string>
+
+    <!--        Login-->
+    <string name="password_login">Enter password</string>
+    <string name="username_login">Enter username</string>
+    <string name="youtube_image">youtube</string>
+    <string name="camera_img">Camera\n</string>
+
 </resources>
