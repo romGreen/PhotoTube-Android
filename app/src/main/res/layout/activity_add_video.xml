@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".AddVideoActivity">
+    tools:context=".AddVideoActivity"
+    android:background="@color/background_color">
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/youtube_image"
+        android:src="@drawable/youtube"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Video"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextVideoName"
@@ -13,7 +35,10 @@
         android:layout_height="wrap_content"
         android:hint="Video Name"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@drawable/rounded_edittext"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextAuthor"
@@ -21,26 +46,75 @@
         android:layout_height="wrap_content"
         android:hint="Author"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:background="@drawable/rounded_edittext"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/buttonChooseImage"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Thumbnail" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
 
-    <Button
-        android:id="@+id/buttonChooseVideo"
+        <ImageButton
+            android:id="@+id/buttonChooseImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/upload_image"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_add_photo"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/selectedThumbnail"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="80dp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Video" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/buttonChooseVideo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/upload_image"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_addvideo"
+            app:tint="@android:color/white"
+            />
+
+
+        <TextView
+            android:id="@+id/selectedVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <Button
+        android:layout_marginTop="80dp"
         android:id="@+id/buttonUploadVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload Video" />
-
-
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/button_color"
+        android:text="Upload Video"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

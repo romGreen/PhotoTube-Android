@@ -24,19 +24,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     private LayoutInflater mInflater;
     private Context context;
 
-    public CommentsAdapter(Context context, List<Comment> comments) {
+    private String loggedInUsername;
+
+    public CommentsAdapter(Context context, List<Comment> comments, String loggedInUsername) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.comments = comments;
-    }
-
-    public CommentsAdapter(Context context) {
-        this.context = context;
-        this.comments = new ArrayList<>();  // Initialize with an empty list
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+        this.loggedInUsername = loggedInUsername;
     }
 
     @Override
@@ -51,6 +45,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         holder.usernameTextView.setText(currentComment.getUsername() + ": ");
         holder.commentTextView.setText(currentComment.getCommentText());
+
+        if (loggedInUsername != null && !loggedInUsername.isEmpty() && currentComment.getUsername().equals(loggedInUsername)) {
+            holder.editButton.setVisibility(View.VISIBLE);
+            holder.deleteButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.editButton.setVisibility(View.GONE);
+            holder.deleteButton.setVisibility(View.GONE);
+        }
 
         holder.editButton.setOnClickListener(v -> {
             // Trigger edit comment logic, possibly through a dialog
@@ -92,6 +94,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = mInflater.inflate(R.layout.dialog_edit_comment, null);
         builder.setView(dialogView);
+
 
         EditText editCommentEditText = dialogView.findViewById(R.id.edit_comment_edit_text);
         ImageButton saveEditButton = dialogView.findViewById(R.id.save_edit_button);

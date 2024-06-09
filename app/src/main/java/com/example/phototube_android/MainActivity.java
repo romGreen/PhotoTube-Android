@@ -47,11 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         initialize();
 
-
-
-
-
-
         // Update user information if logged in
         if (UserManager.getInstance().isLoggedIn()) {
             updateUserInfo();
@@ -78,13 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         videoListInit.add(new Video(3, "Play 3", "Narcos", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
         videoListInit.add(new Video(4, "Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
         videoListInit.add(new Video(5, "Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
-
-
-
-
         VideoListManager.getInstance().init(videoListInit);
-
-
         videoAdapter = new VideoAdapter(this,    VideoListManager.getInstance().getVideoList());
         videoAdapter.getFilteredVideoList().addAll( VideoListManager.getInstance().getVideoList());
         recyclerView.setAdapter(videoAdapter);
@@ -168,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Optionally, you can restart the activity to refresh the UI
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
         startActivity(intent);
     }
     private void updateUIForLogout() {
