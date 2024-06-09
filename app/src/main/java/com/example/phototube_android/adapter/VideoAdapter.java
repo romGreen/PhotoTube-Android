@@ -30,7 +30,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.context = context;
         this.videos = videos;
         this.filteredVideoList = new ArrayList<>(videos); // Initially, filtered list is the same as original list
-
     }
 
     public List<Video> getVideoList() {

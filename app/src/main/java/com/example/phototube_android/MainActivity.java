@@ -2,27 +2,35 @@ package com.example.phototube_android;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.User;
@@ -30,20 +38,8 @@ import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.entities.Video;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import android.widget.Toast;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.content.res.Resources;
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -51,49 +47,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static VideoAdapter videoAdapter;
     private static List<Video> videoList;
     private BottomNavigationView bottomNavigationView;
-
+    private ImageView userImageView;
+    private TextView userNameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //left menu
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        // Left menu
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //bottom menu
-        this.bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Set the listener for bottom navigation view
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.navigation_home) {
-                Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.nav_shorts) {
-                Toast.makeText(MainActivity.this, "Dashboard", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.nav_notifications) {
-                Toast.makeText(MainActivity.this, "Notifications", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            return false;
-        });
 
-        //video list - setup recycler view
+
+
+        // Update user information if logged in
+        if (UserManager.getInstance().isLoggedIn()) {
+            updateUserInfo();
+        }
+
+        // Video list - setup recycler view
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         videoList = new ArrayList<>();
-        // Example of adding videos with local drawable resources
-        videoList.add(new Video(1,"Play 1", "Narcos", resourceToString(R.drawable.pic1), resourceToString(R.raw.play1)));
+        videoList.add(new Video(1, "Play 1", "Narcos", resourceToString(R.drawable.pic1), resourceToString(R.raw.play1)));
         videoList.add(new Video(2, "Play 2", "Narcos", resourceToString(R.drawable.photo2), resourceToString(R.raw.play2)));
         videoList.add(new Video(3, "Play 3", "Narcos", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
-        videoList.add(new Video(4,"Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
+        videoList.add(new Video(4, "Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
         videoList.add(new Video(5, "Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
 
-        // setup adapter
+        // Setup adapter
         videoAdapter = new VideoAdapter(this, videoList);
         recyclerView.setAdapter(videoAdapter);
 
@@ -117,64 +105,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void resetComments() {
         SharedPreferences prefs = getSharedPreferences("VideoComments", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();  // This will clear all data stored in "VideoComments" SharedPreferences
+        editor.clear();
         editor.apply();
     }
 
-
-
-    //func to add video
     public static void addVideoToList(Video video) {
         videoList.add(video);
         videoAdapter.getFilteredVideoList().add(video);
-        videoAdapter.notifyDataSetChanged(); // Notify the adapter that data has changed
+        videoAdapter.notifyDataSetChanged();
     }
 
-    // Helper method to convert a resource ID to its URI string
     private String resourceToString(int resourceId) {
         return "android.resource://" + getPackageName() + "/" + resourceId;
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (UserManager.getInstance().isLoggedIn()) {
-            //String imageUri = UserManager.getInstance().getUser().getImageUri();
-            updateUserImage();
-        }
-    }
-    public void updateUserImage() {
-        if (UserManager.getInstance().isLoggedIn()) {
-            User user = UserManager.getInstance().getUser();
-            if (user != null) {
-                Uri imageUri = Uri.parse(user.getImageUri());
-                MenuItem userItem = bottomNavigationView.getMenu().findItem(R.id.navigation_user);
-
-                if (userItem != null) {
-                    userItem.setVisible(true);
-                    // Update the title with the user's name
-                    userItem.setTitle(user.getFirstName());
-
-                    // Load the image with Glide and set it as the icon
-                    Glide.with(this)
-                            .load(imageUri)
-                            .circleCrop()  // Optional: if you want the image in a circle
-                            .into(new CustomTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    userItem.setIcon(resource);
-                                    userItem.setVisible(true);
-                                }
-
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                }
-                            });
-                }
-            }
-        }
-    }
-
 
     @Override
     protected void onStart() {
@@ -182,69 +125,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         updateMenuItems();
     }
 
-    // update the left menu buttons based on the login or not
     private void updateMenuItems() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu leftMenu = navigationView.getMenu();
-
-        // Check if user is logged in
         boolean isLoggedIn = UserManager.getInstance().isLoggedIn();
 
-        // Set visibility of button in left menu based on login status
         leftMenu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
         leftMenu.findItem(R.id.nav_register).setVisible(!isLoggedIn);
         leftMenu.findItem(R.id.nav_add_video).setVisible(isLoggedIn);
         leftMenu.findItem(R.id.nav_logout).setVisible(isLoggedIn);
+
+        if (isLoggedIn) {
+            updateUserInfo();
+        }
     }
 
     private void logoutClear() {
-        // Clear the user data in UserManager
         UserManager.getInstance().setUser(null);
-
-        // Navigate back to LoginActivity
-        /*Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-*/
-        // Finish MainActivity so that the user can't go back to it
         finish();
     }
 
-
-    // function to navigate in the left menu
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Get the ID of the clicked menu item
         int id = item.getItemId();
 
-        // Handle navigation view item clicks here.
         if (id == R.id.nav_home) {
             // Handle Home click
         } else if (id == R.id.nav_profile) {
             // Handle Profile click
         } else if (id == R.id.nav_login) {
-            // Handle Login click
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_register) {
-            // Handle Login click
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            // Perform logout
             UserManager.getInstance().logout();
             logoutClear();
-            updateMenuItems(); // Refresh menu items
+            updateMenuItems();
         } else if (id == R.id.nav_add_video) {
-            // Handle add video click
             Intent intent = new Intent(MainActivity.this, AddVideoActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_dark_mode) {
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+            recreate();
         }
-        // Add more else-if statements as necessary
-
-
-        // Close the navigation drawer
-       // drawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void updateUserInfo() {
+        if (UserManager.getInstance().isLoggedIn()) {
+            User user = UserManager.getInstance().getUser();
+            if (user != null) {
+
+
+                ImageView userImage = findViewById(R.id.user_image_view);
+                TextView userName = findViewById(R.id.user_name_view);
+
+                userImage.setVisibility(View.VISIBLE);
+                userName.setText(user.getFirstName());
+
+                userImage.setImageURI(user.getImageUri());
+            }
+        }
+    }
+    // Launch ImageTestActivity when the button is clicked
 
 }

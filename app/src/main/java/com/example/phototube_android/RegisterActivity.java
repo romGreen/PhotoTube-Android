@@ -3,16 +3,21 @@ package com.example.phototube_android;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,6 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.phototube_android.LoginActivity;
 import com.example.phototube_android.R;
+import com.example.phototube_android.entities.PhotoHandler;
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserListManager;
 import com.example.phototube_android.entities.UserManager;
@@ -32,8 +38,13 @@ public class RegisterActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 101;
 
     private EditText etFirstName, etLastName, etUsername, etEmail, etPassword, etRePassword;
+    private PhotoHandler photoHandler;
+    private ImageView regPhoto;
+    private Uri photoHolderUri;
     private RadioGroup rgGender;
-    private Button btnRegister, btnUploadImage;
+    private Bitmap resultBit;
+    private Button btnRegister;
+    private ImageButton galleryPhoto,cameraPhoto;
     private Uri imageUri;
 
     @Override
@@ -41,7 +52,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
-
+        regPhoto = findViewById(R.id.reg_photo);
+        photoHandler = new PhotoHandler(regPhoto, this);
+        cameraPhoto = findViewById(R.id.add_selfie);
         etFirstName = findViewById(R.id.et_first_name);
         etLastName = findViewById(R.id.et_last_name);
         etUsername = findViewById(R.id.et_username);
@@ -50,53 +63,25 @@ public class RegisterActivity extends AppCompatActivity {
         etRePassword = findViewById(R.id.et_re_password);
         rgGender = findViewById(R.id.rg_gender);
         btnRegister = findViewById(R.id.btn_register);
-        btnUploadImage = findViewById(R.id.btn_upload_image);
+        galleryPhoto = findViewById(R.id.btn_upload_image);
 
         btnRegister.setOnClickListener(v -> registerUser());
+        galleryPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoHandler.checkPermissionAndOpenGallery();
 
-        btnUploadImage.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-            } else {
-                openImagePicker();
+            }
+        });
+        cameraPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoHandler.askCameraPermissions();
+
             }
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
-
-    private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            Toast.makeText(this, "Image Selected", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openImagePicker();
-            } else {
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private void registerUser() {
         // Get user input
         String firstName = etFirstName.getText().toString().trim();
@@ -155,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Create User object
-        User user = new User(firstName, lastName, username, email, password, gender, imageUri != null ? imageUri.toString() : "");
+        User user = new User(firstName, lastName, username, email, password, gender, PhotoHandler.bitmapToUri(resultBit,this));
 
 
         // Add user to UserListManager
@@ -171,4 +156,22 @@ public class RegisterActivity extends AppCompatActivity {
         // Finish RegisterActivity so that the user can't go back to it
         finish();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        photoHandler.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+    //handling the result of the photo
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.resultBit=photoHandler.onActivityResult(requestCode,resultCode,data);
+    }
+
+
+
+
+
 }
+
