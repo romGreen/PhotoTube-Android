@@ -1,10 +1,16 @@
 package com.example.phototube_android.entities;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Video {
     private int id;
     private String name;
     private String author;
     private String imagePath;
     private String videoPath;  // Resource ID for the video file
+    private List<Comment> comments;
+
 
     // Constructor
     public Video(int id, String name, String author, String imagePath, String videoPath) {
@@ -13,6 +19,19 @@ public class Video {
         this.imagePath = imagePath;
         this.videoPath = videoPath;
         this.id = id;
+        this.comments = new ArrayList<>();
+
+    }
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     public void setId (int id) {

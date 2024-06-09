@@ -1,4 +1,6 @@
 package com.example.phototube_android.adapter;
+import static com.example.phototube_android.MainActivity.videoList;
+
 import com.bumptech.glide.Glide;
 
 import android.content.Context;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.phototube_android.R;
 import com.example.phototube_android.VideoActivity;
 import com.example.phototube_android.entities.Video;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +26,14 @@ import java.util.List;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private final List<Video> videos;
     private final Context context;
-    private List<Video> filteredVideoList;
+    public List<Video> filteredVideoList;
 
 
     public VideoAdapter(Context context, List<Video> videos) {
         this.context = context;
         this.videos = videos;
-        this.filteredVideoList = new ArrayList<>(videos); // Initially, filtered list is the same as original list
+        this.filteredVideoList = new ArrayList<>(); // Initially, filtered list is the same as original list
+
     }
 
     public List<Video> getVideoList() {
@@ -38,6 +42,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public List<Video> getFilteredVideoList() {
         return filteredVideoList;
     }
+
+    //func to add video
+    public void addVideoToList(Video video) {
+        videoList.add(video);
+        this.getFilteredVideoList().add(video);
+        this.notifyDataSetChanged(); // Notify the adapter that data has changed
+    }
+
 
     @NonNull
     @Override
@@ -51,7 +63,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Video currentVideo = filteredVideoList.get(position);
         holder.videoNameTextView.setText(currentVideo.getVideoName());
         holder.authorTextView.setText(currentVideo.getAuthor());
-        //holder.image.setImageResource(currentVideo.getImagePath());
         Glide.with(context)
                 .load(currentVideo.getImagePath()) // Here currentVideo.getImagePath() should return a valid URL or file path
                 .into(holder.image);
@@ -62,6 +73,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             intent.putExtra("videoName", currentVideo.getVideoName());
             intent.putExtra("author", currentVideo.getAuthor());
             intent.putExtra("videoResource", currentVideo.getVideoPath());
+            Gson gson = new Gson();
+            String videoJson = gson.toJson(currentVideo);
+            intent.putExtra("video_data", videoJson);
             context.startActivity(intent);
         });
     }

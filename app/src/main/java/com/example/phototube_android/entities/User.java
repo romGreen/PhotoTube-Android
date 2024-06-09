@@ -12,6 +12,7 @@ public class User {
     private Uri imageUri;
 
     // Constructor
+
     public User(String firstName, String lastName, String username, String email, String password, String gender, Uri imageUri) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,9 +21,13 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.imageUri = imageUri;
+        this.id = id;
     }
 
+
     // Getters and Setters
+
+
     public String getFirstName() {
         return firstName;
     }

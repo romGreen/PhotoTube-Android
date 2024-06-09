@@ -14,16 +14,23 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.phototube_android.adapter.CommentsAdapter;
+import com.example.phototube_android.entities.Comment;
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VideoActivity extends AppCompatActivity {
     private VideoView videoView;
     private TextView videoNameTextView, authorTextView;
-    private EditText commentEditText;
-    private Button submitCommentButton;
-    private TextView commentsContent;
+    private RecyclerView commentsRecyclerView;
+    private CommentsAdapter commentsAdapter;
+    public List<Comment> commentsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +66,25 @@ public class VideoActivity extends AppCompatActivity {
         videoView.setMediaController(mediaController);
 
         //comment handle
-        commentsContent = findViewById(R.id.commentsContent);
-        commentEditText = findViewById(R.id.commentEditText);
-        submitCommentButton = findViewById(R.id.submitCommentButton);
+        commentsList = new ArrayList<>(); // Initialize this with actual data
+        commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        commentsAdapter = new CommentsAdapter(this, commentsList);
+        commentsRecyclerView.setAdapter(commentsAdapter);
 
+        // Handle posting new comments
+        EditText commentEditText = findViewById(R.id.commentEditText);
+        Button submitCommentButton = findViewById(R.id.submitCommentButton);
+        submitCommentButton.setOnClickListener(v -> {
+            String commentText = commentEditText.getText().toString();
+            if (!commentText.isEmpty()) {
+                User currentUser = UserManager.getInstance().getUser();
+                Comment newComment = new Comment(currentUser.getUserId(), currentUser.getFirstName(), commentText, videoId);
+                commentsAdapter.addComment(newComment);
+                commentEditText.setText("");  // Clear the input field
+            }
+        });
 
         // if user logged in , show comment button
         if (UserManager.getInstance().isLoggedIn()) {
@@ -74,19 +95,19 @@ public class VideoActivity extends AppCompatActivity {
             submitCommentButton.setVisibility(View.GONE);
         }
 
-            submitCommentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    postComment(videoId);
-                }
-            });
+       /* submitCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postComment(videoId);
+            }
+        });
 
         // Now use this video ID for loading and posting comments
         loadComments(videoId);
-        submitCommentButton.setOnClickListener(v -> postComment(videoId));
+        submitCommentButton.setOnClickListener(v -> postComment(videoId));*/
     }
 
-    private void postComment(int videoId) {
+    /*private void postComment(int videoId) {
         String comment = commentEditText.getText().toString();
         if (!comment.isEmpty()) {
             User currentUser = UserManager.getInstance().getUser();
@@ -105,15 +126,15 @@ public class VideoActivity extends AppCompatActivity {
             commentsContent.append(newComment);
             commentEditText.setText(""); // Clear the input field after posting
         }
-    }
+    }*/
 
 
-    private void loadComments(int videoId) {
+   /* private void loadComments(int videoId) {
         SharedPreferences prefs = getSharedPreferences("VideoComments", MODE_PRIVATE);
         // Generate a unique key for each video by appending videoId to a string base
         String key = "comments_" + videoId;
         String savedComments = prefs.getString(key, "");
         commentsContent.setText(savedComments);
-    }
+    }*/
 
 }
