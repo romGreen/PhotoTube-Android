@@ -1,5 +1,7 @@
 package com.example.phototube_android.entities;
 
+import android.net.Uri;
+
 public class User {
     private String firstName;
     private String lastName;
@@ -7,10 +9,10 @@ public class User {
     private String email;
     private String password;
     private String gender;
-    private String imageUri;
+    private Uri imageUri;
 
     // Constructor
-    public User(String firstName, String lastName, String username, String email, String password, String gender, String imageUri) {
+    public User(String firstName, String lastName, String username, String email, String password, String gender, Uri imageUri) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -69,11 +71,11 @@ public class User {
         this.gender = gender;
     }
 
-    public String getImageUri() {
+    public Uri getImageUri() {
         return imageUri;
     }
 
-    public void setImageUri(String imageUri) {
+    public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
     }
 }

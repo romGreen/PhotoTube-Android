@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserListManager;
@@ -24,15 +27,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameEditText = findViewById(R.id.username);
-        passwordEditText = findViewById(R.id.password);
-        loginButton = findViewById(R.id.loginButton);
+        usernameEditText = findViewById(R.id.username_login_text);
+        passwordEditText = findViewById(R.id.password_login_text);
+        loginButton = findViewById(R.id.login_button);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
             }
+        });
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
     }
 
