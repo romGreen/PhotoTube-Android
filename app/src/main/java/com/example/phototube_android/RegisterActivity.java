@@ -22,14 +22,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.phototube_android.LoginActivity;
 import com.example.phototube_android.R;
+import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserListManager;
 import com.example.phototube_android.entities.UserManager;
+import com.example.phototube_android.entities.Video;
+
+import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int STORAGE_PERMISSION_CODE = 101;
+    private static int userId = 1;
 
     private EditText etFirstName, etLastName, etUsername, etEmail, etPassword, etRePassword;
     private RadioGroup rgGender;
@@ -155,8 +160,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Create User object
-        User user = new User(firstName, lastName, username, email, password, gender, imageUri != null ? imageUri.toString() : "");
-
+        User user = new User(userId, firstName, lastName, username, email, password, gender, imageUri != null ? imageUri.toString() : "");
+        userId++;
 
         // Add user to UserListManager
         UserListManager.getInstance().addUser(user);

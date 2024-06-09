@@ -1,6 +1,7 @@
 package com.example.phototube_android.entities;
 
 public class User {
+    private final int id;
     private String firstName;
     private String lastName;
     private String username;
@@ -10,7 +11,7 @@ public class User {
     private String imageUri;
 
     // Constructor
-    public User(String firstName, String lastName, String username, String email, String password, String gender, String imageUri) {
+    public User(int id, String firstName, String lastName, String username, String email, String password, String gender, String imageUri) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -18,9 +19,16 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.imageUri = imageUri;
+        this.id = id;
     }
 
+
     // Getters and Setters
+
+    public int getUserId() {
+        return id;
+    }
+
     public String getFirstName() {
         return firstName;
     }

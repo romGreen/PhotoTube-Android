@@ -1,5 +1,8 @@
 package com.example.phototube_android;
 
+import static com.example.phototube_android.MainActivity.videoList;
+import static com.example.phototube_android.adapter.VideoAdapter.*;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,8 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.phototube_android.MainActivity;
+import com.example.phototube_android.MainActivity.*;
 import com.example.phototube_android.R;
+import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.Video;
 
 public class AddVideoActivity extends Activity {
@@ -63,10 +67,11 @@ public class AddVideoActivity extends Activity {
         });
     }
 
+
     private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
         Video newVideo = new Video(counterId, videoName, author, imagePath, videoPath);
         counterId++;
-        MainActivity.addVideoToList(newVideo); // Ensure this method accepts Video objects
+        MainActivity.addVideoToList(newVideo);
         Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Close this activity
     }

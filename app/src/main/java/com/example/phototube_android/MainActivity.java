@@ -46,10 +46,9 @@ import android.content.res.Resources;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
-    private static VideoAdapter videoAdapter;
-    private static List<Video> videoList;
+    public static VideoAdapter videoAdapter;
+    public static List<Video> videoList;
     private BottomNavigationView bottomNavigationView;
 
 
@@ -93,8 +92,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         videoList.add(new Video(4,"Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
         videoList.add(new Video(5, "Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
 
+
         // setup adapter
+
         videoAdapter = new VideoAdapter(this, videoList);
+        videoAdapter.getFilteredVideoList().addAll(videoList);
         recyclerView.setAdapter(videoAdapter);
 
         // Setup SearchView
@@ -113,6 +115,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+    //func to add video
+    public static void addVideoToList(Video video) {
+        videoList.add(video);
+        videoAdapter.getFilteredVideoList().add(video);
+        videoAdapter.notifyDataSetChanged(); // Notify the adapter that data has changed
+    }
 
     private void resetComments() {
         SharedPreferences prefs = getSharedPreferences("VideoComments", MODE_PRIVATE);
@@ -121,14 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.apply();
     }
 
-
-
-    //func to add video
-    public static void addVideoToList(Video video) {
-        videoList.add(video);
-        videoAdapter.getFilteredVideoList().add(video);
-        videoAdapter.notifyDataSetChanged(); // Notify the adapter that data has changed
-    }
 
     // Helper method to convert a resource ID to its URI string
     private String resourceToString(int resourceId) {

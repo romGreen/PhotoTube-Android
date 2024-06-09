@@ -10,8 +10,7 @@
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:layout_gravity="center_horizontal"
-         />
+        android:layout_gravity="center_horizontal" />
 
     <!-- TextView for video name below the video -->
     <TextView
@@ -32,7 +31,7 @@
         android:gravity="center"
         android:layout_marginTop="4dp" />
 
-    <!-- Comments Section -->
+    <!-- Comments Section Label -->
     <TextView
         android:id="@+id/commentsLabel"
         android:layout_width="match_parent"
@@ -42,6 +41,15 @@
         android:textSize="20sp"
         android:layout_marginTop="16dp" />
 
+    <!-- RecyclerView for displaying comments -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <!-- EditText and Button for adding new comments -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,29 +62,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Add a comment..."
-            android:inputType="textMultiLine"/>
+            android:inputType="textMultiLine"
+            android:minHeight="48dp" />
 
         <Button
             android:id="@+id/submitCommentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post"/>
-
+            android:text="Post" />
     </LinearLayout>
-
-
-    <!-- ScrollView for comments content -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <TextView
-            android:id="@+id/commentsContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp" />
-
-
-    </ScrollView>
-
 </LinearLayout>
