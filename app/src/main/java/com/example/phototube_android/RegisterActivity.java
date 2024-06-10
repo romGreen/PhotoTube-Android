@@ -112,6 +112,19 @@ public class RegisterActivity extends AppCompatActivity  {
             Toast.makeText(this, "Please select your gender", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (!isValidUsername(username)) {
+            // Handle invalid username
+            Toast.makeText(this, "username must be at least 4 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            return; // or show an error message
+        }
+
+        if (!isValidPassword(password)) {
+            // Handle invalid password
+            Toast.makeText(this, "password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            return; // or show an error message
+        }
+
         // Check if username already exists
         for (User existingUser : UserListManager.getInstance().getUserList()) {
             if (existingUser.getUsername().equals(username)) {
@@ -154,7 +167,45 @@ public class RegisterActivity extends AppCompatActivity  {
 
 
 
+    public boolean isValidUsername(String username) {
+        boolean hasLetter = false;
+        boolean hasDigit = false;
 
+        if (username.length() >= 4) {
+            for (char c : username.toCharArray()) {
+                if (Character.isLetter(c)) {
+                    hasLetter = true;
+                }
+                if (Character.isDigit(c)) {
+                    hasDigit = true;
+                }
+                if (hasLetter && hasDigit) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isValidPassword(String password) {
+        boolean hasLetter = false;
+        boolean hasDigit = false;
+
+        if (password.length() >= 8) {
+            for (char c : password.toCharArray()) {
+                if (Character.isLetter(c)) {
+                    hasLetter = true;
+                }
+                if (Character.isDigit(c)) {
+                    hasDigit = true;
+                }
+                if (hasLetter && hasDigit) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
 

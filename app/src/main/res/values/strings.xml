@@ -31,5 +31,7 @@
     <string name="comments"><u>Comments</u></string>
     <string name="add_a_comment">Add a comment...</string>
     <string name="register_navbar">Register</string>
+    <string name="like_video">like</string>
+    <string name="dislike_video">dislike</string>
 
 </resources>

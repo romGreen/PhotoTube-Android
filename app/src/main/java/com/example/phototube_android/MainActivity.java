@@ -68,11 +68,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Video> videoListInit = new ArrayList<>();
-        videoListInit.add(new Video(1, "Play 1", "Narcos", resourceToString(R.drawable.pic1), resourceToString(R.raw.play1)));
-        videoListInit.add(new Video(2, "Play 2", "Narcos", resourceToString(R.drawable.photo2), resourceToString(R.raw.play2)));
-        videoListInit.add(new Video(3, "Play 3", "Narcos", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
-        videoListInit.add(new Video(4, "Play 4", "Narcos", resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
-        videoListInit.add(new Video(5, "Play 5", "Narcos", resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
+        videoListInit.add(new Video(1, "Play 1", "NBA","5.1 M views", "1 year ago", resourceToString(R.drawable.photo1), resourceToString(R.raw.play1)));
+        videoListInit.add(new Video(2, "Play 2", "NBA", "2 M views","1 year ago", resourceToString(R.drawable.photo2), resourceToString(R.raw.play2)));
+        videoListInit.add(new Video(3, "Play 3", "NBA", "4.1 M views","3 months ago", resourceToString(R.drawable.photo3), resourceToString(R.raw.play3)));
+        videoListInit.add(new Video(4, "Play 4", "NBA", "7.8 M views", "3 months ago",resourceToString(R.drawable.photo4), resourceToString(R.raw.play4)));
+        videoListInit.add(new Video(5, "Play 5", "NBA", "1 M views", "4 months ago",resourceToString(R.drawable.photo5), resourceToString(R.raw.play5)));
+        videoListInit.add(new Video(6, "Play 6", "NBA","5 M views", "7 months ago", resourceToString(R.drawable.photo6), resourceToString(R.raw.play6)));
+        videoListInit.add(new Video(7, "Play 7", "NBA", "200,000 views","2 year ago", resourceToString(R.drawable.photo7), resourceToString(R.raw.play7)));
+        videoListInit.add(new Video(8, "Play 8", "NBA", "4.1 M views","4 year ago", resourceToString(R.drawable.photo8), resourceToString(R.raw.play8)));
+        videoListInit.add(new Video(9, "Play 9", "NBA", "1.3 M views", "3 year ago",resourceToString(R.drawable.photo9), resourceToString(R.raw.play9)));
+        videoListInit.add(new Video(10, "Play 10", "NBA", "1 M views", "1 year ago",resourceToString(R.drawable.photo10), resourceToString(R.raw.play10)));
+
         VideoListManager.getInstance().init(videoListInit);
         videoAdapter = new VideoAdapter(this,    VideoListManager.getInstance().getVideoList());
         videoAdapter.getFilteredVideoList().addAll( VideoListManager.getInstance().getVideoList());
@@ -186,9 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_home) {
             // Handle Home click
-        } else if (id == R.id.nav_profile) {
-            // Handle Profile click
-        } else if (id == R.id.nav_login) {
+        }  else if (id == R.id.nav_login) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_register) {

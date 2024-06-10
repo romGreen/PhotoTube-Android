@@ -32,12 +32,13 @@ import java.util.List;
 
 public class VideoActivity extends AppCompatActivity {
     private VideoView videoView;
-    private TextView videoNameTextView, authorTextView;
+    private TextView videoNameTextView, authorTextView, viewsTextView, timeAgoTextView;
     private EditText commentEditText;
     private RecyclerView commentsRecyclerView;
     private CommentsAdapter commentsAdapter;
-    public List<Comment> commentsList;
     private Video video;
+    private ImageButton likeButton, dislikeButton;
+    private TextView likeCountTextView;
     private ImageButton submitCommentButton;
 
     @Override
@@ -86,7 +87,71 @@ public class VideoActivity extends AppCompatActivity {
                 UserManager.getInstance().getUser().getUsername() : "";
         commentsAdapter = new CommentsAdapter(this, video.getComments(),loggedInUsername);
         commentsRecyclerView.setAdapter(commentsAdapter);
+
+        likeButton = findViewById(R.id.likeButton);
+        dislikeButton = findViewById(R.id.dislikeButton);
+        likeCountTextView = findViewById(R.id.likeCountTextView);
+
+        updateButtonStates(video);
+        setButtonListeners(video);
+        updateLikeCountDisplay(video);
+
     }
+
+    private void setButtonListeners(Video currentVideo) {
+        likeButton.setOnClickListener(v -> handleLike(currentVideo));
+        dislikeButton.setOnClickListener(v -> handleDislike(currentVideo));
+    }
+
+    private void handleLike(Video currentVideo) {
+        if (UserManager.getInstance().isLoggedIn()) {
+            User currentUser = UserManager.getInstance().getUser();
+            if (currentVideo.isLikedBy(currentUser.getUsername())) {
+                currentVideo.removeLike(currentUser.getUsername());
+            } else {
+                if (currentVideo.isDislikedBy(currentUser.getUsername())) {
+                    currentVideo.removeDislike(currentUser.getUsername());  // Ensure to remove dislike if previously disliked
+                }
+                currentVideo.addLike(currentUser.getUsername()); // add like to count
+            }
+            updateButtonStates(currentVideo);
+            updateLikeCountDisplay(currentVideo);
+        }
+        else {
+            Toast.makeText((this), "You must login for like", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleDislike(Video currentVideo) {
+        if (UserManager.getInstance().isLoggedIn()) {
+            User currentUser = UserManager.getInstance().getUser();
+            if (currentVideo.isDislikedBy(currentUser.getUsername())) {
+                currentVideo.removeDislike(currentUser.getUsername());
+            } else {
+                if (currentVideo.isLikedBy(currentUser.getUsername())) {
+                    currentVideo.removeLike(currentUser.getUsername());  // Ensure to remove like if previously liked
+                }
+                currentVideo.addDislike(currentUser.getUsername()); // add dislike to count
+            }
+            updateButtonStates(currentVideo);
+            updateLikeCountDisplay(currentVideo);
+        } else {
+            Toast.makeText((this), "You must login for dis like", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateButtonStates(Video currentVideo) {
+        if (UserManager.getInstance().isLoggedIn()) {
+            User currentUser = UserManager.getInstance().getUser();
+            likeButton.setImageResource(currentVideo.isLikedBy(currentUser.getUsername()) ? R.drawable.thumb_up_filled : R.drawable.thumb_up_40px);
+            dislikeButton.setImageResource(currentVideo.isDislikedBy(currentUser.getUsername()) ? R.drawable.thumb_down_filled : R.drawable.thumb_down_40px);
+        }
+    }
+
+    private void updateLikeCountDisplay(Video currentVideo) {
+        likeCountTextView.setText(currentVideo.getLikes() + " ");
+    }
+
 
     private void addComment()
     {
