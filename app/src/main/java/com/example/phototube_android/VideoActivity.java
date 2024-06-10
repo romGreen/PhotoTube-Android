@@ -38,7 +38,7 @@ public class VideoActivity extends AppCompatActivity {
     private CommentsAdapter commentsAdapter;
     public List<Comment> commentsList;
     private Video video;
-    private ImageButton submitCommentButton, editCommentButton, deleteCommentButton;
+    private ImageButton submitCommentButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,6 @@ public class VideoActivity extends AppCompatActivity {
         authorTextView = findViewById(R.id.authorTextView);
         commentEditText  = findViewById(R.id.commentEditText);
         submitCommentButton = findViewById(R.id.sumbit_Comment_Button);
-        editCommentButton = findViewById(R.id.edit_Comment_Button);
-        deleteCommentButton = findViewById(R.id.delete_Comment_Button);
         int videoId = getIntent().getIntExtra("videoId", -1);
         if (videoId == -1) {
             finish();  // Exit the activity if no valid video ID is passed
@@ -84,8 +82,9 @@ public class VideoActivity extends AppCompatActivity {
         videoView.setMediaController(mediaController);
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        commentsAdapter = new CommentsAdapter(this, video.getComments());
+        String loggedInUsername = UserManager.getInstance().isLoggedIn() ?
+                UserManager.getInstance().getUser().getUsername() : "";
+        commentsAdapter = new CommentsAdapter(this, video.getComments(),loggedInUsername);
         commentsRecyclerView.setAdapter(commentsAdapter);
     }
 

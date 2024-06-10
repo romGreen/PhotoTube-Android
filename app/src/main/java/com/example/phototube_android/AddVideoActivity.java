@@ -1,8 +1,6 @@
 package com.example.phototube_android;
 
 import static com.example.phototube_android.MainActivity.videoAdapter;
-import static com.example.phototube_android.MainActivity.videoList;
-import static com.example.phototube_android.adapter.VideoAdapter.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,13 +11,13 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.phototube_android.MainActivity.*;
-import com.example.phototube_android.R;
 import com.example.phototube_android.adapter.VideoAdapter;
 import com.example.phototube_android.entities.Video;
-import com.example.phototube_android.entities.VideoListManager;
 
 public class AddVideoActivity extends Activity {
     private static int counterId = 11;
@@ -29,9 +27,11 @@ public class AddVideoActivity extends Activity {
 
     private EditText editTextVideoName;
     private EditText editTextAuthor;
-    private Button buttonChooseImage;
-    private Button buttonChooseVideo;
+    private ImageButton buttonChooseImage;
+    private ImageButton buttonChooseVideo;
     private Button buttonUploadVideo;
+    private ImageView selectedThumbnail;
+    private TextView selectedVideo;
     private String imageUri;
     private String videoUri;
 
@@ -45,6 +45,8 @@ public class AddVideoActivity extends Activity {
         buttonChooseImage = findViewById(R.id.buttonChooseImage);
         buttonChooseVideo = findViewById(R.id.buttonChooseVideo);
         buttonUploadVideo = findViewById(R.id.buttonUploadVideo);
+        selectedThumbnail = findViewById(R.id.selectedThumbnail);
+        selectedVideo = findViewById(R.id.selectedVideo);
 
         buttonChooseImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
@@ -69,7 +71,6 @@ public class AddVideoActivity extends Activity {
         });
     }
 
-
     private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
         Video newVideo = new Video(counterId, videoName, author, imagePath, videoPath);
         counterId++;
@@ -78,8 +79,6 @@ public class AddVideoActivity extends Activity {
         finish(); // Close this activity
     }
 
-
-    // Inside AddVideoActivity when handling the result of image/video selection
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,13 +88,16 @@ public class AddVideoActivity extends Activity {
 
             if (requestCode == IMAGE_PICK_CODE) {
                 imageUri = filePath; // Store image path as string
+                selectedThumbnail.setImageURI(selectedUri);
+                selectedThumbnail.setVisibility(View.VISIBLE);
             } else if (requestCode == VIDEO_PICK_CODE) {
                 videoUri = filePath; // Store video path as string
+                selectedVideo.setText("Selected Video: " + filePath);
+                selectedVideo.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    // Helper method to get path from URI
     private String getPathFromUri(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         if (cursor == null) return uri.toString();

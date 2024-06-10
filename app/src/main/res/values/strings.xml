@@ -21,7 +21,8 @@
     <string name="title_home">home</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="subscriptions">Subscriptions</string>
-
+    <!-- other strings -->
+    <string name="selected_video">Selected Video: %1$s</string>
     <!--        Login-->
     <string name="password_login">Enter password</string>
     <string name="username_login">Enter username</string>

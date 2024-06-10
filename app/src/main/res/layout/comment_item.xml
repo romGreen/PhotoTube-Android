@@ -1,51 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
         android:textStyle="bold"
         android:textSize="19sp"
-        android:layout_marginEnd="3dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/commentTextView"
+        android:layout_marginEnd="4dp" />
 
     <TextView
         android:id="@+id/commentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/usernameTextView"
         android:textSize="16sp"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/delete_Comment_Button"
         android:gravity="center_vertical"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/usernameTextView"
+        app:layout_constraintEnd_toStartOf="@id/delete_Comment_Button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="4dp" />
 
     <ImageButton
         android:id="@+id/edit_Comment_Button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/upload_image"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_edit" />
+        android:src="@drawable/ic_edit"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/delete_Comment_Button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="4dp" />
 
     <ImageButton
         android:id="@+id/delete_Comment_Button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_toStartOf="@+id/edit_Comment_Button"
-        android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/upload_image"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_delete" />
+        android:src="@drawable/ic_delete"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
