@@ -63,10 +63,21 @@ public class AddVideoActivity extends Activity {
         buttonUploadVideo.setOnClickListener(v -> {
             String videoName = editTextVideoName.getText().toString().trim();
             String author = editTextAuthor.getText().toString().trim();
-            if (videoUri != null && imageUri != null) {
-                uploadVideo(videoName, author, imageUri, videoUri);
+
+            if (videoUri == null) {
+                Toast.makeText(AddVideoActivity.this, "Please select a video", Toast.LENGTH_LONG).show();
+
+            } else if (imageUri == null) {
+                Toast.makeText(AddVideoActivity.this, "Please select an image", Toast.LENGTH_LONG).show();
+
+            } else if (videoName.isEmpty()) {
+                Toast.makeText(AddVideoActivity.this, "video name must not be empty", Toast.LENGTH_LONG).show();
+
+            } else if (author.isEmpty()) {
+                Toast.makeText(AddVideoActivity.this, "author name must not be empty", Toast.LENGTH_LONG).show();
+
             } else {
-                Toast.makeText(AddVideoActivity.this, "Please select both an image and a video", Toast.LENGTH_LONG).show();
+                uploadVideo(videoName, author, imageUri, videoUri);
             }
         });
     }

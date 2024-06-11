@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dislike_video">dislike</string>
+    <string name="liked_videos">Liked videos</string>
+    <string name="Register">Register</string>
+    <string name="add_video">Add video</string>
+    <string name="logout">Logout</string>
+    <string name="playlists">Playlists</string>
+    <string name="history">History</string>
+    <string name="Shorts">Shorts</string>
+    <string name="Home">Home</string>
+    <string name="Add_video">Add Video</string>
+    <string name="_0">0</string>
+    <string name="sample_video_name">Sample Video Name</string>
+    <string name="author_name">Author Name</string>
+    <string name="dot">•</string>
+    <string name="_1_2m_views_exemple">1.2M Views</string>
+    <string name="_3_days_ago">3 days ago</string>
+    <string name="title_activity_video">fullscreen</string>
+    <string name="fullscreen">fullscreen</string>
 </resources>

@@ -4,11 +4,11 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="@string/Home" />
         <item
             android:id="@+id/nav_shorts"
             android:icon="@drawable/baseline_airplay_24"
-            android:title="Shorts" />
+            android:title="@string/Shorts" />
         <item
             android:id="@+id/nav_subscriptions"
             android:icon="@drawable/subs"
@@ -25,16 +25,16 @@
             <item
                 android:id="@+id/nav_history"
                 android:icon="@drawable/history"
-                android:title="History" />
+                android:title="@string/history" />
             <item
                 android:id="@+id/nav_playlists"
                 android:icon="@drawable/playlist"
-                android:title="Playlists" />
+                android:title="@string/playlists" />
 
             <item
                 android:id="@+id/nav_liked_videos"
                 android:icon="@drawable/like"
-                android:title="Liked videos" />
+                android:title="@string/liked_videos" />
             <item
                 android:id="@+id/nav_login"
                 android:icon="@drawable/login"
@@ -42,16 +42,16 @@
             <item
                 android:id="@+id/nav_register"
                 android:icon="@drawable/ic_register"
-                android:title="Register" />
+                android:title="@string/Register" />
             <item
                 android:id="@+id/nav_add_video"
                 android:icon="@drawable/baseline_add_24"
-                android:title="Add video" />
+                android:title="@string/add_video" />
 
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logout"
-                android:title="Logout"
+                android:title="@string/logout"
                 android:visible="false"/>
 
         </menu>

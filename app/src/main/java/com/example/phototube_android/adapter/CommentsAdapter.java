@@ -105,9 +105,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         saveEditButton.setOnClickListener(v -> {
             String editedCommentText = editCommentEditText.getText().toString();
-            comments.get(position).setCommentText(editedCommentText);
-            notifyItemChanged(position);
-            dialog.dismiss();
+            if (!editedCommentText.isEmpty()) {
+                comments.get(position).setCommentText(editedCommentText);
+                notifyItemChanged(position);
+                dialog.dismiss();
+            }
         });
 
         dialog.show();
