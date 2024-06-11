@@ -220,4 +220,4 @@
         android:layout_gravity="start"
         app:menu="@menu/left_menu" />
 
-1</androidx.drawerlayout.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

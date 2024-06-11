@@ -48,6 +48,22 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
+        // Username validation: At least 4 characters with at least 1 letter and 1 number
+        if (!username.matches("^(?=.*[a-zA-Z])(?=.*\\d).{4,}$")) {
+            // Handle invalid username case here
+            // For example: Show error message
+            Toast.makeText(LoginActivity.this, "username must be at least 4 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            return; // Stop further processing or return error
+        }
+
+        // Password validation: At least 8 characters with at least 1 letter and 1 number
+        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d).{8,}$")) {
+            // Handle invalid password case here
+            // For example: Show error message
+            Toast.makeText(LoginActivity.this, "password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            return; // Stop further processing or return error
+        }
+
         // Check if the username and password match any user in the list
         for (User user : UserListManager.getInstance().getUserList()) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {

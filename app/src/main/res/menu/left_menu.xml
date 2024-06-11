@@ -3,7 +3,7 @@
     <group android:id="@+id/group_main">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/baseline_airplay_24"
+            android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
             android:id="@+id/nav_shorts"
@@ -11,7 +11,7 @@
             android:title="Shorts" />
         <item
             android:id="@+id/nav_subscriptions"
-            android:icon="@drawable/baseline_airplay_24"
+            android:icon="@drawable/subs"
             android:title="@string/subscriptions" />
     </group>
 
@@ -23,36 +23,25 @@
                 android:icon="@drawable/baseline_dark_mode_24"
                 android:title="@string/dark_mode" />
             <item
-                android:id="@+id/nav_your_channel"
-                android:icon="@drawable/baseline_airplay_24"
-                android:title="Your channel" />
-            <item
                 android:id="@+id/nav_history"
-                android:icon="@drawable/baseline_airplay_24"
+                android:icon="@drawable/history"
                 android:title="History" />
             <item
                 android:id="@+id/nav_playlists"
-                android:icon="@drawable/baseline_airplay_24"
+                android:icon="@drawable/playlist"
                 android:title="Playlists" />
-            <item
-                android:id="@+id/nav_your_videos"
-                android:icon="@drawable/baseline_airplay_24"
-                android:title="Your videos" />
-            <item
-                android:id="@+id/nav_watch_later"
-                android:icon="@drawable/baseline_airplay_24"
-                android:title="Watch later" />
+
             <item
                 android:id="@+id/nav_liked_videos"
-                android:icon="@drawable/baseline_airplay_24"
+                android:icon="@drawable/like"
                 android:title="Liked videos" />
             <item
                 android:id="@+id/nav_login"
-                android:icon="@drawable/baseline_airplay_24"
+                android:icon="@drawable/login"
                 android:title="@string/Login" />
             <item
                 android:id="@+id/nav_register"
-                android:icon="@drawable/baseline_airplay_24"
+                android:icon="@drawable/ic_register"
                 android:title="Register" />
             <item
                 android:id="@+id/nav_add_video"
@@ -61,14 +50,10 @@
 
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/google_icons"
+                android:icon="@drawable/logout"
                 android:title="Logout"
                 android:visible="false"/>
 
-            <item
-                android:id="@+id/nav_profile"
-                android:icon="@drawable/baseline_airplay_24"
-                android:title="@string/profile" />
         </menu>
     </item>
 </menu>
