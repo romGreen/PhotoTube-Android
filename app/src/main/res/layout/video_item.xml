@@ -4,49 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="4dp">
 
-    <!-- Image taking full width -->
-
-    <!-- Video name directly below the image, adjusted to start lower -->
     <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginTop="8dp"
+        android:foreground="@drawable/image_foreground"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:foreground="@drawable/image_foreground" />  <!-- Custom drawable for rounded corners -->
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/videoName"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
+        android:layout_height="33dp"
+        android:background="@drawable/text_background"
+        android:gravity="center|start"
+        android:padding="8dp"
+        android:text="Video Name"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="67dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="124dp"
+        android:background="@drawable/text_background"
+        android:gravity="start"
+        android:padding="4dp"
+        android:text="Author"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/videoName"
+
+        app:layout_constraintTop_toBottomOf="@+id/image"
+        app:layout_constraintVertical_bias="0.833" />
+
+    <TextView
+        android:id="@+id/viewsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="210dp"
+        android:background="@drawable/text_background"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="123K views"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/author"
+        app:layout_constraintTop_toTopOf="@+id/image"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/timeAgo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/text_background"
         android:gravity="center"
         android:padding="4dp"
+        android:text="3 days ago"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/image"
-        app:layout_constraintEnd_toEndOf="@id/image"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/image" />
-
-
-    <!-- Author text view aligned to end, next to video name -->
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="#CCCCCC"
-        android:gravity="center"
-        android:padding="4dp"
-        app:layout_constraintEnd_toEndOf="@id/image"
-        app:layout_constraintBottom_toBottomOf="@id/videoName"
-        android:background="@drawable/text_background" />
-
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/viewsCount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/viewsCount"
+        app:layout_constraintTop_toTopOf="@id/viewsCount"
+        app:layout_constraintVertical_bias="0.75" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

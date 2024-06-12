@@ -230,6 +230,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-    // Launch ImageTestActivity when the button is clicked
-
 }

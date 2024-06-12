@@ -27,7 +27,7 @@
             android:id="@+id/user_name_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="@string/Login"
             android:textColor="@android:color/black"
             android:textSize="12sp"
             android:gravity="center" />
@@ -52,7 +52,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Video"
+            android:text="@string/Add_video"
             android:textColor="@android:color/black"
             android:textSize="12sp"
             android:gravity="center" />

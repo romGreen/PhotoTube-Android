@@ -2,18 +2,24 @@ package com.example.phototube_android;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +32,7 @@ import com.example.phototube_android.entities.UserListManager;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.entities.Video;
 import com.example.phototube_android.entities.VideoListManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +47,9 @@ public class VideoActivity extends AppCompatActivity {
     private ImageButton likeButton, dislikeButton;
     private TextView likeCountTextView;
     private ImageButton submitCommentButton;
+    private static final int REQUEST_FULLSCREEN = 1;  // Request code for starting FullscreenActivity
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +60,6 @@ public class VideoActivity extends AppCompatActivity {
         submitCommentButton.setOnClickListener(v -> {
           addComment();
         });
-
-
     }
 
     private void Initialize()
@@ -59,6 +67,8 @@ public class VideoActivity extends AppCompatActivity {
         videoView = findViewById(R.id.video_view);
         videoNameTextView = findViewById(R.id.videoNameTextView);
         authorTextView = findViewById(R.id.authorTextView);
+        viewsTextView = findViewById(R.id.viewsTextView);
+        timeAgoTextView = findViewById(R.id.timeAgoTextView);
         commentEditText  = findViewById(R.id.commentEditText);
         submitCommentButton = findViewById(R.id.sumbit_Comment_Button);
         int videoId = getIntent().getIntExtra("videoId", -1);
@@ -75,12 +85,17 @@ public class VideoActivity extends AppCompatActivity {
         }
         videoNameTextView.setText(getIntent().getStringExtra("videoName"));
         authorTextView.setText(getIntent().getStringExtra("author"));
+        viewsTextView.setText(getIntent().getStringExtra("views"));
+        timeAgoTextView.setText(getIntent().getStringExtra("timeAgo"));
+
         // Set up the VideoView to play the video
         videoView.setVideoURI(Uri.parse(getIntent().getStringExtra("videoResource")));
         videoView.start(); // Start playing automatically
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
+
+        // Handle comments
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         String loggedInUsername = UserManager.getInstance().isLoggedIn() ?
@@ -88,15 +103,47 @@ public class VideoActivity extends AppCompatActivity {
         commentsAdapter = new CommentsAdapter(this, video.getComments(),loggedInUsername);
         commentsRecyclerView.setAdapter(commentsAdapter);
 
+        // Handle likes
         likeButton = findViewById(R.id.likeButton);
         dislikeButton = findViewById(R.id.dislikeButton);
         likeCountTextView = findViewById(R.id.likeCountTextView);
-
         updateButtonStates(video);
         setButtonListeners(video);
         updateLikeCountDisplay(video);
 
+        // Fullscreen
+        ImageButton fullscreenButton = findViewById(R.id.fullscreenButton);
+        fullscreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (video.getVideoPath() != null && video != null) {
+                    Intent intent = new Intent(VideoActivity.this, FullscreenActivity.class);
+                    intent.putExtra("videoPath", video.getVideoPath());
+
+                    startActivityForResult(intent, REQUEST_FULLSCREEN); // Start FullscreenActivity with the request code
+                } else {
+                    // Handle null or invalid data case
+                    Toast.makeText(VideoActivity.this, "Video data is not available.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_FULLSCREEN && resultCode == RESULT_OK && data != null) {
+            int position = data.getIntExtra("currentPosition", 0); // Retrieve the current position of the video
+            if (videoView != null) {
+                videoView.seekTo(position);
+                videoView.start(); // Resume video playback
+            }
+        }
+    }
+
+
 
     private void setButtonListeners(Video currentVideo) {
         likeButton.setOnClickListener(v -> handleLike(currentVideo));
@@ -175,5 +222,7 @@ public class VideoActivity extends AppCompatActivity {
             submitCommentButton.setVisibility(View.GONE);
         }
     }
+
+
 
 }

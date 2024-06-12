@@ -17,11 +17,7 @@ public class Video {
     private List<Comment> comments;
     private Map<String, Integer> usersReactions; // (userName, 1/0/-1)
 
-
-
     // Constructor
-
-
     public Video(int id, String name, String author, String views, String timeAgo, String imagePath, String videoPath) {
         this.name = name;
         this.author = author;
@@ -36,7 +32,7 @@ public class Video {
     }
     public void addLike(String userName) {
         usersReactions.put(userName, 1);
-        likes +=   1;
+        likes += 1;
     }
 
     public boolean isLikedBy(String userName) {
@@ -46,13 +42,13 @@ public class Video {
     public void removeLike(String userName) {
         if (isLikedBy(userName)) {
             usersReactions.put(userName, 0);
-            likes -=   1;
+            likes -= 1;
         }
     }
 
     public void addDislike(String userName) {
         usersReactions.put(userName, -1);
-        likes -=   1;
+        likes -= 1;
 
     }
 

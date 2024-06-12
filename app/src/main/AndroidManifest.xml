@@ -47,6 +47,13 @@
             android:exported="false" /> <!-- `exported="false"` if not accessible outside the app -->
         <activity android:name=".VideoActivity" />
         <activity android:name=".AddVideoActivity" />
+        <activity android:name=".FullscreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/fullscreen"
+            android:screenOrientation="landscape">
+        </activity>
+
+
 
     </application>
 

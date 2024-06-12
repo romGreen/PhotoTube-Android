@@ -20,15 +20,8 @@ public class CommentListManager {
         return instance;
     }
 
-    public void addComment(int videoId, Comment comment) {
-        commentsMap.computeIfAbsent(videoId, k -> new ArrayList<>()).add(comment);
-    }
-
     public List<Comment> getCommentsForVideo(int videoId) {
         return commentsMap.getOrDefault(videoId, new ArrayList<>());
     }
 
-    public void clearCommentsForVideo(int videoId) {
-        commentsMap.remove(videoId);
-    }
 }
