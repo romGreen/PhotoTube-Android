@@ -1,5 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">PhotoTube_Android</string>
+
+    <string name="Login">Login</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="register">Register Page\n</string>
+    <string name="login">Login\n</string>
+    <string name="register_btn">Sign up</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="re_enter_password">Re-enter Password</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="username_hint">Username</string>
+    <string name="last_name_hint">Last Name</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="notifications">notifications</string>
+    <string name="shorts">shorts\n</string>
+    <string name="title_home">home</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="subscriptions">Subscriptions</string>
+    <!-- other strings -->
+    <string name="selected_video">Selected Video: %1$s</string>
+    <!--        Login-->
+    <string name="password_login">Enter password</string>
+    <string name="username_login">Enter username</string>
+    <string name="youtube_image">youtube</string>
+    <string name="camera_img">Camera\n</string>
+    <string name="comments"><u>Comments</u></string>
+    <string name="add_a_comment">Add a comment...</string>
+    <string name="register_navbar">Register</string>
+    <string name="like_video">like</string>
     <string name="dislike_video">dislike</string>
     <string name="liked_videos">Liked videos</string>
     <string name="Register">Register</string>
@@ -18,4 +50,5 @@
     <string name="_3_days_ago">3 days ago</string>
     <string name="title_activity_video">fullscreen</string>
     <string name="fullscreen">fullscreen</string>
+
 </resources>

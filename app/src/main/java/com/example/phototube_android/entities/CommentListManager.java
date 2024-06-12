@@ -24,7 +24,4 @@ public class CommentListManager {
         return commentsMap.getOrDefault(videoId, new ArrayList<>());
     }
 
-    public void clearCommentsForVideo(int videoId) {
-        commentsMap.remove(videoId);
-    }
 }

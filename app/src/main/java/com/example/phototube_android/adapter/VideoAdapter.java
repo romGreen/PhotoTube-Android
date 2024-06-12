@@ -1,5 +1,4 @@
 package com.example.phototube_android.adapter;
-import static com.example.phototube_android.MainActivity.videoList;
 
 import com.bumptech.glide.Glide;
 
@@ -32,7 +31,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public VideoAdapter(Context context, List<Video> videos) {
         this.context = context;
         this.videos = videos;
-        this.filteredVideoList = new ArrayList<>(); // Initially, filtered list is the same as original list
+        this.filteredVideoList = new ArrayList<>();
 
     }
 
@@ -61,8 +60,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Video currentVideo = filteredVideoList.get(position);
         holder.videoNameTextView.setText(currentVideo.getVideoName());
         holder.authorTextView.setText(currentVideo.getAuthor());
+        holder.viewsTextView.setText(currentVideo.getViews());
+        holder.timeAgoTextView.setText(currentVideo.getTimeAgo());
         Glide.with(context)
-                .load(currentVideo.getImagePath()) // Here currentVideo.getImagePath() should return a valid URL or file path
+                .load(currentVideo.getImagePath())
                 .into(holder.image);
 
         holder.itemView.setOnClickListener(v -> {
@@ -71,6 +72,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             intent.putExtra("videoName", currentVideo.getVideoName());
             intent.putExtra("author", currentVideo.getAuthor());
             intent.putExtra("videoResource", currentVideo.getVideoPath());
+            intent.putExtra("views", currentVideo.getViews());
+            intent.putExtra("timeAgo", currentVideo.getTimeAgo());
+
             Gson gson = new Gson();
             String videoJson = gson.toJson(currentVideo);
             intent.putExtra("video_data", videoJson);
@@ -86,6 +90,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     static class VideoViewHolder extends RecyclerView.ViewHolder {
         final TextView videoNameTextView;
         final TextView authorTextView;
+
+        final TextView timeAgoTextView;
+        final TextView viewsTextView;
         final ImageView image;
 
         VideoViewHolder(View itemView) {
@@ -93,6 +100,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             videoNameTextView = itemView.findViewById(R.id.videoName);
             authorTextView = itemView.findViewById(R.id.author);
             image = itemView.findViewById(R.id.image);
+            timeAgoTextView = itemView.findViewById(R.id.timeAgo);
+            viewsTextView = itemView.findViewById(R.id.viewsCount);
         }
     }
 

@@ -44,8 +44,7 @@ public class FullscreenActivity extends AppCompatActivity {
         String videoJson = getIntent().getStringExtra("video_data");
         if (videoJson != null) {
             Gson gson = new Gson();
-            Video video = gson.fromJson(videoJson, Video.class); // Ensure the Video class is defined correctly
-            // Use `video` object as needed
+            Video video = gson.fromJson(videoJson, Video.class);
         }
 
         btnExitFullscreen.setOnClickListener(v -> {
