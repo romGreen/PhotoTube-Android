@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Video"
+        android:text="@string/add_video11"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -33,7 +33,7 @@
         android:id="@+id/editTextVideoName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Video Name"
+        android:hint="@string/video_name"
         android:inputType="text"
         android:minHeight="48dp"
         android:background="@drawable/rounded_edittext"
@@ -44,7 +44,7 @@
         android:id="@+id/editTextAuthor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Author"
+        android:hint="@string/author"
         android:inputType="text"
         android:minHeight="48dp"
         android:background="@drawable/rounded_edittext"
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/button_color"
-        android:text="Upload Video"
+        android:text="@string/upload_video111"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

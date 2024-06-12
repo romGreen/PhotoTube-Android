@@ -15,6 +15,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.example.phototube_android.entities.PhotoHandler;
 import com.example.phototube_android.entities.User;
 import com.example.phototube_android.entities.UserListManager;
@@ -33,10 +37,11 @@ public class RegisterActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        EdgeToEdge.enable(this);
         initialize();
         clickEventer();
+
 
     }
 
@@ -53,9 +58,6 @@ public class RegisterActivity extends AppCompatActivity  {
         rgGender = findViewById(R.id.rg_gender);
          btnRegister = findViewById(R.id.btn_register);
         galleryPhoto = findViewById(R.id.btn_upload_image);
-
-
-
     }
     private void clickEventer()
     {
@@ -79,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity  {
 
         // Basic validation
         if (firstName.isEmpty()) {
-            Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Please enter your first name", Toast.LENGTH_SHORT).show());
             return;
         }
 

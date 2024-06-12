@@ -60,5 +60,15 @@
     <string name="hint_video_name">hint_video</string>
     <string name="select_image">select image</string>
     <string name="select_video">select video</string>
+    <string name="upload_video">Upload Video</string>
+    <string name="add_video11">Add Video</string>
+    <string name="video_name">Video Name</string>
+    <string name="author">Author</string>
+    <string name="upload_video111">Upload Video</string>
+    <string name="home111">Home</string>
+    <string name="video_name111">Video Name</string>
+    <string name="author1111">Author</string>
+    <string name="_123k_views">123K views</string>
+    <string name="_3_days_ago32">3 days ago</string>
 
 </resources>
