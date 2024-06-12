@@ -50,5 +50,15 @@
     <string name="_3_days_ago">3 days ago</string>
     <string name="title_activity_video">fullscreen</string>
     <string name="fullscreen">fullscreen</string>
+    <string name="share">string</string>
+    <string name="edit_or_delete">delete</string>
+    <string name="edit">edit</string>
+    <string name="delete">delete</string>
+    <string name="edit_video">edit</string>
+    <string name="hint_video_author">hint author</string>
+    <string name="save">save</string>
+    <string name="hint_video_name">hint_video</string>
+    <string name="select_image">select image</string>
+    <string name="select_video">select video</string>
 
 </resources>

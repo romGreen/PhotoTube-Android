@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressLint("StaticFieldLeak")
     public static VideoAdapter videoAdapter;
     public static List<Video> videoList;
-    private BottomNavigationView bottomNavigationView;
     private LinearLayout loginSection,addVideoSection,registerSection;
 
 
