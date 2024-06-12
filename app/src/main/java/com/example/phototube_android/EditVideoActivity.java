@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +26,8 @@ public class EditVideoActivity extends AppCompatActivity {
     private EditText editVideoName;
     private EditText editVideoAuthor;
     private int videoId;
+    private ImageView selectedThumbnail;
+    private TextView selectedVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +36,9 @@ public class EditVideoActivity extends AppCompatActivity {
 
         editVideoName = findViewById(R.id.editVideoName);
         editVideoAuthor = findViewById(R.id.editVideoAuthor);
+        selectedThumbnail = findViewById(R.id.selectedThumbnail);
+        selectedVideo = findViewById(R.id.selectedVideo);
         Button saveButton = findViewById(R.id.saveButton);
-
-       /* buttonChooseVideo.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("video/*");
-            startActivityForResult(intent, VIDEO_PICK_CODE);
-        });*/
 
         videoId = getIntent().getIntExtra("VIDEO_ID", -1);
         if (videoId != -1) {
@@ -45,8 +46,21 @@ public class EditVideoActivity extends AppCompatActivity {
             if (video != null) {
                 editVideoName.setText(video.getVideoName());
                 editVideoAuthor.setText(video.getAuthor());
+                selectedImagePath = video.getImagePath();
+                selectedVideoPath = video.getVideoPath();
+
+                if (!selectedImagePath.isEmpty()) {
+                    selectedThumbnail.setImageURI(Uri.parse(selectedImagePath));
+                    selectedThumbnail.setVisibility(View.VISIBLE);
+                }
+
+                if (!selectedVideoPath.isEmpty()) {
+                    selectedVideo.setText(selectedVideoPath);
+                    selectedVideo.setVisibility(View.VISIBLE);
+                }
             }
         }
+
         findViewById(R.id.selectImageButton).setOnClickListener(view -> selectImage());
         findViewById(R.id.selectVideoButton).setOnClickListener(view -> selectVideo());
         saveButton.setOnClickListener(v -> saveVideoDetails());
@@ -78,13 +92,18 @@ public class EditVideoActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_IMAGE_PICK:
                     selectedImagePath = getPathFromUri(data.getData());
+                    selectedThumbnail.setImageURI(Uri.parse(selectedImagePath));
+                    selectedThumbnail.setVisibility(View.VISIBLE);
                     break;
                 case REQUEST_VIDEO_PICK:
                     selectedVideoPath = getPathFromUri(data.getData());
+                    selectedVideo.setText(selectedVideoPath);
+                    selectedVideo.setVisibility(View.VISIBLE);
                     break;
             }
         }
     }
+
     private String getPathFromUri(Uri uri) {
         String[] projection = { MediaStore.Images.Media.DATA };
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
@@ -106,7 +125,6 @@ public class EditVideoActivity extends AppCompatActivity {
         }
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
-        //setResult(RESULT_OK);
         finish();
     }
 }
