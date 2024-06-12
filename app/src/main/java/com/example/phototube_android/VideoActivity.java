@@ -1,5 +1,7 @@
 package com.example.phototube_android;
 
+import static com.example.phototube_android.MainActivity.videoAdapter;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -7,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -38,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VideoActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_EDIT_VIDEO = 1;
     private VideoView videoView;
     private TextView videoNameTextView, authorTextView, viewsTextView, timeAgoTextView;
     private EditText commentEditText;
@@ -48,7 +53,7 @@ public class VideoActivity extends AppCompatActivity {
     private TextView likeCountTextView;
     private ImageButton submitCommentButton;
     private static final int REQUEST_FULLSCREEN = 1;  // Request code for starting FullscreenActivity
-
+    private boolean wasPlaying;
 
 
     @Override
@@ -129,20 +134,109 @@ public class VideoActivity extends AppCompatActivity {
         });
 
 
+        // share button
+        ImageButton shareButton = findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserManager.getInstance().isLoggedIn()) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String shareBody = "Choose share option";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                    startActivity(Intent.createChooser(shareIntent, "Share via"));
+                }
+                Toast.makeText(VideoActivity.this, "You have to be logged in to share", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        //delete
+        ImageButton DeleteButton = findViewById(R.id.deleteButton);
+        DeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserManager.getInstance().isLoggedIn()) {
+                    deleteVideo(videoId);
+                }
+            }
+        });
+
+        //edit button
+        ImageButton editButton = findViewById(R.id.editButton);
+        editButton.setOnClickListener(view -> {
+            if (UserManager.getInstance().isLoggedIn()) {
+                Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
+                intent.putExtra("VIDEO_ID", videoId); // Assuming videoId is the ID of the current video
+                startActivityForResult(intent, REQUEST_CODE_EDIT_VIDEO);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (videoView.isPlaying()) {
+            videoView.pause();
+            wasPlaying = true;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasPlaying) {
+            videoView.start();
+            wasPlaying = false;
+        }
+        if (videoAdapter != null) {
+            videoView.setVideoPath(video.getVideoPath());
+            videoView.start();
+            videoAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void deleteVideo(int videoId) {
+        for (Video videoC :  VideoListManager.getInstance(). getVideoList()) {
+            if (videoC.getId() == videoId) {
+                video = videoC;
+                break;
+            }
+        }
+        videoAdapter.deleteVideo(video);  // Call the delete method on your adapter
+        finish(); // Close this activity and go back
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_EDIT_VIDEO && resultCode == RESULT_OK) {
+            updateVideoUI(); // This method resumes playback where it was paused
+        }
         if (requestCode == REQUEST_FULLSCREEN && resultCode == RESULT_OK && data != null) {
             int position = data.getIntExtra("currentPosition", 0); // Retrieve the current position of the video
             if (videoView != null) {
                 videoView.seekTo(position);
-                videoView.start(); // Resume video playback
+                videoView.start();
             }
         }
     }
 
+    private void updateVideoUI() {
+        int videoId = getIntent().getIntExtra("videoId", -1);
+        for (Video videoC :  VideoListManager.getInstance(). getVideoList()) {
+            if (videoC.getId() == videoId) {
+                video = videoC;
+                break;
+            }
+        }   if (video != null) {
+            videoNameTextView.setText(video.getVideoName());
+            authorTextView.setText(video.getAuthor());
+
+            videoView.setVideoPath(video.getVideoPath());
+            videoView.start();
+        }
+    }
 
 
     private void setButtonListeners(Video currentVideo) {

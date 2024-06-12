@@ -86,6 +86,7 @@ public class AddVideoActivity extends Activity {
         Video newVideo = new Video(counterId, videoName, author, "0 views", "today", imagePath, videoPath);
         counterId++;
         videoAdapter.addVideoToList(newVideo);
+
         Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Close this activity
     }

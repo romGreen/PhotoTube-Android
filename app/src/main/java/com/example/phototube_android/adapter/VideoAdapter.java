@@ -1,5 +1,7 @@
 package com.example.phototube_android.adapter;
 
+import static com.example.phototube_android.MainActivity.videoAdapter;
+
 import com.bumptech.glide.Glide;
 
 import android.content.Context;
@@ -47,6 +49,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
+    public void deleteVideo(Video video) {
+        videos.remove(video);
+        this.getFilteredVideoList().remove(video);
+        this.notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

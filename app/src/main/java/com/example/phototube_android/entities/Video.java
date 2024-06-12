@@ -107,7 +107,7 @@ public class Video {
         return videoPath;
     }
 
-    public void setName(String name) {
+    public void setVideoName(String name) {
         this.name = name;
     }
 
