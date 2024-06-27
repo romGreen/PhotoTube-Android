@@ -1,6 +1,4 @@
-package com.example.phototube_android;
-
-import static com.example.phototube_android.MainActivity.videoAdapter;
+package com.example.phototube_android.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.phototube_android.adapter.VideoAdapter;
-import com.example.phototube_android.entities.Video;
+import com.example.phototube_android.R;
 
 public class AddVideoActivity extends Activity {
     private static int counterId = 11;
@@ -77,19 +74,19 @@ public class AddVideoActivity extends Activity {
                 Toast.makeText(AddVideoActivity.this, "author name must not be empty", Toast.LENGTH_LONG).show();
 
             } else {
-                uploadVideo(videoName, author, imageUri, videoUri);
+                //uploadVideo(videoName, author, imageUri, videoUri);
             }
         });
     }
 
-    private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
-        Video newVideo = new Video(counterId, videoName, author, "0 views", "today", imagePath, videoPath);
-        counterId++;
-        videoAdapter.addVideoToList(newVideo);
-
-        Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
-        finish(); // Close this activity
-    }
+//    private void uploadVideo(String videoName, String author, String imagePath, String videoPath) {
+//        Video newVideo = new Video();
+//        counterId++;
+//        videoAdapter.addVideoToList(newVideo);
+//
+//        Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
+//        finish(); // Close this activity
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

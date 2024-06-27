@@ -1,6 +1,5 @@
-package com.example.phototube_android;
-
-import static com.example.phototube_android.MainActivity.videoAdapter;
+/*
+package com.example.phototube_android.ui.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +14,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.phototube_android.entities.Video;
+import com.example.phototube_android.R;
+import com.example.phototube_android.model.Video;
 import com.example.phototube_android.entities.VideoListManager;
 
 public class EditVideoActivity extends AppCompatActivity {
@@ -128,3 +128,4 @@ public class EditVideoActivity extends AppCompatActivity {
         finish();
     }
 }
+*/

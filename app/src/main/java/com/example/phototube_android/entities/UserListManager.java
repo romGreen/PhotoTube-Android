@@ -1,5 +1,7 @@
 package com.example.phototube_android.entities;
 
+import com.example.phototube_android.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 

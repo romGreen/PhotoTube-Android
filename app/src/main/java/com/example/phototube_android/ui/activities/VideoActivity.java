@@ -1,24 +1,13 @@
-package com.example.phototube_android;
-
-import static com.example.phototube_android.MainActivity.videoAdapter;
+/*
+package com.example.phototube_android.ui.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.MediaController;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -28,18 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.phototube_android.adapter.CommentsAdapter;
-import com.example.phototube_android.entities.Comment;
-import com.example.phototube_android.entities.CommentListManager;
-import com.example.phototube_android.entities.User;
-import com.example.phototube_android.entities.UserListManager;
+import com.example.phototube_android.R;
 import com.example.phototube_android.entities.UserManager;
-import com.example.phototube_android.entities.Video;
 import com.example.phototube_android.entities.VideoListManager;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.phototube_android.model.Comment;
+import com.example.phototube_android.model.User;
+import com.example.phototube_android.model.Video;
+import com.example.phototube_android.ui.adapters.CommentsAdapter;
 
 public class VideoActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_EDIT_VIDEO = 1;
@@ -319,4 +303,4 @@ public class VideoActivity extends AppCompatActivity {
 
 
 
-}
+}*/

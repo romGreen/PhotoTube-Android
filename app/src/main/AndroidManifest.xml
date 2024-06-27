@@ -10,7 +10,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -31,10 +34,10 @@
         </provider>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,16 +46,16 @@
             </intent-filter>
         </activity> <!-- Declaration for LoginActivity -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activities.LoginActivity"
             android:exported="false" /> <!-- `exported="false"` if not accessible outside the app -->
-        <activity android:name=".VideoActivity" />
-        <activity android:name=".AddVideoActivity" />
-        <activity android:name=".FullscreenActivity"
+        <!--<activity android:name=".ui.activities.VideoActivity" /> -->
+        <activity android:name=".ui.activities.AddVideoActivity" />
+        <activity android:name=".ui.activities.FullscreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/fullscreen"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".EditVideoActivity" />
+        <!--<activity android:name=".ui.activities.EditVideoActivity" /> -->
 
     </application>
 

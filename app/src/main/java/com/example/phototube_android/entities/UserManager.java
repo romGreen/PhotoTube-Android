@@ -1,9 +1,6 @@
 package com.example.phototube_android.entities;
 
-import android.content.Intent;
-
-import com.example.phototube_android.LoginActivity;
-import com.example.phototube_android.MainActivity;
+import com.example.phototube_android.model.User;
 
 public class UserManager {
     // Static instance of UserManager
