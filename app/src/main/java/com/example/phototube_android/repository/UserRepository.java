@@ -21,6 +21,7 @@ import retrofit2.Response;
 public class UserRepository {
     private UserDao userDao;
     private ApiService apiService;
+    private ApiService aa;
 
     // Define the callback interfaces
     public interface UserValidationCallback {
