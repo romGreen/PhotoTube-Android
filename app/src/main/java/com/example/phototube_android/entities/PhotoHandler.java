@@ -95,6 +95,7 @@ public class PhotoHandler {
         Uri photoHolderUri = null;
         if (requestCode == CAMERA_REQUEST) {
             Bitmap photoHolderBitmap = (Bitmap) data.getExtras().get("data");
+            assert photoHolderBitmap != null;
             photoHolderUri = bitmapToUri(photoHolderBitmap, activity);
             imageView.setImageURI(photoHolderUri);
             Bitmap result= getBitmapFromUri(photoHolderUri,activity);

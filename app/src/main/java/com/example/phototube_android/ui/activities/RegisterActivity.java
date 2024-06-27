@@ -1,9 +1,9 @@
-package com.example.phototube_android;
+package com.example.phototube_android.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -11,41 +11,62 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.phototube_android.R;
 import com.example.phototube_android.entities.PhotoHandler;
-import com.example.phototube_android.entities.User;
-import com.example.phototube_android.entities.UserListManager;
+import com.example.phototube_android.model.User;
+import com.example.phototube_android.repository.UserRepository;
+import com.example.phototube_android.ui.viewmodels.UserViewModel;
+import com.example.phototube_android.ui.viewmodels.UserViewModelFactory;
 
-public class RegisterActivity extends AppCompatActivity  {
 
+public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFirstName, etLastName, etUsername, etEmail, etPassword, etRePassword;
     private PhotoHandler photoHandler;
     private RadioGroup rgGender;
     private Button btnRegister;
     private Bitmap resultBit;
-    private ImageButton galleryPhoto,cameraPhoto;
-
+    private ImageButton galleryPhoto, cameraPhoto;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         EdgeToEdge.enable(this);
+
+        UserRepository userRepository = new UserRepository(getApplication());
+        UserViewModelFactory userViewModelFactory = new UserViewModelFactory(userRepository);
+        userViewModel = new ViewModelProvider(this, userViewModelFactory).get(UserViewModel.class);
+
         initialize();
         clickEventer();
 
-
+        // Observe the user addition result
+        userViewModel.getCurrentUser().observe(this, newUser -> {
+            Log.d("RegisterActivity", "Inside observer");
+            if (newUser != null) {
+                Log.d("RegisterActivity", "User registered successfully");
+                Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                // Navigate to LoginActivity
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                // Finish RegisterActivity so that the user can't go back to it
+                finish();
+                Log.d("RegisterActivity", "Navigation to LoginActivity");
+            } else {
+                Log.d("RegisterActivity", "New user is null");
+            }
+        });
     }
-
-    private void initialize(){
+    private void initialize() {
         ImageView regPhoto = findViewById(R.id.reg_photo);
         photoHandler = new PhotoHandler(regPhoto, this);
         cameraPhoto = findViewById(R.id.add_selfie);
@@ -56,15 +77,16 @@ public class RegisterActivity extends AppCompatActivity  {
         etPassword = findViewById(R.id.et_password);
         etRePassword = findViewById(R.id.et_re_password);
         rgGender = findViewById(R.id.rg_gender);
-         btnRegister = findViewById(R.id.btn_register);
+        btnRegister = findViewById(R.id.btn_register);
         galleryPhoto = findViewById(R.id.btn_upload_image);
     }
-    private void clickEventer()
-    {
+
+    private void clickEventer() {
         btnRegister.setOnClickListener(v -> registerUser());
         galleryPhoto.setOnClickListener(v -> photoHandler.checkPermissionAndOpenGallery());
         cameraPhoto.setOnClickListener(v -> photoHandler.askCameraPermissions());
     }
+
     private void registerUser() {
         // Get user input
         String firstName = etFirstName.getText().toString().trim();
@@ -79,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity  {
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gender = (selectedGenderButton != null) ? selectedGenderButton.getText().toString() : "";
 
-        // Basic validation
+      /*  // Basic validation
         if (firstName.isEmpty()) {
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Please enter your first name", Toast.LENGTH_SHORT).show());
             return;
@@ -117,57 +139,41 @@ public class RegisterActivity extends AppCompatActivity  {
 
         if (!isValidUsername(username)) {
             // Handle invalid username
-            Toast.makeText(this, "username must be at least 4 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Username must be at least 4 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
             return; // or show an error message
         }
 
         if (!isValidPassword(password)) {
             // Handle invalid password
-            Toast.makeText(this, "password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
             return; // or show an error message
         }
+*/
+        // Prepare the User object
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setDisplayname(firstName + " " + lastName);
+        user.setGender(gender);
+        String profileImgUri = PhotoHandler.bitmapToUri(resultBit, this).toString();
+        user.setProfileImg(profileImgUri);
 
-        // Check if username already exists
-        for (User existingUser : UserListManager.getInstance().getUserList()) {
-            if (existingUser.getUsername().equals(username)) {
-                Toast.makeText(this, "Username already exists. Please choose another username.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-
-
-
-        User user = new User(firstName, lastName, username, email, password, gender, PhotoHandler.bitmapToUri(resultBit,this));
-
-
-
-        // Add user to UserListManager
-        UserListManager.getInstance().addUser(user);
-
-        // Show success message
-        Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
-
-        // Navigate to LoginActivity
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-
-        // Finish RegisterActivity so that the user can't go back to it
-        finish();
+        // Use ViewModel to add user
+        userViewModel.addUser(user);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        photoHandler.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        photoHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-    //handling the result of the photo
+
+    // Handling the result of the photo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        this.resultBit=photoHandler.onActivityResult(requestCode,resultCode,data);
+        this.resultBit = photoHandler.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
     public boolean isValidUsername(String username) {
         boolean hasLetter = false;
@@ -208,6 +214,4 @@ public class RegisterActivity extends AppCompatActivity  {
         }
         return false;
     }
-
 }
-

@@ -1,11 +1,9 @@
-package com.example.phototube_android.adapter;
+package com.example.phototube_android.ui.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,9 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phototube_android.R;
-import com.example.phototube_android.entities.Comment;
+import com.example.phototube_android.model.Comment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
@@ -43,10 +40,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment currentComment = comments.get(position);
 
-        holder.usernameTextView.setText(currentComment.getUsername() + ": ");
-        holder.commentTextView.setText(currentComment.getCommentText());
+        holder.usernameTextView.setText(currentComment.getCreatedBy() + ": ");
+        holder.commentTextView.setText(currentComment.getText());
 
-        if (loggedInUsername != null && !loggedInUsername.isEmpty() && currentComment.getUsername().equals(loggedInUsername)) {
+        if (loggedInUsername != null && !loggedInUsername.isEmpty() && currentComment.getCreatedBy().equals(loggedInUsername)) {
             holder.editButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setVisibility(View.VISIBLE);
         } else {
@@ -69,7 +66,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             builder.setTitle("Full Comment");
 
             final TextView fullCommentTextView = new TextView(context);
-            fullCommentTextView.setText(currentComment.getCommentText());
+            fullCommentTextView.setText(currentComment.getText());
             fullCommentTextView.setPadding(16, 16, 16, 16);
             builder.setView(fullCommentTextView);
 
@@ -99,14 +96,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         EditText editCommentEditText = dialogView.findViewById(R.id.edit_comment_edit_text);
         ImageButton saveEditButton = dialogView.findViewById(R.id.save_edit_button);
 
-        editCommentEditText.setText(comments.get(position).getCommentText());
+        editCommentEditText.setText(comments.get(position).getText());
 
         AlertDialog dialog = builder.create();
 
         saveEditButton.setOnClickListener(v -> {
             String editedCommentText = editCommentEditText.getText().toString();
             if (!editedCommentText.isEmpty()) {
-                comments.get(position).setCommentText(editedCommentText);
+                comments.get(position).setText(editedCommentText);
                 notifyItemChanged(position);
                 dialog.dismiss();
             }

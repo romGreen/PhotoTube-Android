@@ -1,16 +1,15 @@
-package com.example.phototube_android;
+package com.example.phototube_android.ui.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.MediaController;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.phototube_android.entities.Video;
+import com.example.phototube_android.R;
+import com.example.phototube_android.model.Video;
 import com.google.gson.Gson;
 
 
