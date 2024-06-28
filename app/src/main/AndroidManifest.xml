@@ -6,6 +6,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -34,10 +35,10 @@
         </provider>
 
         <activity
-            android:name=".ui.activities.RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,11 +47,11 @@
             </intent-filter>
         </activity> <!-- Declaration for LoginActivity -->
         <activity
-            android:name=".ui.activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" /> <!-- `exported="false"` if not accessible outside the app -->
         <!--<activity android:name=".ui.activities.VideoActivity" /> -->
-        <activity android:name=".ui.activities.AddVideoActivity" />
-        <activity android:name=".ui.activities.FullscreenActivity"
+        <activity android:name=".activities.AddVideoActivity" />
+        <activity android:name=".activities.FullscreenActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/fullscreen"
             android:screenOrientation="landscape">

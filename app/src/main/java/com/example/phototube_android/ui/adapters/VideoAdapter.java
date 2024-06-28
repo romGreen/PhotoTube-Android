@@ -7,49 +7,49 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
-import com.example.phototube_android.model.Video;
 
+
+import com.example.phototube_android.classes.Video;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private final List<Video> videos;
     private final Context context;
     public List<Video> filteredVideoList;
 
+
     public VideoAdapter(Context context, List<Video> videos) {
         this.context = context;
         this.videos = videos;
-        this.filteredVideoList = new ArrayList<>(videos); // Initialize with all videos
+        this.filteredVideoList = new ArrayList<>();
+
     }
 
-    // Updated function to set videos
-    public void setVideos(List<Video> newVideos) {
-        filteredVideoList.clear();
-        filteredVideoList.addAll(newVideos);
-        notifyDataSetChanged(); // Notify the adapter of the data change
-    }
 
     public List<Video> getFilteredVideoList() {
         return filteredVideoList;
     }
 
+    //func to add video
     public void addVideoToList(Video video) {
         videos.add(video);
         this.getFilteredVideoList().add(video);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
     public void deleteVideo(Video video) {
         videos.remove(video);
         this.getFilteredVideoList().remove(video);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -65,10 +65,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.videoNameTextView.setText(currentVideo.getTitle());
         holder.authorTextView.setText(currentVideo.getCreatedBy());
         holder.viewsTextView.setText(currentVideo.getViews());
-        holder.timeAgoTextView.setText(currentVideo.getDate());
-        Glide.with(context)
-                .load(currentVideo.getImageUrl())
-                .into(holder.image);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String formattedDate = sdf.format(currentVideo.getDate());
+        holder.timeAgoTextView.setText(formattedDate);
 
 //        holder.itemView.setOnClickListener(v -> {
 //            Intent intent = new Intent(context, VideoActivity.class);
@@ -94,6 +93,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     static class VideoViewHolder extends RecyclerView.ViewHolder {
         final TextView videoNameTextView;
         final TextView authorTextView;
+
         final TextView timeAgoTextView;
         final TextView viewsTextView;
         final ImageView image;
@@ -108,13 +108,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         }
     }
 
+
+    // Filter logic
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Video> filteredList = new ArrayList<>();
                 if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(videos);
+                    filteredList.addAll(videos); // no filter applied
                 } else {
                     String filterPattern = constraint.toString().toLowerCase().trim();
                     for (Video video : videos) {

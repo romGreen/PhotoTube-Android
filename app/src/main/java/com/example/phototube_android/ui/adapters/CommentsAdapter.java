@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phototube_android.R;
-import com.example.phototube_android.model.Comment;
+import com.example.phototube_android.classes.Comment;
 
 import java.util.List;
 
