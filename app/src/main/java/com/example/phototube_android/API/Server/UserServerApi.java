@@ -2,9 +2,12 @@ package com.example.phototube_android.API.Server;
 
 import com.example.phototube_android.classes.User;
 
+import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.TokenResponse;
 import com.example.phototube_android.response.isExistResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -30,4 +33,7 @@ public interface UserServerApi {
 
     @DELETE("/api/users/{id}")
     Call<Void> deleteUser(@Body User user);
+
+    @GET("/users/{userId}/videos")
+    Call<List<Video>> getUserVideos(@Path("userId") String userId);
 }

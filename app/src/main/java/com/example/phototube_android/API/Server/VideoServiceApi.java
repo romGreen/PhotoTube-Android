@@ -16,9 +16,9 @@ public interface VideoServiceApi {
     @GET("/api/videos")
     Call<List<Video>> getVideos();
     @GET("/api/users/{id}/videos")
-    Call<List<Video>> getUserVideos(@Body List<Video> videos);
+    Call<List<Video>> getUserVideos();
     @GET("/api/users/{id}/videos/{pid}")
-    Call<Video> gerVideo(@Body Video video);
+    Call<Video> getVideo(@Body Video video);
 
     @PATCH("/api/users/{id}/videos/{pid}")
     Call<Video> updateVideo(@Body Video video);

@@ -41,10 +41,10 @@ public class LoginActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
-            //put the token on a singelton
+            //put the token on a singleton
             UserManager.getInstance().setToken(user.getData().getToken());
             UserManager.getInstance().setUserId(user.getData().getUserId());
-            //Gets the user detalies
+            //Gets the user details
            getUser();
 
             Toast toast = Toast.makeText(LoginActivity.this,
@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUser(){
-
         userLogViewModel = new ViewModelProvider(this).get(UserLogViewModel.class);
         userLogViewModel.getUser();
 
@@ -108,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginRequest loginRequest = new LoginRequest(username,password);
         userViewModel.loginUser(loginRequest);
+        UserManager.getInstance().login();
+        finish();
     }
 
     private void validation()

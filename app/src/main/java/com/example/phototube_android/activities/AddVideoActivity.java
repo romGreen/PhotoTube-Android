@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.phototube_android.R;
 import com.example.phototube_android.classes.Video;
 
+import java.util.Date;
+
 
 public class AddVideoActivity extends Activity {
 
@@ -65,8 +67,10 @@ public class AddVideoActivity extends Activity {
         Video newVideo = new Video();
         newVideo.setVideoUrl(videoUri);
         newVideo.setTitle(editTextVideoName.getText().toString().trim());
+        newVideo.setDate(new Date());
 
        videoAdapter.addVideoToList(newVideo);
+       videoAdapter.notifyDataSetChanged();
 
         Toast.makeText(this, "Video uploaded successfully!", Toast.LENGTH_SHORT).show();
         finish(); // Close this activity

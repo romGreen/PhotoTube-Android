@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 
 
@@ -22,7 +23,7 @@ import java.util.Locale;
 
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
-    private final List<Video> videos;
+    private List<Video> videos;
     private final Context context;
     public List<Video> filteredVideoList;
 
@@ -30,7 +31,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public VideoAdapter(Context context, List<Video> videos) {
         this.context = context;
         this.videos = videos;
-        this.filteredVideoList = new ArrayList<>();
+        this.filteredVideoList = videos;
 
     }
 
@@ -51,6 +52,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.getFilteredVideoList().remove(video);
         this.notifyDataSetChanged();
     }
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+        notifyDataSetChanged();  // Notify any registered observers that the data set has changed.
+    }
 
     @NonNull
     @Override
@@ -64,10 +69,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Video currentVideo = filteredVideoList.get(position);
         holder.videoNameTextView.setText(currentVideo.getTitle());
         holder.authorTextView.setText(currentVideo.getCreatedBy());
-        holder.viewsTextView.setText(currentVideo.getViews());
+        holder.viewsTextView.setText(String.valueOf(currentVideo.getViews()));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String formattedDate = sdf.format(currentVideo.getDate());
         holder.timeAgoTextView.setText(formattedDate);
+        Glide.with(context)
+                .load(currentVideo.getImageUrl())
+                .placeholder(R.drawable.youtube_image) // Optional placeholder while image loads
+                .into(holder.image);
+
 
 //        holder.itemView.setOnClickListener(v -> {
 //            Intent intent = new Intent(context, VideoActivity.class);
@@ -93,7 +103,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     static class VideoViewHolder extends RecyclerView.ViewHolder {
         final TextView videoNameTextView;
         final TextView authorTextView;
-
         final TextView timeAgoTextView;
         final TextView viewsTextView;
         final ImageView image;
