@@ -7,7 +7,7 @@
     android:padding="16dp"
     android:id="@+id/login"
     android:background="@color/background_color"
-    tools:context=".ui.activities.LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <!-- YouTube Logo -->
 

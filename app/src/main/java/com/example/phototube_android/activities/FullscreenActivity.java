@@ -1,4 +1,4 @@
-package com.example.phototube_android.ui.activities;
+package com.example.phototube_android.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.phototube_android.R;
-import com.example.phototube_android.model.Video;
+import com.example.phototube_android.classes.Video;
 import com.google.gson.Gson;
 
 

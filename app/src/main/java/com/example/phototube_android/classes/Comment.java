@@ -1,4 +1,4 @@
-package com.example.phototube_android.model;
+package com.example.phototube_android.classes;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

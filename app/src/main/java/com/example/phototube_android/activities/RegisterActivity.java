@@ -1,9 +1,8 @@
-package com.example.phototube_android.ui.activities;
+package com.example.phototube_android.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,10 +19,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.phototube_android.R;
 import com.example.phototube_android.entities.PhotoHandler;
-import com.example.phototube_android.model.User;
-import com.example.phototube_android.repository.UserRepository;
-import com.example.phototube_android.ui.viewmodels.UserViewModel;
-import com.example.phototube_android.ui.viewmodels.UserViewModelFactory;
+import com.example.phototube_android.classes.User;
+import com.example.phototube_android.viewmodels.UserViewModel;
+
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -42,29 +40,25 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         EdgeToEdge.enable(this);
 
-        UserRepository userRepository = new UserRepository(getApplication());
-        UserViewModelFactory userViewModelFactory = new UserViewModelFactory(userRepository);
-        userViewModel = new ViewModelProvider(this, userViewModelFactory).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+
+
+        userViewModel.getRegisterData().observe(this,user -> {
+            if(!user.isSuccess()){
+                Toast toast = Toast.makeText(RegisterActivity.this,
+                        user.getMessage(), Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+            Toast toast = Toast.makeText(RegisterActivity.this,
+                    user.getMessage(), Toast.LENGTH_LONG);
+            toast.show();
+            startActivity(new Intent(this, LoginActivity.class));
+        });
 
         initialize();
         clickEventer();
-
-        // Observe the user addition result
-        userViewModel.getCurrentUser().observe(this, newUser -> {
-            Log.d("RegisterActivity", "Inside observer");
-            if (newUser != null) {
-                Log.d("RegisterActivity", "User registered successfully");
-                Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                // Navigate to LoginActivity
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-                // Finish RegisterActivity so that the user can't go back to it
-                finish();
-                Log.d("RegisterActivity", "Navigation to LoginActivity");
-            } else {
-                Log.d("RegisterActivity", "New user is null");
-            }
-        });
     }
     private void initialize() {
         ImageView regPhoto = findViewById(R.id.reg_photo);
@@ -148,11 +142,16 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
             return; // or show an error message
         }
-*/
+
+
+//*/
+//       userViewModel.isExist(username);
+
         // Prepare the User object
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setEmail(email);
         user.setDisplayname(firstName + " " + lastName);
         user.setGender(gender);
         String profileImgUri = PhotoHandler.bitmapToUri(resultBit, this).toString();
