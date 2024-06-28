@@ -70,5 +70,7 @@
     <string name="author1111">Author</string>
     <string name="_123k_views">123K views</string>
     <string name="_3_days_ago32">3 days ago</string>
+    <string name="most_viewed_video">Most viewed video</string>
+    <string name="profile_image">profile image\n</string>
 
 </resources>

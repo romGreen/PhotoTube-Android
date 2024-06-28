@@ -15,7 +15,6 @@ import java.util.List;
 
 public class Video {
 
-
     @PrimaryKey(autoGenerate = true)
     private int id;
     @SerializedName("_id")
@@ -36,6 +35,9 @@ public class Video {
     @SerializedName("videoUrl")
     private String videoUrl;
 
+    @SerializedName("imageUrl")
+    private String imageUrl;
+
     @SerializedName("createdBy")
     private String createdBy;
 
@@ -43,6 +45,13 @@ public class Video {
     private List<String> comments;
 
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getTitle() {
         return title;

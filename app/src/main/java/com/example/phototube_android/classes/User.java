@@ -32,7 +32,7 @@ public class User {
     private String profileImg; // Changed to String to match Mongoose schema
 
     @SerializedName("videoList")
-    private List<String> videoList; // Assuming videoList contains ObjectIds which are strings
+    private List<Video> videoList; // Assuming videoList contains ObjectIds which are strings
 
     // Getters and Setters
     public int getId() {
@@ -97,11 +97,11 @@ public class User {
         this.profileImg = profileImg;
     }
 
-    public List<String> getVideoList() {
+    public List<Video> getVideoList() {
         return videoList;
     }
 
-    public void setVideoList(List<String> videoList) {
+    public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
     }
 }

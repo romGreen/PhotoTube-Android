@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getVideos();
 
-        recyclerView.setAdapter(videoAdapter);
+        //recyclerView.setAdapter(videoAdapter);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -89,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                videoAdapter.getFilter().filter(newText);
+                if (videoAdapter != null) {
+                    videoAdapter.getFilter().filter(newText);
+                }
                 return true;
             }
         });
@@ -115,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             videoAdapter = new VideoAdapter(this,  videoList.getData());
-            videoAdapter.getFilteredVideoList().addAll(videoList.getData());
+           // videoAdapter.getFilteredVideoList().addAll(videoList.getData());
+            recyclerView.setAdapter(videoAdapter);
         });
     }
 
@@ -133,10 +136,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateMenuItems() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu leftMenu = navigationView.getMenu();
+
         boolean isLoggedIn = UserManager.getInstance().isLoggedIn();
 
         addVideoSection.setVisibility(isLoggedIn ? View.VISIBLE : View.GONE);
         registerSection.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
+        loginSection.setVisibility(isLoggedIn ?  View.GONE : View.VISIBLE);
         leftMenu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
         leftMenu.findItem(R.id.nav_register).setVisible(!isLoggedIn);
         leftMenu.findItem(R.id.nav_add_video).setVisible(isLoggedIn);

@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.phototube_android.API.Server.UserServerApi;
 import com.example.phototube_android.classes.User;
+import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
 import com.example.phototube_android.response.isExistResponse;
 
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -46,6 +49,7 @@ public class UserApi {
 
     }
 
+
     public void addUser(User user,MutableLiveData<ApiResponse<User>> registerLiveData){
         userServerApi.addUser(user).enqueue(new Callback<User>(){
             @Override
@@ -62,6 +66,27 @@ public class UserApi {
         public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
             registerLiveData.postValue(new ApiResponse<>
                     (null, "Error: " + t.getMessage(), false));
+            }
+        });
+    }
+
+    // Function to fetch user videos
+    public void getUserVideos(String userId, Callback<List<Video>> callback) {
+        Call<List<Video>> call = userServerApi.getUserVideos(userId);
+        call.enqueue(new Callback<List<Video>>() {
+            @Override
+            public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
+                if (response.isSuccessful()) {
+                    callback.onResponse(call, response);
+                } else {
+                    // Error handling - could include logging or modifying the response
+                    callback.onFailure(call, new RuntimeException("Response unsuccessful"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Video>> call, Throwable t) {
+                callback.onFailure(call, t);
             }
         });
     }

@@ -60,5 +60,7 @@
     <string name="hint_video_name">hint_video</string>
     <string name="select_image">select image</string>
     <string name="select_video">select video</string>
+    <string name="most_viewed_video">Most viewed video</string>
+    <string name="profile_image">profile image\n</string>
 
 </resources>
