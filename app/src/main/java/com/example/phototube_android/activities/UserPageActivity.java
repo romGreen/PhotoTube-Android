@@ -1,3 +1,4 @@
+/*
 package com.example.phototube_android.activities;
 
 import android.os.Bundle;
@@ -63,8 +64,8 @@ public class UserPageActivity extends AppCompatActivity {
 
     private void updateUI(User user) {
         displayNameTextView.setText(user.getDisplayname());
-        List<Video> videos = user.getVideoList();
-        Video mostViewedVideo = getMostViewedVideo(videos);
+        List<String> videos = user.getVideoList();
+        String mostViewedVideo = getMostViewedVideo(videos);
 
         if (mostViewedVideo != null) {
             updateMostViewedVideo(mostViewedVideo);
@@ -74,7 +75,7 @@ public class UserPageActivity extends AppCompatActivity {
         videoAdapter.setVideos(videos); // Set remaining videos to the adapter
     }
 
-    private void updateMostViewedVideo(Video video) {
+    private void updateMostViewedVideo(String video) {
         videoTitleTextView.setText(video.getTitle());
        // Glide.with(this).load(video.getImageUrl).into(videoThumbnailImageView);
     }
@@ -93,3 +94,4 @@ public class UserPageActivity extends AppCompatActivity {
         return mostViewed;
     }
 }
+*/

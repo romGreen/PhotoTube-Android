@@ -43,7 +43,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     //func to add video
     public void addVideoToList(Video video) {
         videos.add(video);
-        this.getFilteredVideoList().add(video);
+        //this.getFilteredVideoList().add(video);
         this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
@@ -75,7 +75,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.timeAgoTextView.setText(formattedDate);
         Glide.with(context)
                 .load(currentVideo.getImageUrl())
-                .placeholder(R.drawable.youtube_image) // Optional placeholder while image loads
+                .placeholder(R.drawable.youtube_image)
                 .into(holder.image);
 
 

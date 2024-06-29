@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phototube_android.R;
+import com.example.phototube_android.activities.FullscreenActivity;
 import com.example.phototube_android.entities.UserManager;
-import com.example.phototube_android.entities.VideoListManager;
-import com.example.phototube_android.model.Comment;
-import com.example.phototube_android.model.User;
-import com.example.phototube_android.model.Video;
+import com.example.phototube_android.classes.Comment;
+import com.example.phototube_android.classes.User;
+import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.ui.adapters.CommentsAdapter;
 
 public class VideoActivity extends AppCompatActivity {
@@ -216,7 +216,6 @@ public class VideoActivity extends AppCompatActivity {
         }   if (video != null) {
             videoNameTextView.setText(video.getVideoName());
             authorTextView.setText(video.getAuthor());
-
             videoView.setVideoPath(video.getVideoPath());
             videoView.start();
         }
@@ -303,4 +302,5 @@ public class VideoActivity extends AppCompatActivity {
 
 
 
-}*/
+}
+*/

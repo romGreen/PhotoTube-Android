@@ -1,11 +1,15 @@
 package com.example.phototube_android.API;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.phototube_android.API.Server.UserServerApi;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.entities.FileUtils;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.ApiResponse;
@@ -13,9 +17,14 @@ import com.example.phototube_android.response.TokenResponse;
 import com.example.phototube_android.response.isExistResponse;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -49,23 +58,47 @@ public class UserApi {
 
     }
 
+    public void addUser(Context context, User user, MutableLiveData<ApiResponse<User>> registerLiveData){
 
-    public void addUser(User user,MutableLiveData<ApiResponse<User>> registerLiveData){
-        userServerApi.addUser(user).enqueue(new Callback<User>(){
+        RequestBody usernamePart = RequestBody.create(MediaType.parse("text/plain"), user.getUsername());
+        RequestBody passwordPart = RequestBody.create(MediaType.parse("text/plain"), user.getPassword());
+        RequestBody displaynamePart = RequestBody.create(MediaType.parse("text/plain"), user.getDisplayname());
+        RequestBody emailPart = RequestBody.create(MediaType.parse("text/plain"), user.getEmail());
+        RequestBody genderPart = RequestBody.create(MediaType.parse("text/plain"), user.getGender());
+
+
+        String profileImgString = user.getProfileImg();
+        Uri profileImgUri = Uri.parse(profileImgString);
+        File imageFile;
+        try {
+            imageFile = FileUtils.getFileFromUri(context, profileImgUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle error
+            return;
+        }
+
+
+        RequestBody filePart = RequestBody.create(MediaType.parse("multipart/form-data"),imageFile);
+        MultipartBody.Part profileImg = MultipartBody.Part.createFormData("profileImg", imageFile.getName(), filePart);
+
+        Call<User> call = userServerApi.addUser(usernamePart, passwordPart, displaynamePart, emailPart, genderPart, profileImg);
+
+        call.enqueue(new Callback<User>(){
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-            if (response.isSuccessful() && response.body() != null) {
-                registerLiveData.postValue(new ApiResponse<>
-                        (response.body(), "User register successfully", true));
-            } else {
-                registerLiveData.postValue(new ApiResponse<>
-                        (null, "Username exists", false));
+                if (response.isSuccessful() && response.body() != null) {
+                    registerLiveData.postValue(new ApiResponse<>
+                            (response.body(), "User register successfully", true));
+                } else {
+                    registerLiveData.postValue(new ApiResponse<>
+                            (null, "Username exists", false));
+                }
             }
-        }
-        @Override
-        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-            registerLiveData.postValue(new ApiResponse<>
-                    (null, "Error: " + t.getMessage(), false));
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                registerLiveData.postValue(new ApiResponse<>
+                        (null, "Error: " + t.getMessage(), false));
             }
         });
     }
@@ -114,33 +147,5 @@ public class UserApi {
         });
     }
 
-//    public void getUser(MutableLiveData<ApiResponse<User>> userLiveData){
-//        String token = UserManager.getInstance().getToken();
-//        String userId = UserManager.getInstance().getUserId();
-//        userServerApi.getUser(userId,"Bearer " + token).enqueue(new Callback<User>(){
-//            @Override
-//            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    userLiveData.postValue(new ApiResponse<>
-//                            (response.body(), "User Info gets", true));
-//                } else {
-//                    userLiveData.postValue(new ApiResponse<>
-//                            (null, "Error in getting userInfo", false));
-//                }
-//            }
-//            @Override
-//            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-//                userLiveData.postValue(new ApiResponse<>
-//                        (null, "Error: " + t.getMessage(), false));
-//            }
-//        });
-//    }
-
-
-//
-//    public void updateUser()
-//    {}
-//    public void deleteUser()
-//    {}
 
 }
