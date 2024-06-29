@@ -1,6 +1,8 @@
 package com.example.phototube_android.repository;
 
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 import com.example.phototube_android.API.UserApi;
 import com.example.phototube_android.API.UserLogApi;
@@ -19,15 +21,14 @@ import retrofit2.Callback;
 public class UserRepository {
 
     private UserApi userApi;
-    private UserLogApi userLogApi;
 
 
     public UserRepository() {
         userApi = new UserApi();
 
     }
-    public void addUser(User user, MutableLiveData<ApiResponse<User>> RegisterLiveData) {
-        userApi.addUser(user,RegisterLiveData);
+    public void addUser(Context context, User user, MutableLiveData<ApiResponse<User>> RegisterLiveData) {
+        userApi.addUser(context, user,RegisterLiveData);
     }
 
 

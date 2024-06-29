@@ -158,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.setProfileImg(profileImgUri);
 
         // Use ViewModel to add user
-        userViewModel.addUser(user);
+        userViewModel.addUser(this, user);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.phototube_android.viewmodels;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -25,7 +26,6 @@ import retrofit2.Response;
 public class UserViewModel extends ViewModel {
         private UserRepository userRepository;
         private MutableLiveData<ApiResponse<User>> registerData;
-
         private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
         public UserViewModel() {
             this.userRepository = new UserRepository();
@@ -43,8 +43,8 @@ public class UserViewModel extends ViewModel {
             return this.tokenData;
         }
 
-        public void addUser(User user) {
-            userRepository.addUser(user,registerData);
+        public void addUser(Context context, User user) {
+            userRepository.addUser(context, user,registerData);
         }
 
 

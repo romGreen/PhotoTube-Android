@@ -35,7 +35,7 @@ public class Video {
     @SerializedName("videoUrl")
     private String videoUrl;
 
-    @SerializedName("imageUrl")
+    @SerializedName("videoImage")
     private String imageUrl;
 
     @SerializedName("createdBy")
