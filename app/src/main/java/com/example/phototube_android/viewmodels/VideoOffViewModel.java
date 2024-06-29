@@ -14,11 +14,12 @@ public class VideoOffViewModel extends ViewModel {
     private VideoRepository videoRepository;
 
     private MutableLiveData<ApiResponse<List<Video>>> VideoData;
+    private MutableLiveData<ApiResponse<Video>> singleVideoData;
 
     private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
     public VideoOffViewModel() {
         this.videoRepository = new VideoRepository();
-
+        this.singleVideoData = new MutableLiveData<>();
         this.VideoData = new MutableLiveData<>();
         this.tokenData = new MutableLiveData<>();
     }
@@ -33,4 +34,10 @@ public class VideoOffViewModel extends ViewModel {
     {
         videoRepository.getVideos(VideoData);
     }
+
+    public void getVideo(String userId, String videoId)
+    {
+        videoRepository.getVideo(userId, videoId, singleVideoData);
+    }
+
 }

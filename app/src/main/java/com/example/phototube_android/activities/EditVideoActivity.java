@@ -1,5 +1,5 @@
-/*
-package com.example.phototube_android.ui.activities;
+
+package com.example.phototube_android.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,123 +9,115 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.phototube_android.R;
-import com.example.phototube_android.model.Video;
-import com.example.phototube_android.entities.VideoListManager;
+import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.entities.UserManager;
+import com.example.phototube_android.requests.VideoUpdateRequest;
+import com.example.phototube_android.viewmodels.UserViewModel;
+import com.example.phototube_android.viewmodels.VideoInViewModel;
+
+import java.io.File;
+
 
 public class EditVideoActivity extends AppCompatActivity {
-    private static final int REQUEST_IMAGE_PICK = 1;
-    private static final int REQUEST_VIDEO_PICK = 2;
-    private String selectedImagePath = "";
-    private String selectedVideoPath = "";
+
+    private static final int VIDEO_PICK_CODE = 1001;
+
     private EditText editVideoName;
-    private EditText editVideoAuthor;
-    private int videoId;
-    private ImageView selectedThumbnail;
+    private ImageButton buttonChooseVideo;
+    private Button buttonEditVideo;
     private TextView selectedVideo;
+    private String videoUri; // URI for the video file
+    private String videoId;
+    private VideoInViewModel videoInViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_video);
+        initialize();
+        clickerListen();
 
-        editVideoName = findViewById(R.id.editVideoName);
-        editVideoAuthor = findViewById(R.id.editVideoAuthor);
-        selectedThumbnail = findViewById(R.id.selectedThumbnail);
-        selectedVideo = findViewById(R.id.selectedVideo);
-        Button saveButton = findViewById(R.id.saveButton);
 
-        videoId = getIntent().getIntExtra("VIDEO_ID", -1);
-        if (videoId != -1) {
-            Video video = findVideoById(videoId);
-            if (video != null) {
-                editVideoName.setText(video.getVideoName());
-                editVideoAuthor.setText(video.getAuthor());
-                selectedImagePath = video.getImagePath();
-                selectedVideoPath = video.getVideoPath();
 
-                if (!selectedImagePath.isEmpty()) {
-                    selectedThumbnail.setImageURI(Uri.parse(selectedImagePath));
-                    selectedThumbnail.setVisibility(View.VISIBLE);
-                }
+    }
+    private void initialize() {
+        editVideoName = findViewById(R.id.editTextVideoTitle);
+        buttonChooseVideo = findViewById(R.id.buttonChooseVideoEdit);
+        buttonEditVideo = findViewById(R.id.buttonEditVideo);
+        selectedVideo = findViewById(R.id.selectedVideoEdit);
 
-                if (!selectedVideoPath.isEmpty()) {
-                    selectedVideo.setText(selectedVideoPath);
-                    selectedVideo.setVisibility(View.VISIBLE);
-                }
-            }
+        Intent intent = getIntent();
+        // Retrieve the extras
+        videoId = intent.getStringExtra("videoId");
+        String title = intent.getStringExtra("Title");
+        String videoUrl = intent.getStringExtra("VideoUrl");
+
+        if (videoId != null) {
+            editVideoName.setText(title);
+            selectedVideo.setText(videoUrl);
+            selectedVideo.setVisibility(View.VISIBLE);
+            videoInViewModel =  new ViewModelProvider(this).get(VideoInViewModel.class);
         }
 
-        findViewById(R.id.selectImageButton).setOnClickListener(view -> selectImage());
-        findViewById(R.id.selectVideoButton).setOnClickListener(view -> selectVideo());
-        saveButton.setOnClickListener(v -> saveVideoDetails());
     }
-
-    private Video findVideoById(int id) {
-        for (Video video : VideoListManager.getInstance().getVideoList()) {
-            if (video.getId() == id) {
-                return video;
+    private void clickerListen() {
+        buttonEditVideo.setOnClickListener(v -> {
+            String title = editVideoName.getText().toString().trim();
+          if (title.isEmpty()) {
+                Toast.makeText(this, "Video name must not be empty", Toast.LENGTH_LONG).show();
+            } else {
+                File videoFile = new File(videoUri);
+                VideoUpdateRequest VUR = new VideoUpdateRequest(title,videoFile);
+                videoInViewModel.updateVideo(UserManager.getInstance().getUserId(), videoId,VUR);
+                startActivity(new Intent(this, MainActivity.class));
             }
-        }
-        return null;
-    }
+        });
 
-    private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+        buttonChooseVideo.setOnClickListener(v -> {
+            Intent intentUp = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intentUp, VIDEO_PICK_CODE);
+        });
     }
-
-    private void selectVideo() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_VIDEO_PICK);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_IMAGE_PICK:
-                    selectedImagePath = getPathFromUri(data.getData());
-                    selectedThumbnail.setImageURI(Uri.parse(selectedImagePath));
-                    selectedThumbnail.setVisibility(View.VISIBLE);
-                    break;
-                case REQUEST_VIDEO_PICK:
-                    selectedVideoPath = getPathFromUri(data.getData());
-                    selectedVideo.setText(selectedVideoPath);
+        if (resultCode == RESULT_OK && data != null) {
+            Uri selectedUri = data.getData();
+            if (selectedUri != null) {
+                String filePath = getPathFromUri(selectedUri);
+                if (requestCode == VIDEO_PICK_CODE) {
+                    videoUri = filePath;
+                    selectedVideo.setText("Selected Video: " + filePath);
                     selectedVideo.setVisibility(View.VISIBLE);
-                    break;
+                }
             }
         }
     }
 
     private String getPathFromUri(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = { MediaStore.Video.Media.DATA };
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            return cursor.getString(column_index);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
         }
-        if (cursor != null) cursor.close();
         return null;
     }
 
-    private void saveVideoDetails() {
-        Video video = findVideoById(videoId);
-        if (video != null) {
-            video.setVideoName(editVideoName.getText().toString());
-            video.setAuthor(editVideoAuthor.getText().toString());
-            video.setImagePath(selectedImagePath);
-            video.setVideoPath(selectedVideoPath);
-        }
-        Intent returnIntent = new Intent();
-        setResult(RESULT_OK, returnIntent);
-        finish();
-    }
+
+
+
 }
-*/
+

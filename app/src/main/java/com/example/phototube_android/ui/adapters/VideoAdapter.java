@@ -1,12 +1,19 @@
 package com.example.phototube_android.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import com.example.phototube_android.activities.EditVideoActivity;
+import android.media.Image;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +25,7 @@ import com.example.phototube_android.classes.Video;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,15 +51,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     //func to add video
     public void addVideoToList(Video video) {
         videos.add(video);
-        this.getFilteredVideoList().add(video);
+        //this.getFilteredVideoList().add(video);
         this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
-    public void deleteVideo(Video video) {
-        videos.remove(video);
-        this.getFilteredVideoList().remove(video);
-        this.notifyDataSetChanged();
-    }
     public void setVideos(List<Video> videos) {
         this.videos = videos;
         notifyDataSetChanged();  // Notify any registered observers that the data set has changed.
@@ -67,32 +70,55 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Video currentVideo = filteredVideoList.get(position);
+
         holder.videoNameTextView.setText(currentVideo.getTitle());
         holder.authorTextView.setText(currentVideo.getCreatedBy());
         holder.viewsTextView.setText(String.valueOf(currentVideo.getViews()));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String formattedDate = sdf.format(currentVideo.getDate());
+
+
+        // Load a frame from the video using Glide
+        String videoUrl = currentVideo.getVideoUrl();
+        Glide.with(holder.thumbnail.getContext())
+                .asBitmap()
+                .load("http://10.0.2.2:1324" +videoUrl)
+                .frame(1000000) // Load frame at 1 second (1000000 microseconds)
+                .into(holder.thumbnail);
+
+        // Load creator image
+        String creatorImageUrl = currentVideo.getCreatorImg();
+        Glide.with(holder.creatorImage.getContext())
+                .load("http://10.0.2.2:1324" + creatorImageUrl)
+                .into(holder.creatorImage);
+
+        // Format date
+        String formattedDate = formatDate(currentVideo.getDate());
         holder.timeAgoTextView.setText(formattedDate);
-        Glide.with(context)
-                .load(currentVideo.getImageUrl())
-                .placeholder(R.drawable.youtube_image) // Optional placeholder while image loads
-                .into(holder.image);
 
-
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, VideoActivity.class);
-//            intent.putExtra("videoId", currentVideo.getId());
-//            intent.putExtra("videoName", currentVideo.getTitle());
-//            intent.putExtra("author", currentVideo.getCreatedBy());
-//            intent.putExtra("videoResource", currentVideo.getVideoUrl());
-//            intent.putExtra("views", currentVideo.getViews());
-//            intent.putExtra("timeAgo", currentVideo.getDate());
+// Set click listener for the video thumbnail
+        holder.thumbnail.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), EditVideoActivity.class);
+            intent.putExtra("videoId", currentVideo.get_id());
+            intent.putExtra("Title", currentVideo.getTitle());
+            intent.putExtra("VideoUrl", currentVideo.getVideoUrl());
+            holder.itemView.getContext().startActivity(intent);
+        });
 //
-//            Gson gson = new Gson();
-//            String videoJson = gson.toJson(currentVideo);
-//            intent.putExtra("video_data", videoJson);
-//            context.startActivity(intent);
+//        // Set click listener for the creator image
+//        holder.creatorImage.setOnClickListener(v -> {
+//            Intent intent = new Intent(holder.itemView.getContext(), CreatorProfileActivity.class);
+//            intent.putExtra("creatorId", .getCreatorId());
+//            holder.itemView.getContext().startActivity(intent);
 //        });
+    }
+
+    private String formatDate(Date date) {
+        try {
+            SimpleDateFormat desiredFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            return desiredFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override
@@ -105,13 +131,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         final TextView authorTextView;
         final TextView timeAgoTextView;
         final TextView viewsTextView;
-        final ImageView image;
+        final ImageView thumbnail;
+        final ImageView creatorImage;
 
         VideoViewHolder(View itemView) {
             super(itemView);
             videoNameTextView = itemView.findViewById(R.id.videoName);
             authorTextView = itemView.findViewById(R.id.author);
-            image = itemView.findViewById(R.id.image);
+            thumbnail = itemView.findViewById(R.id.thumbnail);
+            creatorImage = itemView.findViewById(R.id.creatorImage);
             timeAgoTextView = itemView.findViewById(R.id.timeAgo);
             viewsTextView = itemView.findViewById(R.id.viewsCount);
         }

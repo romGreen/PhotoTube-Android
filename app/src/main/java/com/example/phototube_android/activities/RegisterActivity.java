@@ -2,6 +2,7 @@ package com.example.phototube_android.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 import com.example.phototube_android.entities.PhotoHandler;
 import com.example.phototube_android.classes.User;
@@ -62,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void initialize() {
         ImageView regPhoto = findViewById(R.id.reg_photo);
+
         photoHandler = new PhotoHandler(regPhoto, this);
         cameraPhoto = findViewById(R.id.add_selfie);
         etFirstName = findViewById(R.id.et_first_name);
@@ -158,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.setProfileImg(profileImgUri);
 
         // Use ViewModel to add user
-        userViewModel.addUser(user);
+        userViewModel.addUser(this, user);
     }
 
     @Override
