@@ -34,9 +34,11 @@ public interface VideoServiceApi {
             @Part MultipartBody.Part videoFile
     );
 
+    @Multipart
     @PATCH("/api/users/{id}/videos/{pid}")
     Call<Video> updateVideo(@Path("id") String userId, @Path("pid") String videoId,
-                            @Body VideoUpdateRequest updateRequest);
+                            @Part("title") RequestBody title,
+                            @Part MultipartBody.Part video);
 
     @DELETE("/api/users/{id}/videos/{pid}")
     Call<Void> deleteVideo(@Path("id") String userId, @Path("pid") String videoId);

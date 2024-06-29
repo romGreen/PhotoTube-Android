@@ -185,7 +185,15 @@ public class VideoInApi {
 
     public void updateVideo(String userId, String videoId, VideoUpdateRequest updateRequest,
                             MutableLiveData<ApiResponse<Video>> videoLiveData) {
-        Call<Video> call = videoServiceApi.updateVideo(userId, videoId, updateRequest);
+
+        // Create RequestBody instance from title
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), updateRequest.getTitle());
+
+        // Create RequestBody instance from file
+        RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), updateRequest.getVideoUrl());
+        MultipartBody.Part videoPart = MultipartBody.Part.createFormData("videoFile", updateRequest.getVideoUrl().getName(), videoBody);
+
+        Call<Video> call = videoServiceApi.updateVideo(userId, videoId, titleBody,videoPart);
         call.enqueue(new Callback<Video>() {
             @Override
             public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {

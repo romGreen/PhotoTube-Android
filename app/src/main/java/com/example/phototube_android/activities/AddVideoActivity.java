@@ -24,7 +24,6 @@ import java.io.File;
 
 public class AddVideoActivity extends AppCompatActivity {
     private static final int VIDEO_PICK_CODE = 1001;
-    private static final int IMAGE_PICK_CODE = 1002;
 
     private EditText editTextVideoName;
     private ImageButton buttonChooseVideo;
@@ -61,6 +60,7 @@ public class AddVideoActivity extends AppCompatActivity {
             } else {
                 File videoFile = new File(videoUri);
                 videoViewModel.addVideo(UserManager.getInstance().getUserId(), videoName, videoFile);
+                startActivity(new Intent(this, MainActivity.class));
             }
         });
     }

@@ -116,14 +116,14 @@
             app:layout_constraintTop_toBottomOf="@id/re_password">
 
             <RadioButton
-                android:id="@+id/male"
+                android:id="@+id/maleInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/male"
                 android:textColor="@android:color/black" />
 
             <RadioButton
-                android:id="@+id/female"
+                android:id="@+id/femaleInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/female"
@@ -183,8 +183,6 @@
             android:text="@string/update"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reg_photo_info"
             app:layout_constraintVertical_bias="0.534" />
@@ -194,7 +192,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="84dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="40dp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/upload_image"
             android:scaleType="centerInside"

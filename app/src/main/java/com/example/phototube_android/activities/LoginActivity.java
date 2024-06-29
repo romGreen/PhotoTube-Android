@@ -13,12 +13,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.phototube_android.R;
-
+import com.example.phototube_android.activities.MainActivity;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.viewmodels.UserLogViewModel;
 import com.example.phototube_android.viewmodels.UserViewModel;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,57 +32,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initialize();
-        //Token data
-        userViewModel.getTokenData().observe(this,user -> {
-            if(!user.isSuccess()){
-                Toast toast = Toast.makeText(LoginActivity.this,
-                        user.getMessage(), Toast.LENGTH_LONG);
-                toast.show();
-                return;
-            }
-            //put the token on a singleton
-            UserManager.getInstance().setToken(user.getData().getToken());
-            UserManager.getInstance().setUserId(user.getData().getUserId());
-            //Gets the user details
-           getUser();
-
-            Toast toast = Toast.makeText(LoginActivity.this,
-                    user.getMessage(), Toast.LENGTH_LONG);
-
-            toast.show();
-            startActivity(new Intent(this, MainActivity.class));
-        });
-
-
-
-
-
-
     }
 
-    private void getUser(){
+    private void getUser() {
         userLogViewModel = new ViewModelProvider(this).get(UserLogViewModel.class);
-        userLogViewModel.getUser();
-
-        userLogViewModel.getUserData().observe(this,user -> {
-            if(!user.isSuccess()){
-                Toast toast = Toast.makeText(LoginActivity.this,
-                        user.getMessage(), Toast.LENGTH_LONG);
-                toast.show();
+        userLogViewModel.getUserData().observe(this, user -> {
+            if (!user.isSuccess()) {
+                Toast.makeText(LoginActivity.this, user.getMessage(), Toast.LENGTH_LONG).show();
                 return;
             }
-
-            Toast toast = Toast.makeText(LoginActivity.this,
-                    user.getMessage(), Toast.LENGTH_LONG);
-
-            toast.show();
             UserManager.getInstance().setUser(user.getData());
-            UserManager.getInstance().login();
 
         });
+
+        userLogViewModel.getUser();
     }
 
-    private void initialize(){
+    private void initialize() {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         usernameEditText = findViewById(R.id.username_login_text);
@@ -96,36 +61,28 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-
     }
 
     private void loginUser() {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        validation();
 
-        LoginRequest loginRequest = new LoginRequest(username,password);
+        LoginRequest loginRequest = new LoginRequest(username, password);
         userViewModel.loginUser(loginRequest);
-        UserManager.getInstance().login();
-        finish();
-    }
 
-    private void validation()
-    {
-        // Username validation: At least 4 characters with at least 1 letter and 1 number
-       /* if (!username.matches("^(?=.*[a-zA-Z])(?=.*\\d).{4,}$")) {
-            // Handle invalid username case here
-            Toast.makeText(LoginActivity.this, "username must be at least 4 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        userViewModel.getTokenData().observe(this, user -> {
+            if (!user.isSuccess()) {
+                Toast.makeText(LoginActivity.this, user.getMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
+            UserManager.getInstance().setToken(user.getData().getToken());
+            UserManager.getInstance().setUserId(user.getData().getUserId());
+            UserManager.getInstance().login();
 
-        // Password validation: At least 8 characters with at least 1 letter and 1 number
-        if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d).{8,}$")) {
-            // Handle invalid password case here
-            Toast.makeText(LoginActivity.this, "password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
-            return;
-        }
-*/
+            Toast.makeText(LoginActivity.this, user.getMessage(), Toast.LENGTH_LONG).show();
+            getUser();
+            finish();
+        });
+
     }
 }

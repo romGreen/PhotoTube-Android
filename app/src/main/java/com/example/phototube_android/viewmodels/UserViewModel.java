@@ -1,26 +1,15 @@
 package com.example.phototube_android.viewmodels;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.phototube_android.classes.User;
-import com.example.phototube_android.classes.Video;
-import com.example.phototube_android.repository.UserLogRepository;
 import com.example.phototube_android.repository.UserRepository;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
-import com.example.phototube_android.response.isExistResponse;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class UserViewModel extends ViewModel {

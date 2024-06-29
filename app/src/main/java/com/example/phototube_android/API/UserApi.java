@@ -10,11 +10,9 @@ import com.example.phototube_android.API.Server.UserServerApi;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.entities.FileUtils;
-import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
-import com.example.phototube_android.response.isExistResponse;
 
 
 import java.io.File;

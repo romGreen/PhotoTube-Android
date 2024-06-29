@@ -35,8 +35,8 @@ public class Video {
     @SerializedName("videoUrl")
     private String videoUrl;
 
-    @SerializedName("videoImage")
-    private String imageUrl;
+    @SerializedName("creatorImg")
+    private String creatorImg;
 
     @SerializedName("createdBy")
     private String createdBy;
@@ -45,12 +45,12 @@ public class Video {
     private List<String> comments;
 
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCreatorImg() {
+        return creatorImg;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCreatorImg(String creatorImg) {
+        this.creatorImg = creatorImg;
     }
 
     public String getTitle() {

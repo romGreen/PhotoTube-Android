@@ -1,13 +1,15 @@
 package com.example.phototube_android.requests;
 
+import java.io.File;
+
 public class VideoUpdateRequest {
     private String title;
-    private String videoUrl;
+    private File video;
 
     // Constructor, getters and setters
-    public VideoUpdateRequest(String title, String videoUrl) {
+    public VideoUpdateRequest(String title, File videoUrl) {
         this.title = title;
-        this.videoUrl = videoUrl;
+        this.video = videoUrl;
     }
 
     public String getTitle() {
@@ -18,11 +20,11 @@ public class VideoUpdateRequest {
         this.title = title;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public File getVideoUrl() {
+        return video;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setVideoUrl(File videoUrl) {
+        this.video = videoUrl;
     }
 }
