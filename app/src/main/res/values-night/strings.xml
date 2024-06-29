@@ -63,5 +63,7 @@
     <string name="most_viewed_video">Most viewed video</string>
     <string name="profile_image">profile image\n</string>
     <string name="update">update\n</string>
+    <string name="editVideo">Edit Video</string>
+    <string name="update_video">Update Video</string>
 
 </resources>

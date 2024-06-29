@@ -12,17 +12,24 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 
 
+import com.example.phototube_android.activities.UserPageActivity;
+
 import com.example.phototube_android.activities.VideoActivity;
+
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.entities.UserManager;
+import com.example.phototube_android.viewmodels.UserLogViewModel;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -36,6 +43,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private List<Video> videos;
     private final Context context;
     public List<Video> filteredVideoList;
+    private UserLogViewModel userLogViewModel;
+
 
 
     public VideoAdapter(Context context, List<Video> videos) {
@@ -43,6 +52,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.videos = videos;
         this.filteredVideoList = videos;
 
+    }
+
+    public List<Video> getVideos() {
+        return videos;
     }
 
 
@@ -76,7 +89,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.videoNameTextView.setText(currentVideo.getTitle());
         holder.authorTextView.setText(currentVideo.getCreatedBy());
         holder.viewsTextView.setText(String.valueOf(currentVideo.getViews()));
-
+       //holder.creatorImage.setImageURI(currentVideo.getCreatedBy());
 
         // Load a frame from the video using Glide
         String videoUrl = currentVideo.getVideoUrl();
@@ -110,13 +123,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             holder.itemView.getContext().startActivity(intent);
         });
-//
-//        // Set click listener for the creator image
-//        holder.creatorImage.setOnClickListener(v -> {
-//            Intent intent = new Intent(holder.itemView.getContext(), CreatorProfileActivity.class);
-//            intent.putExtra("creatorId", .getCreatorId());
-//            holder.itemView.getContext().startActivity(intent);
-//        });
+
+        // Set click listener for the creator image
+        holder.creatorImage.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), UserPageActivity.class);
+            intent.putExtra("creatorId", currentVideo.getUserId());
+            intent.putExtra("createdBy", currentVideo.getCreatedBy());
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     private String formatDate(Date date) {

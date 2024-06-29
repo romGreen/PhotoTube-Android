@@ -48,6 +48,9 @@
             android:name=".activities.EditVideoActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.UserPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
