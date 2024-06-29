@@ -41,9 +41,19 @@ public class Video {
     @SerializedName("createdBy")
     private String createdBy;
 
+    @SerializedName("userId")
+    private String userId;
+
     @SerializedName("comments")
     private List<String> comments;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getCreatorImg() {
         return creatorImg;

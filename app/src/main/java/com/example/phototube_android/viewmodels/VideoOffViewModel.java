@@ -15,15 +15,33 @@ public class VideoOffViewModel extends ViewModel {
 
     private MutableLiveData<ApiResponse<List<Video>>> VideoData;
     private MutableLiveData<ApiResponse<Video>> singleVideoData;
+    private MutableLiveData<ApiResponse<List<Video>>> userVideosData;
+
 
     private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
     public VideoOffViewModel() {
         this.videoRepository = new VideoRepository();
         this.singleVideoData = new MutableLiveData<>();
+        this.userVideosData = new MutableLiveData<>();
         this.VideoData = new MutableLiveData<>();
         this.tokenData = new MutableLiveData<>();
     }
 
+    public VideoRepository getVideoRepository() {
+        return videoRepository;
+    }
+
+    public MutableLiveData<ApiResponse<Video>> getSingleVideoData() {
+        return singleVideoData;
+    }
+
+    public MutableLiveData<ApiResponse<List<Video>>> getUserVideosData() {
+        return userVideosData;
+    }
+
+    public MutableLiveData<ApiResponse<TokenResponse>> getTokenData() {
+        return tokenData;
+    }
 
     public MutableLiveData<ApiResponse<List<Video>>> getVideoData()
     {
@@ -38,6 +56,10 @@ public class VideoOffViewModel extends ViewModel {
     public void getVideo(String userId, String videoId)
     {
         videoRepository.getVideo(userId, videoId, singleVideoData);
+    }
+
+    public void getUserVideos(String userId) {
+        videoRepository.getUserVideos(userId, userVideosData);
     }
 
 }

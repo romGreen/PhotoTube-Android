@@ -33,6 +33,8 @@ public class EditVideoActivity extends AppCompatActivity {
 
     private EditText editVideoName;
     private ImageButton buttonChooseVideo;
+    private ImageButton buttonDeleteVideo;
+
     private Button buttonEditVideo;
     private TextView selectedVideo;
     private String videoUri; // URI for the video file
@@ -53,6 +55,7 @@ public class EditVideoActivity extends AppCompatActivity {
         editVideoName = findViewById(R.id.editTextVideoTitle);
         buttonChooseVideo = findViewById(R.id.buttonChooseVideoEdit);
         buttonEditVideo = findViewById(R.id.buttonEditVideo);
+        buttonDeleteVideo = findViewById(R.id.buttonDeleteVideo);
         selectedVideo = findViewById(R.id.selectedVideoEdit);
 
         Intent intent = getIntent();
@@ -72,13 +75,19 @@ public class EditVideoActivity extends AppCompatActivity {
     private void clickerListen() {
         buttonEditVideo.setOnClickListener(v -> {
             String title = editVideoName.getText().toString().trim();
-          if (title.isEmpty()) {
+            if (title.isEmpty()) {
                 Toast.makeText(this, "Video name must not be empty", Toast.LENGTH_LONG).show();
+            } else if (videoUri == null || videoUri.isEmpty()) {
+                Toast.makeText(this, "No video selected!", Toast.LENGTH_LONG).show();
             } else {
                 File videoFile = new File(videoUri);
-                VideoUpdateRequest VUR = new VideoUpdateRequest(title,videoFile);
-                videoInViewModel.updateVideo(UserManager.getInstance().getUserId(), videoId,VUR);
-                startActivity(new Intent(this, MainActivity.class));
+                if (!videoFile.exists()) {
+                    Toast.makeText(this, "File path is not valid!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                VideoUpdateRequest VUR = new VideoUpdateRequest(title, videoFile);
+                videoInViewModel.updateVideo(UserManager.getInstance().getUserId(), videoId, VUR);
+                observeUpdateVideoResponse();
             }
         });
 
@@ -86,7 +95,17 @@ public class EditVideoActivity extends AppCompatActivity {
             Intent intentUp = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intentUp, VIDEO_PICK_CODE);
         });
+
+        buttonDeleteVideo.setOnClickListener(v -> {
+            if (videoId != null) {
+                videoInViewModel.deleteVideo(UserManager.getInstance().getUserId(), videoId);
+                observeDeleteVideoResponse();
+            } else {
+                Toast.makeText(this, "Video ID is not available", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,8 +135,26 @@ public class EditVideoActivity extends AppCompatActivity {
         return null;
     }
 
+    private void observeDeleteVideoResponse() {
+        videoInViewModel.getDeleteVideoData().observe(this, apiResponse -> {
+            if (apiResponse.isSuccess()) {
+                Toast.makeText(this, "Video deleted successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                Toast.makeText(this, "Failed to delete video: " + apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
-
+    private void observeUpdateVideoResponse() {
+        videoInViewModel.getUpdateVideoData().observe(this, apiResponse -> {
+            if (apiResponse.isSuccess()) {
+                Toast.makeText(this, "Video updated successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                Toast.makeText(this, "Failed to update video: " + apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 }
-
