@@ -1,10 +1,10 @@
 package com.example.phototube_android.response;
 
-public class DeleteUserResponse {
+public class MessageResponse {
 
     private String message;
 
-    public DeleteUserResponse(String message)
+    public MessageResponse(String message)
     {
         this.message = message;
     }

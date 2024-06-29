@@ -13,7 +13,7 @@ import com.example.phototube_android.entities.FileUtils;
 import com.example.phototube_android.entities.TokenInterceptor;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.response.ApiResponse;
-import com.example.phototube_android.response.DeleteUserResponse;
+import com.example.phototube_android.response.MessageResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,13 +90,13 @@ public class UserLogApi {
     }
 
 
-    public void deleteUser(MutableLiveData<ApiResponse<DeleteUserResponse>> userLiveData) {
+    public void deleteUser(MutableLiveData<ApiResponse<MessageResponse>> userLiveData) {
         String userId = UserManager.getInstance().getUserId();
 
 
-        userServerApi.deleteUser(userId).enqueue(new Callback<DeleteUserResponse>() {
+        userServerApi.deleteUser(userId).enqueue(new Callback<MessageResponse>() {
             @Override
-            public void onResponse(@NonNull Call<DeleteUserResponse> call, @NonNull Response<DeleteUserResponse> response) {
+            public void onResponse(@NonNull Call<MessageResponse> call, @NonNull Response<MessageResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     userLiveData.postValue(new ApiResponse<>(
                             response.body(),
@@ -114,7 +114,7 @@ public class UserLogApi {
             }
 
             @Override
-            public void onFailure(@NonNull Call<DeleteUserResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<MessageResponse> call, @NonNull Throwable t) {
                 userLiveData.postValue(new ApiResponse<>(
                         null,
                         "Error: " + t.getMessage(),

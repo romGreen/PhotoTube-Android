@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.repository.UserLogRepository;
-import com.example.phototube_android.repository.UserRepository;
 import com.example.phototube_android.response.ApiResponse;
-import com.example.phototube_android.response.DeleteUserResponse;
+import com.example.phototube_android.response.MessageResponse;
 
 public class UserLogViewModel extends ViewModel {
 
@@ -19,7 +18,7 @@ public class UserLogViewModel extends ViewModel {
 
     private MutableLiveData<ApiResponse<User>> userUpdateData;
 
-    private MutableLiveData<ApiResponse<DeleteUserResponse>> userDeleteData;
+    private MutableLiveData<ApiResponse<MessageResponse>> userDeleteData;
     public UserLogViewModel() {
         this.userLogRepository = new UserLogRepository();
         this.userUpdateData = new MutableLiveData<>();
@@ -36,7 +35,7 @@ public class UserLogViewModel extends ViewModel {
     {
         return this.userInfoData;
     }
-    public MutableLiveData<ApiResponse<DeleteUserResponse>> getUserDeleteData()
+    public MutableLiveData<ApiResponse<MessageResponse>> getUserDeleteData()
     {
         return this.userDeleteData;
     }

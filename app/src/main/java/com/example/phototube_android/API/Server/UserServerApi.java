@@ -4,7 +4,7 @@ import com.example.phototube_android.classes.User;
 
 import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.requests.LoginRequest;
-import com.example.phototube_android.response.DeleteUserResponse;
+import com.example.phototube_android.response.MessageResponse;
 import com.example.phototube_android.response.TokenResponse;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public interface UserServerApi {
     );
 
     @DELETE("/api/users/{id}")
-    Call<DeleteUserResponse> deleteUser(@Path("id") String id);
+    Call<MessageResponse> deleteUser(@Path("id") String id);
 
     @GET("/users/{userId}/videos")
     Call<List<Video>> getUserVideos(@Path("userId") String userId);

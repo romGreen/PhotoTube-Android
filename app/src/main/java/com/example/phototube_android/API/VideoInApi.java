@@ -235,8 +235,9 @@ public class VideoInApi {
         });
     }
 
-    public void likeVideo(String userId, String videoId, LikeActionRequest likeRequest,
+    public void likeVideo(String videoId, LikeActionRequest likeRequest,
                           MutableLiveData<ApiResponse<Video>> videoLiveData) {
+        String userId = UserManager.getInstance().getUserId();
         Call<Video> call = videoServiceApi.likeAction(userId, videoId, likeRequest);
         call.enqueue(new Callback<Video>() {
             @Override

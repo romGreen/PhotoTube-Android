@@ -21,8 +21,10 @@ import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 
 
+import com.example.phototube_android.activities.VideoActivity;
 import com.example.phototube_android.classes.Video;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,10 +98,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
 // Set click listener for the video thumbnail
         holder.thumbnail.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), EditVideoActivity.class);
+            Intent intent = new Intent(holder.itemView.getContext(), VideoActivity.class);
             intent.putExtra("videoId", currentVideo.get_id());
             intent.putExtra("Title", currentVideo.getTitle());
             intent.putExtra("VideoUrl", currentVideo.getVideoUrl());
+            intent.putExtra("createdBy", currentVideo.getCreatedBy());
+            intent.putExtra("creatorImg",  currentVideo.getCreatorImg());
+            intent.putExtra("videoViews", String.valueOf(currentVideo.getViews()));
+            intent.putExtra("videoDate", formattedDate);
+            intent.putExtra("videoLikes", (Serializable) currentVideo.getLikes());
+
             holder.itemView.getContext().startActivity(intent);
         });
 //

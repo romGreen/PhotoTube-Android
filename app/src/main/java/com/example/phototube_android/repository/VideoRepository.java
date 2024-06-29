@@ -47,9 +47,8 @@ public class VideoRepository {
         videoInApi.deleteVideo(userId, videoId, deleteVideoLiveData);
     }
 
-    public void likeAction(String userId, String videoId, LikeActionRequest likeRequest,
-                          MutableLiveData<ApiResponse<Video>> likeActionLiveData) {
-        videoInApi.likeVideo(userId, videoId, likeRequest, likeActionLiveData);
+    public void likeAction(String videoId, LikeActionRequest likeRequest, MutableLiveData<ApiResponse<Video>> likeActionLiveData) {
+        videoInApi.likeVideo(videoId, likeRequest, likeActionLiveData);
     }
 
 
