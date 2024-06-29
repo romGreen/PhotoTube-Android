@@ -1,18 +1,27 @@
 package com.example.phototube_android.ui.adapters;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phototube_android.R;
 import com.example.phototube_android.classes.Comment;
+import com.example.phototube_android.entities.UserManager;
+import com.example.phototube_android.viewmodels.CommentInViewModel;
+import com.example.phototube_android.viewmodels.VideoInViewModel;
 
 import java.util.List;
 
@@ -23,11 +32,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     private String loggedInUsername;
 
-    public CommentsAdapter(Context context, List<Comment> comments, String loggedInUsername) {
+    private CommentInViewModel commentInViewModel;
+
+    public CommentsAdapter(Context context, List<Comment> comments,CommentInViewModel civm ) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.comments = comments;
-        this.loggedInUsername = loggedInUsername;
+        this.loggedInUsername = UserManager.getInstance().getUserId();
+        this.commentInViewModel = civm;
     }
 
     @Override
@@ -40,7 +52,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         Comment currentComment = comments.get(position);
 
-        holder.usernameTextView.setText(currentComment.getCreatedBy() + ": ");
+        holder.usernameTextView.setText(currentComment.getUsername() + ": ");
         holder.commentTextView.setText(currentComment.getText());
 
         if (loggedInUsername != null && !loggedInUsername.isEmpty() && currentComment.getCreatedBy().equals(loggedInUsername)) {
@@ -58,7 +70,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         holder.deleteButton.setOnClickListener(v -> {
             // Remove comment from the list
-            removeComment(position);
+            deleteComment(position);
         });
 
         holder.commentTextView.setOnClickListener(v -> {
@@ -92,7 +104,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         View dialogView = mInflater.inflate(R.layout.dialog_edit_comment, null);
         builder.setView(dialogView);
 
-
         EditText editCommentEditText = dialogView.findViewById(R.id.edit_comment_edit_text);
         ImageButton saveEditButton = dialogView.findViewById(R.id.save_edit_button);
 
@@ -103,18 +114,49 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         saveEditButton.setOnClickListener(v -> {
             String editedCommentText = editCommentEditText.getText().toString();
             if (!editedCommentText.isEmpty()) {
-                comments.get(position).setText(editedCommentText);
-                notifyItemChanged(position);
-                dialog.dismiss();
+                commentInViewModel.updateComment(comments.get(position).get_id(), editedCommentText);
+                commentInViewModel.getUpdateCommentData().observe((LifecycleOwner) context, commentResponse -> {
+                    if (commentResponse.isSuccess() && commentResponse.getData() != null) {
+                        Toast.makeText(context, commentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        comments.get(position).setText(editedCommentText);
+                        notifyItemChanged(position);
+
+                        // Hide the keyboard
+                        hideKeyboard(editCommentEditText);
+
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(context, "Failed to load user data: " + commentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
-
         dialog.show();
     }
 
-    public void removeComment(int position) {
-        comments.remove(position);
-        notifyItemRemoved(position);
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+
+
+    public void deleteComment(int position) {
+        Comment currentComment = comments.get(position);
+        commentInViewModel.deleteComment(currentComment.get_id());
+        commentInViewModel.getDeleteCommentData().observe((LifecycleOwner) context, commentResponse -> {
+            if (commentResponse.isSuccess() && commentResponse.getData() != null) {
+
+                Toast.makeText(context,  commentResponse.getData().getMessage(), Toast.LENGTH_LONG).show();
+                comments.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, comments.size());
+            } else {
+                Toast.makeText(context, "Failed to load user data: " + commentResponse.getData().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     static class CommentViewHolder extends RecyclerView.ViewHolder {

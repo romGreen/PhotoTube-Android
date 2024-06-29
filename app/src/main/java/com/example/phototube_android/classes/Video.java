@@ -7,6 +7,7 @@ import androidx.room.TypeConverters;
 import com.example.phototube_android.entities.Converters;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -113,6 +114,12 @@ public class Video {
         return id;
     }
 
+    public int countLikes() {
+        return (int) this.getLikes().stream()
+                .filter(like -> "like".equals(like.getAction()))
+                .count();
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -127,7 +134,7 @@ public class Video {
 
     // Getters and setters
 
-    public static class Like {
+    public static class Like implements Serializable {
         @SerializedName("userId")
         private String userId;
 

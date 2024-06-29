@@ -4,11 +4,10 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.phototube_android.API.UserApi;
 import com.example.phototube_android.API.UserLogApi;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.response.ApiResponse;
-import com.example.phototube_android.response.DeleteUserResponse;
+import com.example.phototube_android.response.MessageResponse;
 
 public class UserLogRepository {
     private UserLogApi userLogApi;
@@ -31,7 +30,7 @@ public class UserLogRepository {
     {
         userLogApi.updateUser( context, user, file,userLiveData);
     }
-    public void deleteUser(MutableLiveData<ApiResponse<DeleteUserResponse>> userLiveData)
+    public void deleteUser(MutableLiveData<ApiResponse<MessageResponse>> userLiveData)
     {
         userLogApi.deleteUser(userLiveData);
     }

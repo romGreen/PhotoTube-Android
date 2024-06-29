@@ -74,5 +74,6 @@
     <string name="profile_image">profile image\n</string>
     <string name="update">update\n</string>
     <string name="user_info_page">User Profile</string>
+    <string name="update_video">Update Video</string>
 
 </resources>
