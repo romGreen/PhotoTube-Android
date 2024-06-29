@@ -81,8 +81,8 @@ public class VideoInViewModel extends ViewModel {
     public void deleteVideo(String userId, String videoId) {
         videoRepository.deleteVideo(userId, videoId, deleteVideoData);
     }
-    public void likeAction(String userId, String videoId, LikeActionRequest likeActionRequest) {
-        videoRepository.likeAction(userId, videoId, likeActionRequest, likeActionLiveData);
+    public void likeAction(String videoId, LikeActionRequest likeActionRequest) {
+        videoRepository.likeAction(videoId, likeActionRequest, likeActionLiveData);
     }
 
 }

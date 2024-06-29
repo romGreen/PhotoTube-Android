@@ -5,26 +5,35 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 @Entity(tableName = "comments")
 public class Comment {
-    @PrimaryKey
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @NonNull
     @SerializedName("_id")
-    private String id;
+    private String _id;
 
+    @SerializedName("text")
     private String text;
+
+    @SerializedName("createdBy")
     private String createdBy; // User id
+    @SerializedName("videoId")
     private String videoId;
-    private String date;
+    @SerializedName("date")
+    private Date date;
+
+    @SerializedName("userProfileImg")
+    private String userProfileImg;
+
+    @SerializedName("username")
+    private String username;
 
     // Getters and Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
 
     public String getText() {
         return text;
@@ -50,11 +59,44 @@ public class Comment {
         this.videoId = videoId;
     }
 
-    public String getDate() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @NonNull
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(@NonNull String _id) {
+        this._id = _id;
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getUserProfileImg() {
+        return userProfileImg;
+    }
+
+    public void setUserProfileImg(String userProfileImg) {
+        this.userProfileImg = userProfileImg;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

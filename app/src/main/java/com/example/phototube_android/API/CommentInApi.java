@@ -10,6 +10,7 @@ import com.example.phototube_android.entities.TokenInterceptor;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.CommentRequest;
 import com.example.phototube_android.response.ApiResponse;
+import com.example.phototube_android.response.MessageResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -46,9 +47,9 @@ public class CommentInApi {
         commentServerApi = retrofit.create(CommentServerApi.class);
     }
 
-    public void addComment(String userId, String videoId, String commentText, MutableLiveData<ApiResponse<Comment>> commentLiveData) {
+    public void addComment(String videoId, String commentText, MutableLiveData<ApiResponse<Comment>> commentLiveData) {
         CommentRequest commentRequest = new CommentRequest(commentText);
-
+        String userId = UserManager.getInstance().getUserId();
         Call<Comment> call = commentServerApi.addComment(userId, videoId, commentRequest);
         call.enqueue(new Callback<Comment>() {
             @Override
@@ -59,6 +60,51 @@ public class CommentInApi {
                 } else {
                     // If the server response is not successful, post an error message
                     commentLiveData.postValue(new ApiResponse<>(null, "Failed to add comment: " + response.code(), false));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Comment> call, @NonNull Throwable t) {
+                // Handle the case where the network request itself fails
+                commentLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+            }
+        });
+    }
+
+
+    public void deleteComment(String commentId, MutableLiveData<ApiResponse<MessageResponse>> commentLiveData) {
+        Call<MessageResponse> call = commentServerApi.deleteComment(commentId);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MessageResponse> call, @NonNull Response<MessageResponse> response) {
+                if (response.isSuccessful()) {
+                    // If the request is successful, post the new comment details back to the LiveData
+                    commentLiveData.postValue(new ApiResponse<>(response.body(), "Comment deleted successfully", true));
+                } else {
+                    // If the server response is not successful, post an error message
+                    commentLiveData.postValue(new ApiResponse<>(null, "Failed to delete comment: " + response.code(), false));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MessageResponse> call, @NonNull Throwable t) {
+                // Handle the case where the network request itself fails
+                commentLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+            }
+        });
+    }
+    public void updateComment(String commentId, String commentText, MutableLiveData<ApiResponse<Comment>> commentLiveData) {
+        CommentRequest commentRequest = new CommentRequest(commentText);
+        Call<Comment> call = commentServerApi.updateComment(commentId, commentRequest);
+        call.enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(@NonNull Call<Comment> call, @NonNull Response<Comment> response) {
+                if (response.isSuccessful()) {
+                    // If the request is successful, post the new comment details back to the LiveData
+                    commentLiveData.postValue(new ApiResponse<>(response.body(), "Comment updated successfully", true));
+                } else {
+                    // If the server response is not successful, post an error message
+                    commentLiveData.postValue(new ApiResponse<>(null, "Failed to update comment: " + response.code(), false));
                 }
             }
 
