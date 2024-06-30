@@ -133,8 +133,6 @@ public class UserLogApi {
         RequestBody genderPart = RequestBody.create(MediaType.parse("text/plain"), user.getGender());
 
 
-
-
         MultipartBody.Part profileImgPart = null;
         if (file) {
             Uri profileImgUri = Uri.parse(user.getProfileImg());

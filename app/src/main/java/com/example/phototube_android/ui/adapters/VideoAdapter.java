@@ -54,6 +54,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     }
 
+    public void recoverFilteredVideoList(List<Video> videos) {
+        this.filteredVideoList = videos;
+    }
+
     public List<Video> getVideos() {
         return videos;
     }
@@ -175,7 +179,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Video> filteredList = new ArrayList<>();
                 if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(videos); // no filter applied
+                    filteredList.addAll(videos); // Always use the original list when search query is empty
                 } else {
                     String filterPattern = constraint.toString().toLowerCase().trim();
                     for (Video video : videos) {
@@ -197,4 +201,5 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
         };
     }
+
 }
