@@ -130,8 +130,13 @@ public class UserApi {
             @Override
             public void onResponse(@NonNull Call<TokenResponse> call, @NonNull Response<TokenResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    tokenLiveData.postValue(new ApiResponse<>
-                            (response.body(), "User login successfully", true));
+                    if (response.body().getUserId() != null) {
+                        tokenLiveData.postValue(new ApiResponse<>
+                                (response.body(), "User login successfully", true));
+                    } else {
+                        tokenLiveData.postValue(new ApiResponse<>
+                                (null, "User not found", false));
+                    }
                 } else {
                     tokenLiveData.postValue(new ApiResponse<>
                             (null, "Password or username not good", false));

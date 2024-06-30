@@ -17,8 +17,8 @@ public class VideoRepository {
 
     private VideoInApi videoInApi;
 
-    public VideoRepository() {
 
+    public VideoRepository() {
         videoInApi = new VideoInApi();
     }
 

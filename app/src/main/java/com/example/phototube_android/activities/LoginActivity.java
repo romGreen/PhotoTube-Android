@@ -78,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
             UserManager.getInstance().setToken(user.getData().getToken());
             UserManager.getInstance().setUserId(user.getData().getUserId());
             UserManager.getInstance().login();
-
             Toast.makeText(LoginActivity.this, user.getMessage(), Toast.LENGTH_LONG).show();
             getUser();
             finish();

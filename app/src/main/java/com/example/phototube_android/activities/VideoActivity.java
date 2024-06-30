@@ -3,25 +3,35 @@ package com.example.phototube_android.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.phototube_android.API.CommentOffApi;
 import com.example.phototube_android.R;
 import com.example.phototube_android.activities.EditVideoActivity;
@@ -35,10 +45,11 @@ import com.example.phototube_android.ui.adapters.CommentsAdapter;
 import com.example.phototube_android.viewmodels.CommentInViewModel;
 import com.example.phototube_android.viewmodels.CommentOffViewModel;
 import com.example.phototube_android.viewmodels.VideoInViewModel;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-public class VideoActivity extends AppCompatActivity {
+public class VideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_CODE_EDIT_VIDEO = 1;
     private VideoView videoView;
     private TextView videoNameTextView, authorTextView, viewsTextView, timeAgoTextView;
@@ -59,6 +70,9 @@ public class VideoActivity extends AppCompatActivity {
     private CommentInViewModel commentInViewModel;
 
     private CommentOffViewModel commentOffViewModel;
+    private LinearLayout loginSection, addVideoSection, registerSection;
+    private DrawerLayout drawerLayout;
+
 
 
     @Override
@@ -71,6 +85,7 @@ public class VideoActivity extends AppCompatActivity {
 
     private void Initialize()
     {
+        drawerLayout = findViewById(R.id.drawer_layout);
         videoView = findViewById(R.id.video_view);
         videoNameTextView = findViewById(R.id.videoNameTextView);
         authorTextView = findViewById(R.id.authorTextView);
@@ -78,6 +93,9 @@ public class VideoActivity extends AppCompatActivity {
         timeAgoTextView = findViewById(R.id.timeAgoTextView);
         commentEditText  = findViewById(R.id.commentEditText);
         submitCommentButton = findViewById(R.id.sumbit_Comment_Button);
+        addVideoSection = findViewById(R.id.add_video_section);
+        registerSection = findViewById(R.id.register_section);
+        loginSection = findViewById(R.id.login_section);
         Intent intent = getIntent();
         videoId = intent.getStringExtra("videoId");
 
@@ -118,6 +136,12 @@ public class VideoActivity extends AppCompatActivity {
 
         videoInViewModel = new ViewModelProvider(this).get(VideoInViewModel.class);
         commentInViewModel = new ViewModelProvider(this).get(CommentInViewModel.class);
+        setClickListeners();
+        setupNavigationView();
+
+        if (UserManager.getInstance().isLoggedIn()) {
+            updateUserInfo();
+        }
     }
 
     private void getComments()
@@ -237,6 +261,7 @@ public class VideoActivity extends AppCompatActivity {
             videoView.start();
             wasPlaying = false;
         }
+        setupNavigationView();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -292,9 +317,6 @@ public class VideoActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private void addComment()
     {
         String commentText = commentEditText.getText().toString();
@@ -332,6 +354,102 @@ public class VideoActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateMenuItems(UserManager.getInstance().isLoggedIn());
+    }
+
+    private void setClickListeners() {
+        registerSection.setOnClickListener(v -> startActivity(new Intent(VideoActivity.this, RegisterActivity.class)));
+        loginSection.setOnClickListener(v -> {
+            Class<?> targetActivity = UserManager.getInstance().isLoggedIn() ? UserInfoActivity.class : LoginActivity.class;
+            startActivity(new Intent(VideoActivity.this, targetActivity));
+        });
+        addVideoSection.setOnClickListener(v -> startActivity(new Intent(VideoActivity.this, AddVideoActivity.class)));
+    }
+    private void setupNavigationView() {
+        updateMenuItems(UserManager.getInstance().isLoggedIn());
+    }
+    private void updateMenuItems(boolean isLoggedIn) {
+        addVideoSection.setVisibility(isLoggedIn ? View.VISIBLE : View.GONE);
+        registerSection.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
+        if (isLoggedIn) {
+            updateUserInfo();
+        }
+    }
+
+    private void updateUserInfo() {
+        User user = UserManager.getInstance().getUser();
+        if (user != null) {
+            ImageView userImage = findViewById(R.id.user_image_view);
+            TextView userName = findViewById(R.id.user_name_view);
+            userImage.setVisibility(View.VISIBLE);
+            userName.setText(user.getDisplayname());
+            Glide.with(this).load("http://10.0.2.2:1324" + user.getProfileImg()).into(userImage);
+        }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle Home click
+        } else if (id == R.id.nav_login) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else if (id == R.id.nav_register) {
+            startActivity(new Intent(this, RegisterActivity.class));
+        } else if (id == R.id.nav_logout) {
+            logoutClear();
+        } else if (id == R.id.nav_add_video) {
+            startActivity(new Intent(this, AddVideoActivity.class));
+        } else if (id == R.id.nav_dark_mode) {
+            toggleNightMode();
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void toggleNightMode() {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        AppCompatDelegate.setDefaultNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_YES ?
+                AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+        recreate();
+    }
+    private void logoutClear() {
+        UserManager.getInstance().logout();
+        clearUserInfo();
+        updateMenuItems(false);
+        updateUIForLogout();
+        Toast.makeText(VideoActivity.this, "User Logout", Toast.LENGTH_LONG).show();
+        restartActivity();
+    }
+
+    private void clearUserInfo() {
+        ImageView userImage = findViewById(R.id.user_image_view);
+        TextView userName = findViewById(R.id.user_name_view);
+        userImage.setVisibility(View.GONE);
+        userName.setText("");
+    }
+
+    private void updateUIForLogout() {
+        addVideoSection.setVisibility(View.GONE);
+        registerSection.setVisibility(View.VISIBLE);
+        findViewById(R.id.user_image_view).setVisibility(View.GONE);
+        TextView usernameTextView = findViewById(R.id.usernameTextView);
+        if (usernameTextView != null) {
+            usernameTextView.setText("");
+        }
+    }
+
+    private void restartActivity() {
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
 }
 
