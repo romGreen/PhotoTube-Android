@@ -9,6 +9,7 @@ import com.example.phototube_android.classes.User;
 import com.example.phototube_android.repository.UserLogRepository;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.MessageResponse;
+import com.example.phototube_android.response.UpdateUserResponse;
 
 public class UserLogViewModel extends ViewModel {
 
@@ -16,7 +17,7 @@ public class UserLogViewModel extends ViewModel {
     private MutableLiveData<ApiResponse<User>> userData;
     private MutableLiveData<ApiResponse<User>> userInfoData;
 
-    private MutableLiveData<ApiResponse<User>> userUpdateData;
+    private MutableLiveData<ApiResponse<UpdateUserResponse>> userUpdateData;
 
     private MutableLiveData<ApiResponse<MessageResponse>> userDeleteData;
     public UserLogViewModel() {
@@ -39,7 +40,7 @@ public class UserLogViewModel extends ViewModel {
     {
         return this.userDeleteData;
     }
-    public MutableLiveData<ApiResponse<User>> getUserUpdateData()
+    public MutableLiveData<ApiResponse<UpdateUserResponse>> getUserUpdateData()
     {
         return this.userUpdateData;
     }

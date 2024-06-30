@@ -14,6 +14,7 @@ import com.example.phototube_android.entities.TokenInterceptor;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.MessageResponse;
+import com.example.phototube_android.response.UpdateUserResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -124,7 +125,7 @@ public class UserLogApi {
         });
     }
 
-    public void updateUser(Context context, User user,boolean file,MutableLiveData<ApiResponse<User>> userLiveData) {
+    public void updateUser(Context context, User user,boolean file,MutableLiveData<ApiResponse<UpdateUserResponse>> userLiveData) {
         String userId = UserManager.getInstance().getUserId();
 
         RequestBody passwordPart = RequestBody.create(MediaType.parse("text/plain"), user.getPassword());
@@ -147,9 +148,9 @@ public class UserLogApi {
             RequestBody profileImgRequestBody = RequestBody.create(profileImgFile, MediaType.parse("image/*"));
             profileImgPart = MultipartBody.Part.createFormData("profileImg", profileImgFile.getName(), profileImgRequestBody);
         }
-        userServerApi.updateUser(userId,null,displaynamePart,emailPart,passwordPart,genderPart).enqueue(new Callback<User>() {
+        userServerApi.updateUser(userId,profileImgPart,displaynamePart,emailPart,passwordPart,genderPart).enqueue(new Callback<UpdateUserResponse>() {
             @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+            public void onResponse(@NonNull Call<UpdateUserResponse> call, @NonNull Response<UpdateUserResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     userLiveData.postValue(new ApiResponse<>(
                             response.body(),
@@ -167,7 +168,7 @@ public class UserLogApi {
             }
 
             @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<UpdateUserResponse> call, @NonNull Throwable t) {
                 userLiveData.postValue(new ApiResponse<>(
                         null,
                         "Error: " + t.getMessage(),

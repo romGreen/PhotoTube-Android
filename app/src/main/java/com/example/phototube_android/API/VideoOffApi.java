@@ -78,5 +78,68 @@ public class VideoOffApi {
         });
     }
 
+    public void getUserVideos(String userId, MutableLiveData<ApiResponse<List<Video>>> videoLiveData) {
+        videoServiceApi.getUserVideos(userId).enqueue(new Callback<List<Video>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    videoLiveData.postValue(new ApiResponse<>(
+                            response.body(),
+                            "Videos retrieved successfully",
+                            true
+                    ));
+                } else {
+                    Log.e("VideoInApi", "Failed to retrieve videos: Response code " + response.code());
+                    videoLiveData.postValue(new ApiResponse<>(
+                            null,
+                            "Failed to retrieve videos",
+                            false
+                    ));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
+                Log.e("VideoInApi", "Error retrieving videos: " + t.getMessage(), t);
+                videoLiveData.postValue(new ApiResponse<>(
+                        null,
+                        "Error retrieving videos: " + t.getMessage(),
+                        false
+                ));
+            }
+        });
+    }
+
+    public void getVideo(String userId, String videoId, MutableLiveData<ApiResponse<Video>> videoLiveData) {
+        videoServiceApi.getVideo(userId, videoId).enqueue(new Callback<Video>() {
+            @Override
+            public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    videoLiveData.postValue(new ApiResponse<>(
+                            response.body(),
+                            "Video details retrieved successfully",
+                            true
+                    ));
+                } else {
+                    Log.e("VideoInApi", "Error fetching video: " + response.code());
+                    videoLiveData.postValue(new ApiResponse<>(
+                            null,
+                            "Failed to retrieve video details",
+                            false
+                    ));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Video> call, @NonNull Throwable t) {
+                videoLiveData.postValue(new ApiResponse<>(
+                        null,
+                        "Network error: " + t.getMessage(),
+                        false
+                ));
+            }
+        });
+    }
+
 
 }

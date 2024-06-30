@@ -99,14 +99,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         String videoUrl = currentVideo.getVideoUrl();
         Glide.with(holder.thumbnail.getContext())
                 .asBitmap()
-                .load("http://10.0.2.2:1324" +videoUrl)
+                .load("http://10.0.2.2:" +videoUrl)
                 .frame(1000000) // Load frame at 1 second (1000000 microseconds)
                 .into(holder.thumbnail);
 
         // Load creator image
         String creatorImageUrl = currentVideo.getCreatorImg();
         Glide.with(holder.creatorImage.getContext())
-                .load("http://10.0.2.2:1324" + creatorImageUrl)
+                .load("http://10.0.2.2:" + creatorImageUrl)
                 .into(holder.creatorImage);
 
         // Format date
@@ -117,6 +117,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), VideoActivity.class);
             intent.putExtra("videoId", currentVideo.get_id());
+            intent.putExtra("userId", currentVideo.getUserId());
             intent.putExtra("Title", currentVideo.getTitle());
             intent.putExtra("VideoUrl", currentVideo.getVideoUrl());
             intent.putExtra("createdBy", currentVideo.getCreatedBy());

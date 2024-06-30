@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             UserManager.getInstance().setUser(user.getData());
-
+            startActivity(new Intent(this, MainActivity.class));
         });
 
         userLogViewModel.getUser();
@@ -80,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
             UserManager.getInstance().login();
             Toast.makeText(LoginActivity.this, user.getMessage(), Toast.LENGTH_LONG).show();
             getUser();
-            finish();
         });
 
     }

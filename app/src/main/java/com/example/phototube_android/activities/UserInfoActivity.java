@@ -105,7 +105,7 @@ public class UserInfoActivity extends AppCompatActivity {
         } else if (user.getGender().equalsIgnoreCase("Female")) {
             femaleRadioButton.setChecked(true);
         }
-        String imageUrl = "http://10.0.2.2:1324" + user.getProfileImg();
+        String imageUrl = "http://10.0.2.2:" + user.getProfileImg();
 
         Glide.with(this)
                 .load( imageUrl)
@@ -165,7 +165,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 UserManager.getInstance().getUser().setDisplayname(displayname);
                 UserManager.getInstance().getUser().setGender(gender);
                 UserManager.getInstance().getUser().setPassword(password);
-                Toast.makeText(this,  userResponse.getMessage(), Toast.LENGTH_LONG).show();
+                UserManager.getInstance().getUser().setProfileImg(userResponse.getData().getUser().getProfileImg());
+                Toast.makeText(this,  userResponse.getData().getMessage(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(UserInfoActivity.this , MainActivity.class);
                 startActivity(intent);
             } else {

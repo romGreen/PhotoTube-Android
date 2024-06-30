@@ -4,19 +4,19 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.phototube_android.classes.Video;
-import com.example.phototube_android.repository.VideoRepository;
+import com.example.phototube_android.repository.VideoInRepository;
+import com.example.phototube_android.repository.VideoOffRepository;
 import com.example.phototube_android.response.ApiResponse;
-import com.example.phototube_android.response.TokenResponse;
 
 import java.util.List;
 
 public class VideoOffViewModel extends ViewModel {
-    private VideoRepository videoRepository;
+    private VideoOffRepository videoOffRepository;
     private MutableLiveData<ApiResponse<List<Video>>> VideoData;
     private MutableLiveData<ApiResponse<Video>> singleVideoData;
     private MutableLiveData<ApiResponse<List<Video>>> userVideosData;
     public VideoOffViewModel() {
-        this.videoRepository = new VideoRepository();
+        this.videoOffRepository = new VideoOffRepository();
         this.singleVideoData = new MutableLiveData<>();
         this.userVideosData = new MutableLiveData<>();
         this.VideoData = new MutableLiveData<>();
@@ -36,16 +36,16 @@ public class VideoOffViewModel extends ViewModel {
 
     public void getVideos()
     {
-        videoRepository.getVideos(VideoData);
+        videoOffRepository.getVideos(VideoData);
     }
 
     public void getVideo(String userId, String videoId)
     {
-        videoRepository.getVideo(userId, videoId, singleVideoData);
+        videoOffRepository.getVideo(userId, videoId, singleVideoData);
     }
 
     public void getUserVideos(String userId) {
-        videoRepository.getUserVideos(userId, userVideosData);
+        videoOffRepository.getUserVideos(userId, userVideosData);
     }
 
 }

@@ -13,34 +13,23 @@ import java.io.File;
 import java.util.List;
 
 
-public class VideoRepository {
+public class VideoInRepository {
 
     private VideoInApi videoInApi;
 
 
-    public VideoRepository() {
+    public VideoInRepository() {
         videoInApi = new VideoInApi();
     }
 
-    public void getVideos(MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
-        videoInApi.getVideos(VideoLiveData);
-    }
-
-    public void getUserVideos(String userId, MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
-        videoInApi.getUserVideos(userId, VideoLiveData); //continue that in viewmodelin
-    }
-
-    public void getVideo(String userId, String videoId,MutableLiveData<ApiResponse<Video>> VideoLiveData){
-        videoInApi.getVideo(userId, videoId, VideoLiveData);
-    }
 
     public void addVideo(String userId, String title, File videoFile, MutableLiveData<ApiResponse<Video>> VideoLiveData){
         videoInApi.addVideo(userId, title, videoFile, VideoLiveData);
     }
 
-    public void updateVideo(String userId, String videoId, VideoUpdateRequest updateRequest,
+    public void updateVideo(String userId,boolean file, String videoId, VideoUpdateRequest updateRequest,
                             MutableLiveData<ApiResponse<Video>> videoLiveData) {
-        videoInApi.updateVideo(userId, videoId, updateRequest, videoLiveData);
+        videoInApi.updateVideo(userId,file, videoId, updateRequest, videoLiveData);
     }
 
     public void deleteVideo(String userId, String videoId, MutableLiveData<ApiResponse<Void>> deleteVideoLiveData){

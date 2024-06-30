@@ -48,6 +48,7 @@ import com.example.phototube_android.viewmodels.VideoInViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class VideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_CODE_EDIT_VIDEO = 1;
@@ -104,7 +105,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         authorTextView.setText(intent.getStringExtra("createdBy"));
         viewsTextView.setText(intent.getStringExtra("videoViews"));
         timeAgoTextView.setText(intent.getStringExtra("videoDate"));
-        Uri uri = Uri.parse("http://10.0.2.2:1324"+intent.getStringExtra("VideoUrl"));
+        Uri uri = Uri.parse("http://10.0.2.2:"+intent.getStringExtra("VideoUrl"));
         // Set up the VideoView to play the video
         videoView.setVideoURI(uri);
         videoView.start(); // Start playing automatically
@@ -115,7 +116,19 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         videoView.setMediaController(mediaController);
          fullscreenButton = findViewById(R.id.fullscreenButton);
          shareButton = findViewById(R.id.shareButton);
+
          editButton = findViewById(R.id.edit_Video_Button);
+         String userId =  intent.getStringExtra("userId");
+         if(UserManager.getInstance().isLoggedIn())
+         {
+             if(Objects.equals(UserManager.getInstance().getUserId(), userId))
+                 editButton.setVisibility(View.VISIBLE);
+             else  editButton.setVisibility(View.GONE);
+
+         }
+         else  editButton.setVisibility(View.GONE);
+
+
 
 
         // Handle likes
@@ -223,7 +236,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
                 Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
                 intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
                 intent.putExtra("Title", videoNameTextView.getText()); // Assuming videoId is the ID of the current video
-                intent.putExtra("VideoUrl", "http://10.0.2.2:1324"+getIntent().getStringExtra("VideoUrl")); // Assuming videoId is the ID of the current video
+                intent.putExtra("VideoUrl", "http://10.0.2.2:"+getIntent().getStringExtra("VideoUrl")); // Assuming videoId is the ID of the current video
                 startActivity(intent);
 
         });
@@ -386,7 +399,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             TextView userName = findViewById(R.id.user_name_view);
             userImage.setVisibility(View.VISIBLE);
             userName.setText(user.getDisplayname());
-            Glide.with(this).load("http://10.0.2.2:1324" + user.getProfileImg()).into(userImage);
+            Glide.with(this).load("http://10.0.2.2:" + user.getProfileImg()).into(userImage);
         }
     }
 
