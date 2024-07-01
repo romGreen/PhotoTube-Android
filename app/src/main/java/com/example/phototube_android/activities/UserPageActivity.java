@@ -165,14 +165,14 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
         String videoUrl = video.getVideoUrl();
         Glide.with(videoThumbnailImageView.getContext())
                 .asBitmap()
-                .load("http://10.0.2.2:1324" +videoUrl)
+                .load("http://10.0.2.2:" +videoUrl)
                 .frame(1000000) // Load frame at 1 second (1000000 microseconds)
                 .into(videoThumbnailImageView);
 
         // Load creator image
         String creatorImageUrl = video.getCreatorImg();
         Glide.with(creatorImgView.getContext())
-                .load("http://10.0.2.2:1324" + creatorImageUrl)
+                .load("http://10.0.2.2:" + creatorImageUrl)
                 .into(creatorImgView);
 
     }
@@ -216,7 +216,7 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
             TextView userName = findViewById(R.id.user_name_view);
             userImage.setVisibility(View.VISIBLE);
             userName.setText(user.getDisplayname());
-            Glide.with(this).load("http://10.0.2.2:1324" + user.getProfileImg()).into(userImage);
+            Glide.with(this).load("http://10.0.2.2:" + user.getProfileImg()).into(userImage);
         }
     }
 

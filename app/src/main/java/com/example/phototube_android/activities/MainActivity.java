@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView userName = findViewById(R.id.user_name_view);
             userImage.setVisibility(View.VISIBLE);
             userName.setText(user.getDisplayname());
-            Glide.with(this).load("http://10.0.2.2:1324" + user.getProfileImg()).into(userImage);
+            Glide.with(this).load("http://10.0.2.2:" + user.getProfileImg()).into(userImage);
         }
     }
 

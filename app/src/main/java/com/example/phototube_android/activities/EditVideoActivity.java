@@ -75,20 +75,31 @@ public class EditVideoActivity extends AppCompatActivity {
     private void clickerListen() {
         buttonEditVideo.setOnClickListener(v -> {
             String title = editVideoName.getText().toString().trim();
+            boolean file;
             if (title.isEmpty()) {
                 Toast.makeText(this, "Video name must not be empty", Toast.LENGTH_LONG).show();
-            } else if (videoUri == null || videoUri.isEmpty()) {
-                Toast.makeText(this, "No video selected!", Toast.LENGTH_LONG).show();
-            } else {
-                File videoFile = new File(videoUri);
-                if (!videoFile.exists()) {
-                    Toast.makeText(this, "File path is not valid!", Toast.LENGTH_LONG).show();
-                    return;
+            } else{
+                VideoUpdateRequest VUR;
+                if (videoUri == null || videoUri.isEmpty()) {
+                    file = false;
+                    VUR = new VideoUpdateRequest(title, null);
+                } else {
+                    File videoFile = new File(videoUri);
+                    if (!videoFile.exists()) {
+                        Toast.makeText(this, "File path is not valid!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    file = true;
+                   VUR = new VideoUpdateRequest(title, videoFile);
                 }
-                VideoUpdateRequest VUR = new VideoUpdateRequest(title, videoFile);
-                videoInViewModel.updateVideo(UserManager.getInstance().getUserId(), videoId, VUR);
-                observeUpdateVideoResponse();
+
+                    videoInViewModel.updateVideo(UserManager.getInstance().getUserId(),file, videoId, VUR);
+                    observeUpdateVideoResponse();
+
             }
+
+
+
         });
 
         buttonChooseVideo.setOnClickListener(v -> {
@@ -150,7 +161,7 @@ public class EditVideoActivity extends AppCompatActivity {
         videoInViewModel.getUpdateVideoData().observe(this, apiResponse -> {
             if (apiResponse.isSuccess()) {
                 Toast.makeText(this, "Video updated successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, VideoActivity.class));
             } else {
                 Toast.makeText(this, "Failed to update video: " + apiResponse.getMessage(), Toast.LENGTH_LONG).show();
             }

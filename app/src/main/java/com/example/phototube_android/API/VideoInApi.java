@@ -89,110 +89,23 @@ public class VideoInApi {
         });
     }
 
-    public void getVideos(MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
-        videoServiceApi.getVideos().enqueue(new Callback<List<Video>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    VideoLiveData.postValue(new ApiResponse<>(
-                            response.body(),
-                            "User details retrieved successfully",
-                            true
-                    ));
-                } else {
-                    Log.e("UserViewModel", "Error response code: " + response.code());
-                    VideoLiveData.postValue(new ApiResponse<>(
-                            null,
-                            "Failed to retrieve user details",
-                            false
-                    ));
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
-                VideoLiveData.postValue(new ApiResponse<>(
-                        null,
-                        "Error: " + t.getMessage(),
-                        false
-                ));
-            }
-        });
-    }
 
-    public void getVideo(String userId, String videoId, MutableLiveData<ApiResponse<Video>> videoLiveData) {
-        videoServiceApi.getVideo(userId, videoId).enqueue(new Callback<Video>() {
-            @Override
-            public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    videoLiveData.postValue(new ApiResponse<>(
-                            response.body(),
-                            "Video details retrieved successfully",
-                            true
-                    ));
-                } else {
-                    Log.e("VideoInApi", "Error fetching video: " + response.code());
-                    videoLiveData.postValue(new ApiResponse<>(
-                            null,
-                            "Failed to retrieve video details",
-                            false
-                    ));
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<Video> call, @NonNull Throwable t) {
-                videoLiveData.postValue(new ApiResponse<>(
-                        null,
-                        "Network error: " + t.getMessage(),
-                        false
-                ));
-            }
-        });
-    }
 
-    public void getUserVideos(String userId, MutableLiveData<ApiResponse<List<Video>>> videoLiveData) {
-        videoServiceApi.getUserVideos(userId).enqueue(new Callback<List<Video>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    videoLiveData.postValue(new ApiResponse<>(
-                            response.body(),
-                            "Videos retrieved successfully",
-                            true
-                    ));
-                } else {
-                    Log.e("VideoInApi", "Failed to retrieve videos: Response code " + response.code());
-                    videoLiveData.postValue(new ApiResponse<>(
-                            null,
-                            "Failed to retrieve videos",
-                            false
-                    ));
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
-                Log.e("VideoInApi", "Error retrieving videos: " + t.getMessage(), t);
-                videoLiveData.postValue(new ApiResponse<>(
-                        null,
-                        "Error retrieving videos: " + t.getMessage(),
-                        false
-                ));
-            }
-        });
-    }
 
-    public void updateVideo(String userId, String videoId, VideoUpdateRequest updateRequest,
+    public void updateVideo(String userId,boolean file, String videoId, VideoUpdateRequest updateRequest,
                             MutableLiveData<ApiResponse<Video>> videoLiveData) {
-
+        MultipartBody.Part videoPart = null;
         // Create RequestBody instance from title
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), updateRequest.getTitle());
-
-        // Create RequestBody instance from file
-        RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), updateRequest.getVideoUrl());
-        MultipartBody.Part videoPart = MultipartBody.Part.createFormData("videoFile", updateRequest.getVideoUrl().getName(), videoBody);
-
+        if(file)
+        {
+            // Create RequestBody instance from file
+            RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), updateRequest.getVideoUrl());
+            videoPart = MultipartBody.Part.createFormData("videoFile", updateRequest.getVideoUrl().getName(), videoBody);
+        }
         Call<Video> call = videoServiceApi.updateVideo(userId, videoId, titleBody,videoPart);
         call.enqueue(new Callback<Video>() {
             @Override

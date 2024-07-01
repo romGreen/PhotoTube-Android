@@ -8,6 +8,7 @@ import com.example.phototube_android.API.UserLogApi;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.MessageResponse;
+import com.example.phototube_android.response.UpdateUserResponse;
 
 public class UserLogRepository {
     private UserLogApi userLogApi;
@@ -26,7 +27,7 @@ public class UserLogRepository {
         userLogApi.getInfoUser(userLiveData);
     }
 
-    public void updateUser(Context context, User user,boolean file,MutableLiveData<ApiResponse<User>> userLiveData)
+    public void updateUser(Context context, User user,boolean file,MutableLiveData<ApiResponse<UpdateUserResponse>> userLiveData)
     {
         userLogApi.updateUser( context, user, file,userLiveData);
     }

@@ -6,6 +6,7 @@ import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.MessageResponse;
 import com.example.phototube_android.response.TokenResponse;
+import com.example.phototube_android.response.UpdateUserResponse;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface UserServerApi {
 
     @Multipart
     @PATCH("/api/users/{id}")
-    Call<User> updateUser(
+    Call<UpdateUserResponse> updateUser(
             @Path("id") String id,
             @Part MultipartBody.Part profileImg,
             @Part("displayname") RequestBody displayname,
