@@ -66,6 +66,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
     private ImageButton fullscreenButton,shareButton,editButton;
 
     private String videoId;
+    private String videoUrl;
     private VideoInViewModel videoInViewModel;
 
     private CommentInViewModel commentInViewModel;
@@ -73,6 +74,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
     private CommentOffViewModel commentOffViewModel;
     private LinearLayout loginSection, addVideoSection, registerSection;
     private DrawerLayout drawerLayout;
+    private Intent intent;
 
 
 
@@ -97,7 +99,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         addVideoSection = findViewById(R.id.add_video_section);
         registerSection = findViewById(R.id.register_section);
         loginSection = findViewById(R.id.login_section);
-        Intent intent = getIntent();
+        intent = getIntent();
         videoId = intent.getStringExtra("videoId");
 
 
@@ -105,6 +107,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         authorTextView.setText(intent.getStringExtra("createdBy"));
         viewsTextView.setText(intent.getStringExtra("videoViews"));
         timeAgoTextView.setText(intent.getStringExtra("videoDate"));
+        videoUrl = intent.getStringExtra("VideoUrl");
         Uri uri = Uri.parse("http://10.0.2.2:"+intent.getStringExtra("VideoUrl"));
         // Set up the VideoView to play the video
         videoView.setVideoURI(uri);
@@ -127,8 +130,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
          }
          else  editButton.setVisibility(View.GONE);
-
-
 
 
         // Handle likes
@@ -201,11 +202,10 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
     private void clickers(){
         // Fullscreen
-
         fullscreenButton.setOnClickListener(v -> {
-            if (video.getVideoUrl() != null && video != null) {
+            if (intent.getStringExtra("VideoUrl") != null) {
                 Intent intent = new Intent(VideoActivity.this, FullscreenActivity.class);
-                intent.putExtra("videoPath", video.getVideoUrl());
+                intent.putExtra("VideoUrl", "http://10.0.2.2:"+videoUrl);
 
                 startActivityForResult(intent, REQUEST_FULLSCREEN); // Start FullscreenActivity with the request code
             } else {
@@ -216,7 +216,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
 
         // share button
-
         shareButton.setOnClickListener(v -> {
             if (UserManager.getInstance().isLoggedIn()) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -226,7 +225,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
             }
             Toast.makeText(VideoActivity.this, "You have to be logged in to share", Toast.LENGTH_SHORT).show();
-
         });
 
         //edit button

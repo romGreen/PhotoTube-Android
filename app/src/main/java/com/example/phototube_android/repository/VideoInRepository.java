@@ -1,25 +1,29 @@
 package com.example.phototube_android.repository;
 
-import androidx.lifecycle.MutableLiveData;
+import android.app.Application;
 
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.phototube_android.API.VideoInApi;
 import com.example.phototube_android.classes.Video;
+//import com.example.phototube_android.db.AppDB;
+import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.requests.LikeActionRequest;
 import com.example.phototube_android.requests.VideoUpdateRequest;
 import com.example.phototube_android.response.ApiResponse;
 
 import java.io.File;
-import java.util.List;
 
 
 public class VideoInRepository {
 
     private VideoInApi videoInApi;
+    private VideoDao dao;
 
-
-    public VideoInRepository() {
+    public VideoInRepository(Application application) {
         videoInApi = new VideoInApi();
+        //AppDB db = AppDB.getDatabase(application);
+        //dao = db.videoDao();
     }
 
 

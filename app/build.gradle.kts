@@ -36,6 +36,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.google.code.gson:gson:2.8.8")
+    implementation ("com.google.android.exoplayer:exoplayer:2.17.1")
 
     // Retrofit library
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

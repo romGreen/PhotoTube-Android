@@ -1,5 +1,6 @@
 package com.example.phototube_android.viewmodels;
 
+import android.app.Application;
 import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
@@ -16,8 +17,8 @@ public class UserViewModel extends ViewModel {
         private UserRepository userRepository;
         private MutableLiveData<ApiResponse<User>> registerData;
         private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
-        public UserViewModel() {
-            this.userRepository = new UserRepository();
+        public UserViewModel(Application application) {
+            this.userRepository = new UserRepository(application);
             this.registerData = new MutableLiveData<>();
             this.tokenData = new MutableLiveData<>();
         }

@@ -47,9 +47,6 @@ public class EditVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_video);
         initialize();
         clickerListen();
-
-
-
     }
     private void initialize() {
         editVideoName = findViewById(R.id.editTextVideoTitle);

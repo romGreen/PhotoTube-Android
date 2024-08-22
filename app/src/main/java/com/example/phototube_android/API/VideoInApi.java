@@ -36,6 +36,7 @@ public class VideoInApi {
     private Retrofit retrofit;
     private TokenInterceptor tokenInterceptor;
 
+
     public VideoInApi(){
         String token = UserManager.getInstance().getToken();
         tokenInterceptor = new TokenInterceptor(token);
@@ -88,12 +89,6 @@ public class VideoInApi {
             }
         });
     }
-
-
-
-
-
-
 
     public void updateVideo(String userId,boolean file, String videoId, VideoUpdateRequest updateRequest,
                             MutableLiveData<ApiResponse<Video>> videoLiveData) {

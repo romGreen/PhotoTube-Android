@@ -54,6 +54,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     }
 
+
     public void recoverFilteredVideoList(List<Video> videos) {
         this.filteredVideoList = videos;
     }
@@ -172,6 +173,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         }
     }
 
+    public void restoreOriginalList() {
+        filteredVideoList = new ArrayList<>(videos); // Restore from the original list
+        notifyDataSetChanged(); // Notify to refresh the adapter
+    }
 
     // Filter logic
     public Filter getFilter() {
