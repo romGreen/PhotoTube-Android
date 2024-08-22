@@ -16,13 +16,12 @@ import java.util.List;
 @Dao
 public interface VideoDao {
 
-
-
     @Query("SELECT * FROM video")
     List<Video> getAll();
     @Insert
     void insert(Video... videos);
-
+    @Query("DELETE FROM video WHERE id = :videoId")
+    void deleteById(int videoId);
 
     @Update
     void update(Video... videos);

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.phototube_android.API.Server.UserServerApi;
 import com.example.phototube_android.API.Server.VideoServiceApi;
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.entities.TokenInterceptor;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.LikeActionRequest;
@@ -35,9 +36,10 @@ public class VideoInApi {
     private VideoServiceApi videoServiceApi;
     private Retrofit retrofit;
     private TokenInterceptor tokenInterceptor;
-
+    private VideoDao dao;
 
     public VideoInApi(){
+
         String token = UserManager.getInstance().getToken();
         tokenInterceptor = new TokenInterceptor(token);
 

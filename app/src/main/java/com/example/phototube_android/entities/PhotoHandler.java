@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -92,26 +93,28 @@ public class PhotoHandler {
         activity.startActivityForResult(gallery, GALLERY_PERM);
     }
     public Bitmap onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Uri photoHolderUri = null;
-        if (requestCode == CAMERA_REQUEST) {
-            Bitmap photoHolderBitmap = (Bitmap) data.getExtras().get("data");
-            assert photoHolderBitmap != null;
-            photoHolderUri = bitmapToUri(photoHolderBitmap, activity);
-            imageView.setImageURI(photoHolderUri);
-            Bitmap result= getBitmapFromUri(photoHolderUri,activity);
-            return result;
-
+        if (resultCode == RESULT_OK) {
+            Uri photoHolderUri = null;
+            if (requestCode == CAMERA_REQUEST && data != null && data.getExtras() != null) {
+                Bitmap photoHolderBitmap = (Bitmap) data.getExtras().get("data");
+                if (photoHolderBitmap != null) {
+                    photoHolderUri = bitmapToUri(photoHolderBitmap, activity);
+                    imageView.setImageURI(photoHolderUri);
+                }
+            }
+            if (requestCode == GALLERY_PERM && data != null) {
+                photoHolderUri = data.getData();
+                if (photoHolderUri != null) {
+                    imageView.setImageURI(photoHolderUri);
+                }
+            }
+            if (photoHolderUri != null) {
+                return getBitmapFromUri(photoHolderUri, activity);
+            }
         }
-        if (resultCode == RESULT_OK && requestCode == GALLERY_PERM) {
-            // Get the image URI
-            photoHolderUri = data.getData();
-            imageView.setImageURI(photoHolderUri);
-            Bitmap result= getBitmapFromUri(photoHolderUri,activity);
-            return result;
-        }
-        Bitmap result= getBitmapFromUri(photoHolderUri,activity);
-        return result;
+        return null;
     }
+
     public static Uri bitmapToUri(Bitmap image, Context context) {
         File imagesFolder = new File(context.getCacheDir(), "images");
         Uri uri = null;
@@ -132,17 +135,23 @@ public class PhotoHandler {
         return uri;
     }
     public Bitmap getBitmapFromUri(Uri uri, Context context) {
+        if (uri == null) {
+            Log.e("PhotoHandler", "URI for bitmap is null");
+            return null;
+        }
         Bitmap bitmap = null;
         try {
-            ParcelFileDescriptor parcelFileDescriptor =
-                    context.getContentResolver().openFileDescriptor(uri, "r");
-            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            parcelFileDescriptor.close();
+            ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(uri, "r");
+            if (parcelFileDescriptor != null) {
+                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                parcelFileDescriptor.close();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("PhotoHandler", "Failed to load image from URI", e);
         }
         return bitmap;
     }
+
 
 }

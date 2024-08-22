@@ -38,7 +38,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/thumbnail"
+            app:layout_constraintBottom_toTopOf="@+id/mostViewedVideoRecyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.062"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -46,17 +46,16 @@
             app:layout_constraintTop_toBottomOf="@id/displayNameTextView"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/thumbnail"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mostViewedVideoRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/displayNameTextView"
-            app:layout_constraintVertical_bias="0.111" />
+            app:layout_constraintTop_toBottomOf="@id/displayNameTextView" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -95,24 +94,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/author" />
+            app:layout_constraintTop_toBottomOf="@id/moreVideosLabel" />
 
         <TextView
             android:id="@+id/moreVideosLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="245dp"
+            android:layout_marginBottom="348dp"
             android:text="More Videos"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="25dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/thumbnail"
-            app:layout_constraintVertical_bias="0.148" />
+            app:layout_constraintTop_toTopOf="@+id/mostViewedVideoRecyclerView"
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/videosRecyclerView"
@@ -126,74 +126,7 @@
             app:layout_constraintTop_toBottomOf="@id/moreVideosLabel"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/creatorImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/moreVideosLabel"
-            app:layout_constraintEnd_toStartOf="@+id/videoName"
-            app:layout_constraintHorizontal_bias="0.487"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.09" />
 
-        <TextView
-            android:id="@+id/videoName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Video Title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/author"
-            app:layout_constraintEnd_toStartOf="@+id/viewsCount"
-            app:layout_constraintHorizontal_bias="0.51"
-            app:layout_constraintStart_toStartOf="@+id/moreVideosLabel"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.115" />
-
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:text="Creator Name"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/videosRecyclerView"
-            app:layout_constraintEnd_toStartOf="@+id/viewsCount"
-            app:layout_constraintHorizontal_bias="0.195"
-            app:layout_constraintStart_toEndOf="@+id/creatorImage"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.473" />
-
-        <TextView
-            android:id="@+id/viewsCount"
-            android:layout_width="86dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="37dp"
-            android:text="1000 views"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/videosRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/moreVideosLabel"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.297" />
-
-        <TextView
-            android:id="@+id/timeAgo"
-            android:layout_width="97dp"
-            android:layout_height="41dp"
-            android:text="2 days ago"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/videosRecyclerView"
-            app:layout_constraintEnd_toStartOf="@+id/viewsCount"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/author"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail"
-            app:layout_constraintVertical_bias="0.395" />
 
         <include
             android:id="@+id/bottom_menu"
