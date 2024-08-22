@@ -21,8 +21,8 @@ public class VideoInViewModel extends ViewModel {
     private MutableLiveData<ApiResponse<Void>> deleteVideoData;
 
 
-    public VideoInViewModel(Application application) {
-        this.videoRepository = new VideoInRepository(application);
+    public VideoInViewModel() {
+        this.videoRepository = new VideoInRepository();
         this.addVideoData = new MutableLiveData<>();
         this.updateVideoData = new MutableLiveData<>();
         this.likeActionLiveData = new MutableLiveData<>();

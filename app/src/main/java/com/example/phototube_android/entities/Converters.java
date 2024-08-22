@@ -1,32 +1,44 @@
 package com.example.phototube_android.entities;
-
-// Converters.java
 import androidx.room.TypeConverter;
 
 import com.example.phototube_android.classes.Video;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 
 public class Converters {
+
     @TypeConverter
-    public static String fromLikeList(List<Video.Like> likes) {
-        if (likes == null) {
-            return null;
-        }
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Video.Like>>() {}.getType();
-        return gson.toJson(likes, type);
+    public static Date fromTimestamp(Long value) {
+        return value == null ? null : new Date(value);
     }
 
     @TypeConverter
-    public static List<Video.Like> toLikeList(String likesString) {
-        if (likesString == null) {
-            return null;
-        }
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Video.Like>>() {}.getType();
-        return gson.fromJson(likesString, type);
+    public static Long dateToTimestamp(Date date) {
+        return date == null ? null : date.getTime();
+    }
+
+    @TypeConverter
+    public static List<String> fromStringList(String value) {
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String fromStringList(List<String> list) {
+        return new Gson().toJson(list);
+    }
+
+    @TypeConverter
+    public static List<Video.Like> fromLikeList(String value) {
+        Type listType = new TypeToken<List<Video.Like>>() {}.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String fromLikeList(List<Video.Like> list) {
+        return new Gson().toJson(list);
     }
 }

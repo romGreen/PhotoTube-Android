@@ -9,41 +9,27 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.phototube_android.classes.Video;
+import com.google.android.exoplayer2.C;
 
 import java.util.List;
 
 @Dao
 public interface VideoDao {
 
-    // Insert a new video
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertVideo(Video video);
 
-    // Update an existing video
+
+    @Query("SELECT * FROM video")
+    List<Video> getAll();
+    @Insert
+    void insert(Video... videos);
+
+
     @Update
-    void updateVideo(Video video);
+    void update(Video... videos);
 
-    // Delete a video
     @Delete
-    void deleteVideo(Video video);
+    void delete(Video... videos);
+    @Query("DELETE FROM video")
+    void clear();
 
-    // Get a single video by its MongoDB _id
-    @Query("SELECT * FROM Video WHERE _id = :videoId")
-    LiveData<Video> getVideoById(String videoId);
-
-    // Get all videos
-    @Query("SELECT * FROM Video")
-    LiveData<List<Video>> getAllVideos();
-
-    // Get videos by user ID
-    @Query("SELECT * FROM Video WHERE userId = :userId")
-    LiveData<List<Video>> getVideosByUserId(String userId);
-
-    // Search videos by title
-    @Query("SELECT * FROM Video WHERE title LIKE '%' || :searchQuery || '%'")
-    LiveData<List<Video>> searchVideosByTitle(String searchQuery);
-
-    // Get videos based on views threshold
-    @Query("SELECT * FROM Video WHERE views >= :minViews")
-    LiveData<List<Video>> getPopularVideos(int minViews);
 }

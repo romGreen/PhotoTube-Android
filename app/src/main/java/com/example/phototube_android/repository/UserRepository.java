@@ -18,7 +18,7 @@ public class UserRepository {
     private UserApi userApi;
 
 
-    public UserRepository(Application application) {
+    public UserRepository() {
         userApi = new UserApi();
     }
     public void addUser(Context context, User user, MutableLiveData<ApiResponse<User>> RegisterLiveData) {
