@@ -1,5 +1,7 @@
 package com.example.phototube_android.viewmodels;
 
+import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -14,15 +16,13 @@ import java.io.File;
 public class VideoInViewModel extends ViewModel {
     private MutableLiveData<ApiResponse<Video>> addVideoData;
     private VideoInRepository videoRepository;
-
-
     private MutableLiveData<ApiResponse<Video>> updateVideoData;
     private MutableLiveData<ApiResponse<Video>> likeActionLiveData;
     private MutableLiveData<ApiResponse<Void>> deleteVideoData;
 
 
-    public VideoInViewModel() {
-        this.videoRepository = new VideoInRepository();
+    public VideoInViewModel(Application application) {
+        this.videoRepository = new VideoInRepository(application);
         this.addVideoData = new MutableLiveData<>();
         this.updateVideoData = new MutableLiveData<>();
         this.likeActionLiveData = new MutableLiveData<>();

@@ -18,6 +18,7 @@ import com.example.phototube_android.response.TokenResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -129,7 +130,7 @@ public class UserApi {
         userServerApi.login(loginRequest).enqueue(new Callback<TokenResponse>(){
             @Override
             public void onResponse(@NonNull Call<TokenResponse> call, @NonNull Response<TokenResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && Objects.requireNonNull(response.body()).getUserId() != null) {
                     if (response.body().getUserId() != null) {
                         tokenLiveData.postValue(new ApiResponse<>
                                 (response.body(), "User login successfully", true));

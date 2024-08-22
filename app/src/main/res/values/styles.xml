@@ -19,4 +19,6 @@
         <!-- Customize your theme here -->
         <item name="android:windowFullscreen">false</item>
     </style>
+
+
 </resources>

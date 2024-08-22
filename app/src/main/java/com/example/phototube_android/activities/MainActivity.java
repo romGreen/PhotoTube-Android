@@ -25,11 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 import com.example.phototube_android.classes.User;
+import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.ui.adapters.VideoAdapter;
 import com.example.phototube_android.viewmodels.UserLogViewModel;
 import com.example.phototube_android.viewmodels.VideoOffViewModel;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -72,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (videoAdapter != null) {
+                if (newText == null || newText.isEmpty()) {
+                    videoAdapter.restoreOriginalList(); // Restore original list when search is cleared
+                }
+                else if (videoAdapter != null) {
                     videoAdapter.getFilter().filter(newText);
                 }
                 return true;
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         videoOffViewModel.getVideoData().observe(this, videoList -> {
             if (videoList.isSuccess()) {
                 videoAdapter = new VideoAdapter(this, videoList.getData());
+                videoAdapter.restoreOriginalList(); // Initially restore the list to ensure proper initialization
                 recyclerView.setAdapter(videoAdapter);
             }
         });

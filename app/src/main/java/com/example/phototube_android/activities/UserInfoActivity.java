@@ -56,7 +56,7 @@ public class UserInfoActivity extends AppCompatActivity {
     {
         // Initialize UI components
 
-        usernameTextView = findViewById(R.id.username);
+        //usernameTextView = findViewById(R.id.username);
         displaynameEditText = findViewById(R.id.display_name);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
