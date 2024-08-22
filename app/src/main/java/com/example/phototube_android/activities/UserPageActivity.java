@@ -50,6 +50,8 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
     private RecyclerView videosRecyclerView;
     @SuppressLint("StaticFieldLeak")
     private VideoAdapter videoAdapter;
+    private RecyclerView mostViewedVideoRecyclerView;
+
     private UserLogViewModel userLogViewModel;
 
     // Views from video_item.xml for the most viewed video
@@ -60,7 +62,7 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
     private String creatorId;
     private String createdBy;
     private Video mostViewedVideo;
-    private LinearLayout loginSection, addVideoSection, registerSection;
+    private LinearLayout homeSection, loginSection, addVideoSection, registerSection;
     private DrawerLayout drawerLayout;
 
 
@@ -92,17 +94,14 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
         addVideoSection = findViewById(R.id.add_video_section);
         registerSection = findViewById(R.id.register_section);
         loginSection = findViewById(R.id.login_section);
+        homeSection = findViewById(R.id.home_section);
         drawerLayout = findViewById(R.id.drawer_layout);
 
 
         // Initialize the views for the most viewed video
         videoTitleTextView = findViewById(R.id.mostViewedVideoTitle);
-        titleTextView = findViewById(R.id.videoName);
-        authorTextView = findViewById(R.id.author);
-        timeAgoTextView = findViewById(R.id.timeAgo);
-        viewsCountTextView = findViewById(R.id.viewsCount);
-        videoThumbnailImageView = findViewById(R.id.thumbnail);
-        creatorImgView = findViewById(R.id.creatorImage);
+        mostViewedVideoRecyclerView = findViewById(R.id.mostViewedVideoRecyclerView);
+        mostViewedVideoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         setClickListeners();
         setupNavigationView();
@@ -151,29 +150,10 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
             Log.d("UserPageActivity", "No most viewed video to display.");
             return;
         }
-
-        titleTextView.setText(video.getTitle());
-        authorTextView.setText(video.getCreatedBy());
-        String views = String.valueOf(video.getViews())+ " views";
-        viewsCountTextView.setText(views);
-        // Format date
-        String formattedDate = formatDate(video.getDate());
-        timeAgoTextView.setText(formattedDate);
-
-
-        // Load a frame from the video using Glide
-        String videoUrl = video.getVideoUrl();
-        Glide.with(videoThumbnailImageView.getContext())
-                .asBitmap()
-                .load("http://10.0.2.2:" +videoUrl)
-                .frame(1000000) // Load frame at 1 second (1000000 microseconds)
-                .into(videoThumbnailImageView);
-
-        // Load creator image
-        String creatorImageUrl = video.getCreatorImg();
-        Glide.with(creatorImgView.getContext())
-                .load("http://10.0.2.2:" + creatorImageUrl)
-                .into(creatorImgView);
+        List<Video> singleVideoList = new ArrayList<>();
+        singleVideoList.add(mostViewedVideo);
+        VideoAdapter mostViewedVideoAdapter = new VideoAdapter(this, singleVideoList);
+        mostViewedVideoRecyclerView.setAdapter(mostViewedVideoAdapter);
 
     }
 
@@ -207,6 +187,12 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
             startActivity(new Intent(UserPageActivity.this, targetActivity));
         });
         addVideoSection.setOnClickListener(v -> startActivity(new Intent(UserPageActivity.this, AddVideoActivity.class)));
+        homeSection.setOnClickListener(v -> {
+            // Navigate to the Main Activity
+            Intent homeIntent = new Intent(UserPageActivity.this, MainActivity.class);
+            startActivity(homeIntent);
+        });
+
     }
 
     private void updateUserInfo() {

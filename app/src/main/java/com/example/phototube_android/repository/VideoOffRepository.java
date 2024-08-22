@@ -16,20 +16,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class VideoOffRepository {
-
-
     private VideoOffApi videoOffApi;
     private VideoDao dao;
     VideoListData videoListData;
     public VideoOffRepository(Application application) {
-
         AppDB appDB = AppDB.getDatabase(application);
         dao = appDB.videoDao();
-        videoOffApi = new VideoOffApi(dao);
         videoListData = new VideoListData();
+        videoOffApi = new VideoOffApi(dao, videoListData);
     }
-
-
 
     public void getVideos(MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
         videoOffApi.getVideos(VideoLiveData);
@@ -67,11 +62,10 @@ public class VideoOffRepository {
 
         public void refreshVideos() {
             new Thread(() -> {
-                List<Video> posts = dao.getAll();
+                List<Video> videos = dao.getAll();
                 videoListData.postValue(new ApiResponse<>
-                        (posts, "Posts fetched successfully", true));
+                        (videos, "Videos fetched successfully", true));
             }).start();
         }
     }
-
 }

@@ -57,26 +57,20 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
     private EditText commentEditText;
     private RecyclerView commentsRecyclerView;
     private CommentsAdapter commentsAdapter;
-    private Video video;
     private ImageButton likeButton, dislikeButton;
     private TextView likeCountTextView;
     private ImageButton submitCommentButton;
     private static final int REQUEST_FULLSCREEN = 1;  // Request code for starting FullscreenActivity
     private boolean wasPlaying;
     private ImageButton fullscreenButton,shareButton,editButton;
-
     private String videoId;
     private String videoUrl;
     private VideoInViewModel videoInViewModel;
-
     private CommentInViewModel commentInViewModel;
-
     private CommentOffViewModel commentOffViewModel;
-    private LinearLayout loginSection, addVideoSection, registerSection;
+    private LinearLayout loginSection, homeSection,addVideoSection, registerSection;
     private DrawerLayout drawerLayout;
     private Intent intent;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +93,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         addVideoSection = findViewById(R.id.add_video_section);
         registerSection = findViewById(R.id.register_section);
         loginSection = findViewById(R.id.login_section);
+        homeSection = findViewById(R.id.home_section);
         intent = getIntent();
         videoId = intent.getStringExtra("videoId");
 
@@ -117,19 +112,19 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
 
         videoView.setMediaController(mediaController);
-         fullscreenButton = findViewById(R.id.fullscreenButton);
-         shareButton = findViewById(R.id.shareButton);
+        fullscreenButton = findViewById(R.id.fullscreenButton);
+        shareButton = findViewById(R.id.shareButton);
 
-         editButton = findViewById(R.id.edit_Video_Button);
-         String userId =  intent.getStringExtra("userId");
-         if(UserManager.getInstance().isLoggedIn())
-         {
-             if(Objects.equals(UserManager.getInstance().getUserId(), userId))
-                 editButton.setVisibility(View.VISIBLE);
-             else  editButton.setVisibility(View.GONE);
+        editButton = findViewById(R.id.edit_Video_Button);
+        String userId =  intent.getStringExtra("userId");
+        if(UserManager.getInstance().isLoggedIn())
+        {
+            if(Objects.equals(UserManager.getInstance().getUserId(), userId))
+                editButton.setVisibility(View.VISIBLE);
+            else  editButton.setVisibility(View.GONE);
 
-         }
-         else  editButton.setVisibility(View.GONE);
+        }
+        else  editButton.setVisibility(View.GONE);
 
 
         // Handle likes
@@ -231,11 +226,11 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
         editButton.setOnClickListener(view -> {
 
-                Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
-                intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
-                intent.putExtra("Title", videoNameTextView.getText()); // Assuming videoId is the ID of the current video
-                intent.putExtra("VideoUrl", "http://10.0.2.2:"+getIntent().getStringExtra("VideoUrl")); // Assuming videoId is the ID of the current video
-                startActivity(intent);
+            Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
+            intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
+            intent.putExtra("Title", videoNameTextView.getText()); // Assuming videoId is the ID of the current video
+            intent.putExtra("VideoUrl", "http://10.0.2.2:"+getIntent().getStringExtra("VideoUrl")); // Assuming videoId is the ID of the current video
+            startActivity(intent);
 
         });
 
@@ -298,7 +293,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             videoInViewModel.getLikeActionLiveData().observe(this, likeResponse -> {
                 if (likeResponse.isSuccess() && likeResponse.getData() != null) {
 
-                   updateLikes(likeResponse.getData().getLikes());
+                    updateLikes(likeResponse.getData().getLikes());
                 } else {
                     Toast.makeText(this, "Failed to load user data: " + likeResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -335,7 +330,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             commentInViewModel.addComment(videoId,commentText);
             commentInViewModel.getAddCommentData().observe(this, commentResponse -> {
                 if (commentResponse.isSuccess() && commentResponse.getData() != null) {
-                   getComments();
+                    getComments();
                     // Clear the comment input field
                     commentEditText.setText("");
                     new Handler().postDelayed(() -> {
@@ -378,6 +373,11 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             startActivity(new Intent(VideoActivity.this, targetActivity));
         });
         addVideoSection.setOnClickListener(v -> startActivity(new Intent(VideoActivity.this, AddVideoActivity.class)));
+        homeSection.setOnClickListener(v -> {
+            // Navigate to the Main Activity
+            Intent homeIntent = new Intent(VideoActivity.this, MainActivity.class);
+            startActivity(homeIntent);
+        });
     }
     private void setupNavigationView() {
         updateMenuItems(UserManager.getInstance().isLoggedIn());
