@@ -1,5 +1,8 @@
 package com.example.phototube_android.viewmodels;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -10,16 +13,17 @@ import com.example.phototube_android.response.ApiResponse;
 
 import java.util.List;
 
-public class VideoOffViewModel extends ViewModel {
+public class VideoOffViewModel extends AndroidViewModel {
     private VideoOffRepository videoOffRepository;
     private MutableLiveData<ApiResponse<List<Video>>> VideoData;
     private MutableLiveData<ApiResponse<Video>> singleVideoData;
     private MutableLiveData<ApiResponse<List<Video>>> userVideosData;
-    public VideoOffViewModel() {
-        this.videoOffRepository = new VideoOffRepository();
+    public VideoOffViewModel(Application application) {
+        super(application);
+        this.videoOffRepository = new VideoOffRepository(application);
         this.singleVideoData = new MutableLiveData<>();
         this.userVideosData = new MutableLiveData<>();
-        this.VideoData = new MutableLiveData<>();
+        this.VideoData = videoOffRepository.getVideoListData();
     }
     public MutableLiveData<ApiResponse<Video>> getSingleVideoData() {
         return singleVideoData;

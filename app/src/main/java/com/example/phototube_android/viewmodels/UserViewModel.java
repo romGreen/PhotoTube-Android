@@ -17,8 +17,8 @@ public class UserViewModel extends ViewModel {
         private UserRepository userRepository;
         private MutableLiveData<ApiResponse<User>> registerData;
         private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
-        public UserViewModel(Application application) {
-            this.userRepository = new UserRepository(application);
+        public UserViewModel() {
+            this.userRepository = new UserRepository();
             this.registerData = new MutableLiveData<>();
             this.tokenData = new MutableLiveData<>();
         }

@@ -20,7 +20,7 @@ public class VideoInRepository {
     private VideoInApi videoInApi;
     private VideoDao dao;
 
-    public VideoInRepository(Application application) {
+    public VideoInRepository() {
         videoInApi = new VideoInApi();
         //AppDB db = AppDB.getDatabase(application);
         //dao = db.videoDao();

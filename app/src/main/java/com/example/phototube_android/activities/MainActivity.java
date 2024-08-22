@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.phototube_android.R;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.db.AppDB;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.ui.adapters.VideoAdapter;
 import com.example.phototube_android.viewmodels.UserLogViewModel;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getVideos() {
+
         videoOffViewModel = new ViewModelProvider(this).get(VideoOffViewModel.class);
         videoOffViewModel.getVideos();
         videoOffViewModel.getVideoData().observe(this, videoList -> {
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 recyclerView.setAdapter(videoAdapter);
             }
         });
+
     }
 
     @Override

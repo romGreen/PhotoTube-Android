@@ -9,6 +9,7 @@ import com.example.phototube_android.API.Server.UserServerApi;
 import com.example.phototube_android.API.Server.VideoServiceApi;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.viewmodels.VideoOffViewModel;
 
@@ -27,10 +28,11 @@ public class VideoOffApi {
 
     private static final String BASE_URL = "http://10.0.2.2:1324/";
     private VideoServiceApi videoServiceApi;
-
+private VideoDao dao;
     private Retrofit retrofit;
 
-    public VideoOffApi() {
+    public VideoOffApi(VideoDao dao) {
+        this.dao = dao;
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
@@ -52,11 +54,13 @@ public class VideoOffApi {
             @Override
             public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    dao.clear();
                     VideoLiveData.postValue(new ApiResponse<>(
                             response.body(),
                             "User details retrieved successfully",
                             true
                     ));
+                    dao.insert(response.body().toArray(new Video[0]));
                 } else {
                     Log.e("UserViewModel", "Error response code: " + response.code());
                     VideoLiveData.postValue(new ApiResponse<>(
