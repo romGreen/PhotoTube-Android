@@ -23,11 +23,11 @@ public class VideoOffRepository {
         AppDB appDB = AppDB.getDatabase(application);
         dao = appDB.videoDao();
         videoListData = new VideoListData();
-        videoOffApi = new VideoOffApi(dao, videoListData);
+        videoOffApi = new VideoOffApi(dao,videoListData);
     }
 
-    public void getVideos(MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
-        videoOffApi.getVideos(VideoLiveData);
+    public void getVideos(){
+        videoOffApi.getVideos();
     }
 
     public void getUserVideos(String userId, MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){

@@ -3,11 +3,15 @@ package com.example.phototube_android.classes;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
+import androidx.room.TypeConverters;
+
+import com.example.phototube_android.entities.Converters;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-@Entity(tableName = "comments")
+@Entity
+@TypeConverters(Converters.class)
 public class Comment {
 
     @PrimaryKey(autoGenerate = true)

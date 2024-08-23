@@ -17,6 +17,7 @@ import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -36,9 +37,10 @@ public class VideoInApi {
     private VideoServiceApi videoServiceApi;
     private Retrofit retrofit;
     private TokenInterceptor tokenInterceptor;
+    private MutableLiveData<ApiResponse<List<Video>>> videoListData;
     private VideoDao dao;
 
-    public VideoInApi(){
+    public VideoInApi(VideoDao dao,MutableLiveData<ApiResponse<List<Video>>> videoListData){
 
         String token = UserManager.getInstance().getToken();
         tokenInterceptor = new TokenInterceptor(token);
@@ -58,12 +60,12 @@ public class VideoInApi {
                 .build();
 
         videoServiceApi = retrofit.create(VideoServiceApi.class);
+        this.dao = dao;
+        this.videoListData = videoListData;
 
     }
 
-    public void addVideo(String userId, String title, File videoFile,
-                         MutableLiveData
-                                 <ApiResponse<Video>> videoLiveData) {
+    public void addVideo(String userId, String title, File videoFile) {
         RequestBody titlePart = RequestBody.create(MediaType.parse("text/plain"), title);
         RequestBody requestFile = RequestBody.create(MediaType.parse("video/*"), videoFile);
         MultipartBody.Part videoPart = MultipartBody.Part.createFormData("video", videoFile.getName(), requestFile);
@@ -73,80 +75,153 @@ public class VideoInApi {
             @Override
             public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {
                 if (response.isSuccessful()) {
-                    // Forward the response to the original callback
-                    videoLiveData.postValue(new ApiResponse<>
-                            (response.body(), "Video added successfully", true));
+                    new Thread(() -> {
+
+                        dao.insert(response.body());
+                        videoListData.postValue(new ApiResponse<>(
+                                dao.getAll(),
+                                "Video added successfully",
+                                true
+                        ));
+                    }).start();
+
                 } else {
+                    new Thread(() -> {
                     // Handle the case where the server responds with an error
-                    videoLiveData.postValue(new ApiResponse<>
-                            (null, "add video failed", false));
+                        videoListData.postValue(new ApiResponse<>(
+                                dao.getAll(),
+                                "Add video failed",
+                                false
+                        ));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Video> call, @NonNull Throwable t) {
-                // Forward the failure to the original callback
-                videoLiveData.postValue(new ApiResponse<>
-                        (null, "Error: " + t.getMessage(), false));
+
+                new Thread(() -> {
+                    // Handle the case where the server responds with an error
+                    videoListData.postValue(new ApiResponse<>(
+                            dao.getAll(),
+                            "Error: " + t.getMessage(),
+                            false
+                    ));
+                }).start();
             }
         });
     }
 
-    public void updateVideo(String userId,boolean file, String videoId, VideoUpdateRequest updateRequest,
-                            MutableLiveData<ApiResponse<Video>> videoLiveData) {
-        MultipartBody.Part videoPart = null;
-        // Create RequestBody instance from title
+    public void updateVideo(String userId, boolean file, String videoId, VideoUpdateRequest updateRequest) {
+        // Create the RequestBody instance from title and video file if needed
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), updateRequest.getTitle());
-        if(file)
-        {
-            // Create RequestBody instance from file
+        MultipartBody.Part videoPart = null;
+
+        if (file && updateRequest.getVideoUrl() != null) {
             RequestBody videoBody = RequestBody.create(MediaType.parse("video/*"), updateRequest.getVideoUrl());
             videoPart = MultipartBody.Part.createFormData("videoFile", updateRequest.getVideoUrl().getName(), videoBody);
         }
-        Call<Video> call = videoServiceApi.updateVideo(userId, videoId, titleBody,videoPart);
+
+        // Make the API call to update the video on the server
+        Call<Video> call = videoServiceApi.updateVideo(userId, videoId, titleBody, videoPart);
         call.enqueue(new Callback<Video>() {
             @Override
             public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {
                 if (response.isSuccessful()) {
-                    // If the update is successful, post the updated video details back to the LiveData
-                    videoLiveData.postValue(new ApiResponse<>(response.body(), "Video updated successfully", true));
+                    Video updatedVideo = response.body();
+                    if (updatedVideo != null) {
+                        Log.d("Video Update", "Video updated on server: " + updatedVideo.getId());
+
+                        // Perform the database update in a separate thread
+                        new Thread(() -> {
+                            try {
+                                Video originalVideo = dao.getVideoByServerId(videoId);
+                                if (originalVideo != null) {
+                                    Log.d("Video Update", "Original Video ID: " + originalVideo.getId());
+
+                                    // Set the correct local ID
+                                    updatedVideo.setId(originalVideo.getId());
+                                    Log.d("Video Update", "Updated Video ID before DB update: " + updatedVideo.getId());
+
+                                    // Attempt to update the video in the database
+                                    dao.update(updatedVideo);
+                                    Log.d("Video Update", "Video successfully updated in local database.");
+
+                                    // Fetch and update the LiveData
+                                    List<Video> allVideos = dao.getAll();
+                                    videoListData.postValue(new ApiResponse<>(
+                                            allVideos,
+                                            "Video updated successfully",
+                                            true
+                                    ));
+                                } else {
+                                    Log.e("Video Update", "No video found in local database with server ID: " + videoId);
+                                }
+                            } catch (Exception e) {
+                                Log.e("Video Update", "Exception during database update: " + e.getMessage(), e);
+                            }
+                        }).start();
+                    } else {
+                        Log.e("Video Update", "Response body is null");
+                    }
                 } else {
-                    // If the server response is not successful, post an error message
-                    videoLiveData.postValue(new ApiResponse<>(null, "Failed to update video: " + response.code(), false));
+                    Log.e("Video Update", "Failed to update video: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Video> call, @NonNull Throwable t) {
-                // Handle the case where the network request itself fails
-                videoLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+                Log.e("Video Update", "Network error: " + t.getMessage());
             }
         });
     }
-    public void deleteVideo(String userId, String videoId, MutableLiveData<ApiResponse<Void>> videoLiveData) {
+
+
+
+
+
+    public void deleteVideo(String userId, String videoId) {
         Call<Void> call = videoServiceApi.deleteVideo(userId, videoId);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     // If the deletion is successful, post a success message
-                    videoLiveData.postValue(new ApiResponse<>(null, "Video deleted successfully", true));
+                    new Thread(() -> {
+                        dao.deleteByServerId(videoId);
+                        videoListData.postValue(new ApiResponse<>(
+                                dao.getAll(),
+                                "Video deleted successfully",
+                                true
+                        ));
+                    }).start();
                 } else {
                     // If the server response is not successful, post an error message
-                    videoLiveData.postValue(new ApiResponse<>(null, "Failed to delete video: " + response.code(), false));
+                    new Thread(() -> {
+                        videoListData.postValue(new ApiResponse<>(
+                                dao.getAll(),
+                                "Failed to delete video: " + response.code(),
+                                false
+                        ));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 // Handle the case where the network request itself fails
-                videoLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+                new Thread(() -> {
+                    videoListData.postValue(new ApiResponse<>(
+                            dao.getAll(),
+                            "Network error: " + t.getMessage(),
+                            false
+                    ));
+                }).start();
             }
         });
     }
 
-    public void likeVideo(String videoId, LikeActionRequest likeRequest,
-                          MutableLiveData<ApiResponse<Video>> videoLiveData) {
+    public void likeVideo(String videoId, LikeActionRequest likeRequest, MutableLiveData<ApiResponse<Video>> videoLiveData) {
         String userId = UserManager.getInstance().getUserId();
         Call<Video> call = videoServiceApi.likeAction(userId, videoId, likeRequest);
         call.enqueue(new Callback<Video>() {
@@ -154,17 +229,24 @@ public class VideoInApi {
             public void onResponse(@NonNull Call<Video> call, @NonNull Response<Video> response) {
                 if (response.isSuccessful()) {
                     // If the like or dislike action is successful, post the updated video details back to LiveData
-                    videoLiveData.postValue(new ApiResponse<>(response.body(), "Like/Dislike action performed successfully", true));
+                    new Thread(() -> {
+                        dao.update(response.body());
+                        videoLiveData.postValue(new ApiResponse<>(response.body(), "Like/Dislike action performed successfully", true));
+                    }).start();
                 } else {
                     // If the server response is not successful, post an error message
-                    videoLiveData.postValue(new ApiResponse<>(null, "Failed to perform like/dislike action: " + response.code(), false));
+                    new Thread(() -> {
+                        videoLiveData.postValue(new ApiResponse<>(null, "Failed to perform like/dislike action: " + response.code(), false));
+                    }).start();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Video> call, @NonNull Throwable t) {
                 // Handle the case where the network request itself fails
-                videoLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+                new Thread(() -> {
+                    videoLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
+                }).start();
             }
         });
     }

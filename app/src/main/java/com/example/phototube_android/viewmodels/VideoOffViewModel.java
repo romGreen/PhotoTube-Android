@@ -40,7 +40,7 @@ public class VideoOffViewModel extends AndroidViewModel {
 
     public void getVideos()
     {
-        videoOffRepository.getVideos(VideoData);
+        videoOffRepository.getVideos();
     }
 
     public void getVideo(String userId, String videoId)
