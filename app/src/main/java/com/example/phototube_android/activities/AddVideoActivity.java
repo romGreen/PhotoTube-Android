@@ -60,7 +60,7 @@ public class AddVideoActivity extends AppCompatActivity {
             } else {
                 File videoFile = new File(videoUri);
                 videoViewModel.addVideo(UserManager.getInstance().getUserId(), videoName, videoFile);
-                videoViewModel.getAddVideoData().observe(this, video -> {
+                videoViewModel.getVideoListData().observe(this, video -> {
                     if (!video.isSuccess()) {
                         Toast.makeText(AddVideoActivity.this, video.getMessage(), Toast.LENGTH_LONG).show();
                         return;

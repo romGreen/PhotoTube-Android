@@ -47,6 +47,7 @@ import com.example.phototube_android.viewmodels.CommentOffViewModel;
 import com.example.phototube_android.viewmodels.VideoInViewModel;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,6 +104,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         viewsTextView.setText(intent.getStringExtra("videoViews"));
         timeAgoTextView.setText(intent.getStringExtra("videoDate"));
         videoUrl = intent.getStringExtra("VideoUrl");
+        Log.d("aaaadd", "Initialize: " + videoUrl);
         Uri uri = Uri.parse("http://10.0.2.2:"+intent.getStringExtra("VideoUrl"));
         // Set up the VideoView to play the video
         videoView.setVideoURI(uri);
@@ -230,6 +232,12 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
             intent.putExtra("Title", videoNameTextView.getText()); // Assuming videoId is the ID of the current video
             intent.putExtra("VideoUrl", "http://10.0.2.2:"+getIntent().getStringExtra("VideoUrl")); // Assuming videoId is the ID of the current video
+            intent.putExtra("CreatedBy", authorTextView.getText());
+            intent.putExtra("Views", viewsTextView.getText());
+            intent.putExtra("Date", timeAgoTextView.getText());
+            intent.putExtra("UserId", getIntent().getStringExtra("userId"));
+            intent.putExtra("CreatorImg",  getIntent().getStringExtra("creatorImg"));
+            intent.putExtra("VideoLikes", (Serializable) getIntent().getSerializableExtra("videoLikes"));
             startActivity(intent);
 
         });

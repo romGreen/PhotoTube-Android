@@ -28,12 +28,13 @@ public class VideoOffApi {
 
     private static final String BASE_URL = "http://10.0.2.2:1324/";
     private VideoServiceApi videoServiceApi;
+    private MutableLiveData<ApiResponse<List<Video>>> videoListData;
     private VideoDao dao;
     private Retrofit retrofit;
-    private MutableLiveData<ApiResponse<List<Video>>> videoListData;
 
-    public VideoOffApi(VideoDao dao, MutableLiveData<ApiResponse<List<Video>>> videoListData) {
-        this.dao = dao;
+
+    public VideoOffApi(VideoDao dao,MutableLiveData<ApiResponse<List<Video>>> videoListData) {
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
@@ -48,10 +49,13 @@ public class VideoOffApi {
                 .build();
 
         videoServiceApi = retrofit.create(VideoServiceApi.class);
+
+        this.dao = dao;
         this.videoListData = videoListData;
+
     }
 
-    public void getVideos(MutableLiveData<ApiResponse<List<Video>>> VideoLiveData){
+    public void getVideos(){
         videoServiceApi.getVideos().enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
@@ -59,16 +63,15 @@ public class VideoOffApi {
                     new Thread(() -> {
                         dao.clear();
                         dao.insert(response.body().toArray(new Video[0]));
-                        VideoLiveData.postValue(new ApiResponse<>(
+                        videoListData.postValue(new ApiResponse<>(
                                 dao.getAll(),
                             "User details retrieved successfully",
                             true
                     ));
                     }).start();
                 } else {
-                    Log.e("UserViewModel", "Error response code: " + response.code());
                     new Thread(() -> {
-                    VideoLiveData.postValue(new ApiResponse<>(
+                        videoListData.postValue(new ApiResponse<>(
                             dao.getAll(),
                             "Failed to retrieve user details",
                             false));
@@ -79,7 +82,7 @@ public class VideoOffApi {
             @Override
             public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
                 new Thread(() -> {
-                    VideoLiveData.postValue(new ApiResponse<>(
+                    videoListData.postValue(new ApiResponse<>(
                         dao.getAll(),
                         "Error: " + t.getMessage(),
                         false));

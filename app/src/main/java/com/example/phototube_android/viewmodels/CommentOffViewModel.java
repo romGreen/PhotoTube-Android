@@ -1,5 +1,8 @@
 package com.example.phototube_android.viewmodels;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,14 +15,15 @@ import com.example.phototube_android.response.TokenResponse;
 
 import java.util.List;
 
-public class CommentOffViewModel extends ViewModel {
+public class CommentOffViewModel extends AndroidViewModel {
 
     private CommentOffRepository commentOffRepository;
     private MutableLiveData<ApiResponse<List<Comment>>> commentData;
-    private MutableLiveData<ApiResponse<TokenResponse>> tokenData;
-    public CommentOffViewModel() {
-        this.commentOffRepository = new CommentOffRepository();
-        commentData = new MutableLiveData<>();
+
+    public CommentOffViewModel(Application application) {
+        super(application);
+        this.commentOffRepository = new CommentOffRepository(application);
+        commentData = this.commentOffRepository.getCommentListData();
 
     }
 
@@ -29,6 +33,6 @@ public class CommentOffViewModel extends ViewModel {
     }
     public void getComments(String videoId)
     {
-        commentOffRepository.getComments(videoId,commentData);
+        commentOffRepository.getComments(videoId);
     }
 }

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,12 +21,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.phototube_android.R;
 import com.example.phototube_android.classes.Video;
+import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.entities.UserManager;
 import com.example.phototube_android.requests.VideoUpdateRequest;
 import com.example.phototube_android.viewmodels.UserViewModel;
 import com.example.phototube_android.viewmodels.VideoInViewModel;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.List;
 
 
 public class EditVideoActivity extends AppCompatActivity {
@@ -40,6 +45,7 @@ public class EditVideoActivity extends AppCompatActivity {
     private String videoUri; // URI for the video file
     private String videoId;
     private VideoInViewModel videoInViewModel;
+    private String[] arr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,7 @@ public class EditVideoActivity extends AppCompatActivity {
         String title = intent.getStringExtra("Title");
         String videoUrl = intent.getStringExtra("VideoUrl");
 
+
         if (videoId != null) {
             editVideoName.setText(title);
             selectedVideo.setText(videoUrl);
@@ -71,6 +78,8 @@ public class EditVideoActivity extends AppCompatActivity {
     }
     private void clickerListen() {
         buttonEditVideo.setOnClickListener(v -> {
+
+
             String title = editVideoName.getText().toString().trim();
             boolean file;
             if (title.isEmpty()) {
@@ -144,7 +153,7 @@ public class EditVideoActivity extends AppCompatActivity {
     }
 
     private void observeDeleteVideoResponse() {
-        videoInViewModel.getDeleteVideoData().observe(this, apiResponse -> {
+        videoInViewModel.getVideoListData().observe(this, apiResponse -> {
             if (apiResponse.isSuccess()) {
                 Toast.makeText(this, "Video deleted successfully", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
@@ -155,14 +164,43 @@ public class EditVideoActivity extends AppCompatActivity {
     }
 
     private void observeUpdateVideoResponse() {
-        videoInViewModel.getUpdateVideoData().observe(this, apiResponse -> {
+        videoInViewModel.getVideoListData().observe(this, apiResponse -> {
             if (apiResponse.isSuccess()) {
                 Toast.makeText(this, "Video updated successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, VideoActivity.class));
+
+                // Prepare an intent to navigate back to VideoActivity
+                Intent intent2 = getIntent();
+                Intent intent = new Intent(EditVideoActivity.this, VideoActivity.class);
+                new Handler().postDelayed(() -> {
+                // Force a refresh of the video data from the database
+                new Thread(() -> {
+                    Video currentVideo = videoInViewModel.getVideoByServerId(videoId);
+
+                    runOnUiThread(() -> {
+                        // Pass all necessary data to VideoActivity
+                        intent.putExtra("videoId", videoId);
+                        intent.putExtra("Title", editVideoName.getText().toString().trim());
+                        intent.putExtra("createdBy", intent2.getStringExtra("CreatedBy"));
+                        intent.putExtra("videoViews", intent2.getStringExtra("Views"));
+                        intent.putExtra("videoDate", intent2.getStringExtra("Date"));
+                        intent.putExtra("VideoUrl", currentVideo.getVideoUrl());
+                        intent.putExtra("userId", intent2.getStringExtra("UserId"));
+                        intent.putExtra("creatorImg", intent2.getStringExtra("CreatorImg"));
+                        intent.putExtra("videoLikes", (Serializable) intent2.getSerializableExtra("VideoLikes"));
+
+                        // Start VideoActivity
+                        startActivity(intent);
+                        finish(); // Finish EditVideoActivity to remove it from the back stack
+                    });
+                }).start();
+            }, 1200);
+
             } else {
                 Toast.makeText(this, "Failed to update video: " + apiResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
+
 
 }
