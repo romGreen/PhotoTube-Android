@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.phototube_android.API.Server.CommentServerApi;
 import com.example.phototube_android.classes.Comment;
-import com.example.phototube_android.db.dao.CommentDao;
 import com.example.phototube_android.response.ApiResponse;
 
 import java.util.List;
@@ -24,18 +23,16 @@ public class CommentOffApi {
 
     private static final String BASE_URL = "http://10.0.2.2:1324/";
     private CommentServerApi commentServerApi;
-    private CommentDao dao;
     private Retrofit retrofit;
     private MutableLiveData<ApiResponse<List<Comment>>> commentListData;
 
-    public CommentOffApi(CommentDao dao , MutableLiveData<ApiResponse<List<Comment>>> commentListData) {
-        this.dao = dao;
-this.commentListData =commentListData;
+    public CommentOffApi() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+
                 .build();
 
         retrofit = new Retrofit.Builder()
@@ -47,59 +44,28 @@ this.commentListData =commentListData;
         commentServerApi = retrofit.create(CommentServerApi.class);
     }
 
-    public void getComments(String videoId) {
+    public void getComments(String videoId, MutableLiveData<ApiResponse<List<Comment>>> commentLiveData) {
+
+
         Call<List<Comment>> call = commentServerApi.getCommentsByVideoId(videoId);
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(@NonNull Call<List<Comment>> call, @NonNull Response<List<Comment>> response) {
                 if (response.isSuccessful()) {
-                    new Thread(() -> {
-                        Log.d("Comment DAO", "Deleting comments for videoId: " + videoId);
-                        dao.deleteCommentsByVideoId(videoId); // Clear old comments for this video
-                        Log.d("Comment DAO", "Deleted comments for videoId: " + videoId);
-
-                        List<Comment> commentss = dao.getAll();  // or use `getCommentsByVideoId(videoId)`
-                        for (Comment comment : commentss) {
-                            Log.d("Comment DAO", "Comment ID1: " + comment.getId() + ", Video ID: " + comment.getVideoId() + ", Text: " + comment.getText());
-                        }
-                        dao.insert(response.body().toArray(new Comment[0])); // Insert new comments from server
-                        List<Comment> comments = dao.getCommentsByVideoId(videoId).getValue(); // Fetch updated comments
-                        Log.d("Comment DAO", "Fetched comments for videoId: " + videoId);
-                        Log.d("Comment DAO", "Fetched " + (comments != null ? comments.size() : 0) + " comments");
-
-                        commentListData.postValue(new ApiResponse<>(
-                                comments,
-                                "Comments retrieved successfully",
-                                true
-                        ));
-                        List<Comment> commentsss = dao.getAll();  // or use `getCommentsByVideoId(videoId)`
-                        for (Comment comment : commentsss) {
-                            Log.d("Comment DAO", "Comment ID2: " + comment.getId() + ", Video ID: " + comment.getVideoId() + ", Text: " + comment.getText());
-                        }
-                    }).start();
+                    // If the request is successful, post the new comment details back to the LiveData
+                    commentLiveData.postValue(new ApiResponse<>(response.body(), "Comment added successfully", true));
                 } else {
-                    new Thread(() -> {
-                        List<Comment> comments = dao.getCommentsByVideoId(videoId).getValue(); // Fetch local comments in case of error
-                        commentListData.postValue(new ApiResponse<>(
-                                comments,
-                                "Failed to retrieve comments from server",
-                                false
-                        ));
-                    }).start();
+                    // If the server response is not successful, post an error message
+                    commentLiveData.postValue(new ApiResponse<>(null, "Failed to add comment: " + response.code(), false));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Comment>> call, @NonNull Throwable t) {
-                new Thread(() -> {
-                    List<Comment> comments = dao.getCommentsByVideoId(videoId).getValue(); // Fetch local comments in case of network error
-                    commentListData.postValue(new ApiResponse<>(
-                            comments,
-                            "Network error: " + t.getMessage(),
-                            false
-                    ));
-                }).start();
+                // Handle the case where the network request itself fails
+                commentLiveData.postValue(new ApiResponse<>(null, "Network error: " + t.getMessage(), false));
             }
         });
+
     }
 }
