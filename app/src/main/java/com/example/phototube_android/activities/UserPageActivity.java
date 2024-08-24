@@ -51,14 +51,7 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
     @SuppressLint("StaticFieldLeak")
     private VideoAdapter videoAdapter;
     private RecyclerView mostViewedVideoRecyclerView;
-
-    private UserLogViewModel userLogViewModel;
-
-    // Views from video_item.xml for the most viewed video
-    private TextView videoTitleTextView,titleTextView, authorTextView, timeAgoTextView, viewsCountTextView;
-    private ImageView videoThumbnailImageView, creatorImgView;
     private VideoOffViewModel videoOffViewModel;
-    private VideoInViewModel videoInViewModel;
     private String creatorId;
     private String createdBy;
     private Video mostViewedVideo;
@@ -97,9 +90,8 @@ public class UserPageActivity extends AppCompatActivity implements NavigationVie
         homeSection = findViewById(R.id.home_section);
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
-        // Initialize the views for the most viewed video
-        videoTitleTextView = findViewById(R.id.mostViewedVideoTitle);
+        // Views from video_item.xml for the most viewed video
+        TextView videoTitleTextView = findViewById(R.id.mostViewedVideoTitle);
         mostViewedVideoRecyclerView = findViewById(R.id.mostViewedVideoRecyclerView);
         mostViewedVideoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

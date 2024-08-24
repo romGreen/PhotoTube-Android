@@ -65,5 +65,9 @@
     <string name="update">update\n</string>
     <string name="editVideo">Edit Video</string>
     <string name="update_video">Update Video</string>
+    <string name="choose_video">Choose video</string>
+    <string name="delete_video">Delete video</string>
+    <string name="views">Views</string>
+    <string name="display_name_hint">Display Name</string>
 
 </resources>

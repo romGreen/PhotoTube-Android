@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getVideos() {
-
         videoOffViewModel = new ViewModelProvider(this).get(VideoOffViewModel.class);
         videoOffViewModel.getVideos();
         videoOffViewModel.getVideoData().observe(this, videoList -> {

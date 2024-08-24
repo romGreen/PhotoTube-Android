@@ -16,6 +16,9 @@ import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.MessageResponse;
 import com.example.phototube_android.response.UpdateUserResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -105,7 +108,7 @@ public class UserLogApi {
                             true
                     ));
                 } else {
-                    Log.e("UserViewModel", "Error response code: " + response.code());
+                    Log.e("UserLogApi", "Error response code: " + response.code());
                     userLiveData.postValue(new ApiResponse<>(
                             null,
                             "Failed to delete user",
@@ -125,14 +128,24 @@ public class UserLogApi {
         });
     }
 
-    public void updateUser(Context context, User user,boolean file,MutableLiveData<ApiResponse<UpdateUserResponse>> userLiveData) {
+
+    public void updateUser(Context context, User user, boolean file, MutableLiveData<ApiResponse<UpdateUserResponse>> userLiveData) {
         String userId = UserManager.getInstance().getUserId();
+
+        // Validate password if present
+        if (user.getPassword() != null && !isValidPassword(user.getPassword())) {
+            userLiveData.postValue(new ApiResponse<>(
+                    null,
+                    "Password must be at least 8 characters long and include letters",
+                    false
+            ));
+            return; // Stop further execution if validation fails
+        }
 
         RequestBody passwordPart = RequestBody.create(MediaType.parse("text/plain"), user.getPassword());
         RequestBody displaynamePart = RequestBody.create(MediaType.parse("text/plain"), user.getDisplayname());
         RequestBody emailPart = RequestBody.create(MediaType.parse("text/plain"), user.getEmail());
         RequestBody genderPart = RequestBody.create(MediaType.parse("text/plain"), user.getGender());
-
 
         MultipartBody.Part profileImgPart = null;
         if (file) {
@@ -140,28 +153,43 @@ public class UserLogApi {
             File profileImgFile;
             try {
                 profileImgFile = FileUtils.getFileFromUri(context, profileImgUri);
+                RequestBody profileImgRequestBody = RequestBody.create(profileImgFile, MediaType.parse("image/*"));
+                profileImgPart = MultipartBody.Part.createFormData("profileImg", profileImgFile.getName(), profileImgRequestBody);
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle error
+                userLiveData.postValue(new ApiResponse<>(
+                        null,
+                        "Failed to access image file",
+                        false
+                ));
                 return;
             }
-            RequestBody profileImgRequestBody = RequestBody.create(profileImgFile, MediaType.parse("image/*"));
-            profileImgPart = MultipartBody.Part.createFormData("profileImg", profileImgFile.getName(), profileImgRequestBody);
         }
-        userServerApi.updateUser(userId,profileImgPart,displaynamePart,emailPart,passwordPart,genderPart).enqueue(new Callback<UpdateUserResponse>() {
+
+        userServerApi.updateUser(userId, profileImgPart, displaynamePart, emailPart, passwordPart, genderPart).enqueue(new Callback<UpdateUserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UpdateUserResponse> call, @NonNull Response<UpdateUserResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     userLiveData.postValue(new ApiResponse<>(
                             response.body(),
-                            "User details retrieved successfully",
+                            "User details updated successfully",
                             true
                     ));
                 } else {
-                    Log.e("UserViewModel", "Error response code: " + response.code());
+                    String errorMessage = "Update failed"; // Default error message
+                    if (response.errorBody() != null) {
+                        try {
+                            // Parse the JSON response to get the error message
+                            String errorJson = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorJson);
+                            errorMessage = jsonObject.getString("message");
+                        } catch (IOException | JSONException e) {
+                            Log.e("UserLogApi", "Error parsing error message", e);
+                        }
+                    }
                     userLiveData.postValue(new ApiResponse<>(
                             null,
-                            "Failed to retrieve user details",
+                            errorMessage,
                             false
                     ));
                 }
@@ -171,12 +199,18 @@ public class UserLogApi {
             public void onFailure(@NonNull Call<UpdateUserResponse> call, @NonNull Throwable t) {
                 userLiveData.postValue(new ApiResponse<>(
                         null,
-                        "Error: " + t.getMessage(),
+                        "Network error: " + t.getMessage(),
                         false
                 ));
             }
         });
     }
+
+    // Utility method to validate password
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 && password.matches(".*[a-zA-Z]+.*");
+    }
+
 
     public void getInfoUser(MutableLiveData<ApiResponse<User>> userLiveData) {
         String userId = UserManager.getInstance().getUserId();

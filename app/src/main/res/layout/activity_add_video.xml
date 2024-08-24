@@ -65,9 +65,10 @@
             android:id="@+id/selectedVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:layout_marginStart="16dp"
-            android:visibility="gone"/>
+            android:text="@string/choose_video"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp" />
+
 
     </LinearLayout>
 

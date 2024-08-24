@@ -44,8 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-
-
         userViewModel.getRegisterData().observe(this,user -> {
             if(!user.isSuccess()){
                 Toast toast = Toast.makeText(RegisterActivity.this,
@@ -98,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gender = (selectedGenderButton != null) ? selectedGenderButton.getText().toString() : "";
 
-      /*  // Basic validation
+       // Validations
         if (firstName.isEmpty()) {
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Please enter your first name", Toast.LENGTH_SHORT).show());
             return;
@@ -145,11 +143,6 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Password must be at least 8 characters and contain at least 1 letter and 1 digit", Toast.LENGTH_SHORT).show();
             return; // or show an error message
         }
-
-
-//*/
-//       userViewModel.isExist(username);
-
         // Prepare the User object
         User user = new User();
         user.setUsername(username);
