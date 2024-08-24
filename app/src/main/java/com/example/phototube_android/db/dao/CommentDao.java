@@ -13,7 +13,6 @@ import java.util.List;
 
 @Dao
 public interface CommentDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Comment... comments);
 

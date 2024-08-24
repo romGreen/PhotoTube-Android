@@ -32,93 +32,74 @@
 
     </FrameLayout>
     <!-- VideoView at the top -->
+
+
+    <!-- Comments Section Label -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <!-- TextView for video name below the video -->
+        <!-- Video Name TextView -->
+
+        <!-- Like Button -->
+
+        <!-- Dislike Button -->
+
+        <!-- Like Count TextView -->
         <TextView
             android:id="@+id/videoNameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:gravity="start"
-            android:shadowColor="#000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
             android:text="@string/sample_video_name"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Like Count TextView -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="368dp"
-            android:layout_height="82dp"
-            android:padding="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/likeButton"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintVertical_bias="0.0" />
 
-            <!-- Like Button -->
-            <ImageButton
-                android:id="@+id/likeButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/like_video"
-                android:src="@drawable/thumb_up_40px"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.802"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+        <ImageButton
+            android:id="@+id/likeButton"
+            android:layout_width="39dp"
+            android:layout_height="42dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/like_video"
+            android:src="@drawable/thumb_up_40px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dislikeButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
+        <ImageButton
+            android:id="@+id/dislikeButton"
+            android:layout_width="38dp"
+            android:layout_height="39dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/dislike_video"
+            android:src="@drawable/thumb_down_40px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-            <!-- Dislike Count TextView positioned below the Dislike Button -->
-            <TextView
-                android:id="@+id/likeCountTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/_0"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.224"
-                app:layout_constraintStart_toStartOf="@id/likeButton"
-                app:layout_constraintTop_toBottomOf="@id/likeButton"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <ImageButton
-                android:id="@+id/dislikeButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/dislike_video"
-                android:src="@drawable/thumb_down_40px"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.181"
-                app:layout_constraintStart_toEndOf="@id/likeButton"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/likeCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000 likes"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/likeButton"
+            app:layout_constraintStart_toStartOf="@+id/likeButton"
+            app:layout_constraintTop_toBottomOf="@+id/likeButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!-- Comments Section Label -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="382dp"
         android:layout_height="48dp"

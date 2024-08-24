@@ -104,7 +104,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         viewsTextView.setText(intent.getStringExtra("videoViews"));
         timeAgoTextView.setText(intent.getStringExtra("videoDate"));
         videoUrl = intent.getStringExtra("VideoUrl");
-        Log.d("aaaadd", "Initialize: " + videoUrl);
+        Log.d("VideoActivity", "Initialize: " + videoUrl);
         Uri uri = Uri.parse("http://10.0.2.2:"+intent.getStringExtra("VideoUrl"));
         // Set up the VideoView to play the video
         videoView.setVideoURI(uri);
@@ -166,7 +166,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
                 Toast.makeText(this, "Failed to load user data: " + commentResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
         showCommentsIfLogin();
     }
 
@@ -227,7 +226,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         //edit button
 
         editButton.setOnClickListener(view -> {
-
             Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
             intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
             intent.putExtra("Title", videoNameTextView.getText()); // Assuming videoId is the ID of the current video
