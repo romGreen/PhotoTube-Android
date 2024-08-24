@@ -8,7 +8,6 @@ import androidx.room.TypeConverters;
 import com.example.phototube_android.classes.Comment;
 import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
-import com.example.phototube_android.db.dao.CommentDao;
 import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.entities.Converters;
 
@@ -16,7 +15,6 @@ import com.example.phototube_android.entities.Converters;
 @TypeConverters(Converters.class)
 public abstract class AppDB extends RoomDatabase {
     public abstract VideoDao videoDao();
-    public abstract CommentDao commentDao();
     private static volatile AppDB INSTANCE;
 
     public static AppDB getDatabase(final Context context) {
