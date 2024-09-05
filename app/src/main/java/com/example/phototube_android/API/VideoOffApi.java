@@ -65,7 +65,7 @@ public class VideoOffApi {
                         dao.insert(response.body().toArray(new Video[0]));
                         videoListData.postValue(new ApiResponse<>(
                                 dao.getAll(),
-                            "User details retrieved successfully",
+                            "Videos retrieved successfully",
                             true
                     ));
                     }).start();
@@ -98,11 +98,11 @@ public class VideoOffApi {
                 if (response.isSuccessful() && response.body() != null) {
                     videoLiveData.postValue(new ApiResponse<>(
                             response.body(),
-                            "Videos retrieved successfully",
+                            "User videos retrieved successfully",
                             true
                     ));
                 } else {
-                    Log.e("VideoInApi", "Failed to retrieve videos: Response code " + response.code());
+                    Log.e("VideoOffApi", "Failed to retrieve videos: Response code " + response.code());
                     videoLiveData.postValue(new ApiResponse<>(
                             null,
                             "Failed to retrieve videos",
@@ -113,7 +113,7 @@ public class VideoOffApi {
 
             @Override
             public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
-                Log.e("VideoInApi", "Error retrieving videos: " + t.getMessage(), t);
+                Log.e("VideoOffApi", "Error retrieving videos: " + t.getMessage(), t);
                 videoLiveData.postValue(new ApiResponse<>(
                         null,
                         "Error retrieving videos: " + t.getMessage(),
@@ -134,7 +134,7 @@ public class VideoOffApi {
                             true
                     ));
                 } else {
-                    Log.e("VideoInApi", "Error fetching video: " + response.code());
+                    Log.e("VideoOffApi", "Error fetching video: " + response.code());
                     videoLiveData.postValue(new ApiResponse<>(
                             null,
                             "Failed to retrieve video details",

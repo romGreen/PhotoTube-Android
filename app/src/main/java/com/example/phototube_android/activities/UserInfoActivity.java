@@ -55,8 +55,6 @@ public class UserInfoActivity extends AppCompatActivity {
     private void initialize()
     {
         // Initialize UI components
-
-        //usernameTextView = findViewById(R.id.username);
         displaynameEditText = findViewById(R.id.display_name);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -73,9 +71,6 @@ public class UserInfoActivity extends AppCompatActivity {
         photoHandler = new PhotoHandler(image, this);
         // Get user data
         getUserDetails();
-
-
-
     }
 
    private void getUserDetails() {
@@ -108,7 +103,7 @@ public class UserInfoActivity extends AppCompatActivity {
         String imageUrl = "http://10.0.2.2:" + user.getProfileImg();
 
         Glide.with(this)
-                .load( imageUrl)
+                .load(imageUrl)
                 .into(image);
     }
 
@@ -116,49 +111,52 @@ public class UserInfoActivity extends AppCompatActivity {
         userLogViewModel.deleteUser();
 
         userLogViewModel.getUserDeleteData().observe(this, userResponse -> {
-            Log.d("UserProfileActivity", "Observer triggered");
+            Log.d("UserInfoActivity", "Observer triggered");
             if (userResponse.isSuccess() && userResponse.getData() != null) {
-                Log.d("UserProfileActivity", "User data loaded: " + userResponse.getData());
+                Log.d("UserInfoActivity", "User data loaded: " + userResponse.getData());
                 Toast.makeText(this,  userResponse.getMessage(), Toast.LENGTH_LONG).show();
                 UserManager.getInstance().logout();
                 Intent intent = new Intent(UserInfoActivity.this , MainActivity.class);
                 startActivity(intent);
             } else {
-                Log.e("UserProfileActivity", "Failed to load user data: " + userResponse.getMessage());
+                Log.e("UserInfoActivity", "Failed to load user data: " + userResponse.getMessage());
                 Toast.makeText(this, "Failed to load user data: " + userResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-    private void updateUser(){
-
+    private void updateUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
-       String displayname = displaynameEditText.getText().toString().trim();
+        String rePassword = rePasswordEditText.getText().toString().trim();  // Assume you have a corresponding EditText for this
+        String displayname = displaynameEditText.getText().toString().trim();
 
         // Get selected gender
         int selectedGenderId = infoGender.getCheckedRadioButtonId();
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gender = (selectedGenderButton != null) ? selectedGenderButton.getText().toString() : "";
 
-        User user = new User();
+        if (!password.equals(rePassword)) {
+            Toast.makeText(this, "Password and Re-Password do not match", Toast.LENGTH_SHORT).show();
+            return; // Stop further processing
+        }
 
+        User user = new User();
         user.setPassword(password);
         user.setEmail(email);
         user.setDisplayname(displayname);
         user.setGender(gender);
         Boolean file;
         if (resultBit != null) {
-            // Convert bitmap to URI and set the new profile image
             String profileImgUri = PhotoHandler.bitmapToUri(resultBit, this).toString();
             user.setProfileImg(profileImgUri);
-            file=true;
+            file = true;
         } else {
-            // Use existing profile image URL
             String existingProfileImgUri = UserManager.getInstance().getUser().getProfileImg();
             user.setProfileImg(existingProfileImgUri);
-            file=false;
+            file = false;
         }
-        userLogViewModel.updateUser(this,file,user);
+
+        userLogViewModel.updateUser(this, file, user);
         userLogViewModel.getUserUpdateData().observe(this, userResponse -> {
             if (userResponse.isSuccess() && userResponse.getData() != null) {
                 UserManager.getInstance().getUser().setEmail(email);
@@ -166,15 +164,16 @@ public class UserInfoActivity extends AppCompatActivity {
                 UserManager.getInstance().getUser().setGender(gender);
                 UserManager.getInstance().getUser().setPassword(password);
                 UserManager.getInstance().getUser().setProfileImg(userResponse.getData().getUser().getProfileImg());
-                Toast.makeText(this,  userResponse.getData().getMessage(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(UserInfoActivity.this , MainActivity.class);
+                Toast.makeText(this, userResponse.getData().getMessage(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(UserInfoActivity.this, MainActivity.class);
                 startActivity(intent);
             } else {
-                Log.e("UserProfileActivity", "Failed to load user data: " + userResponse.getMessage());
-                Toast.makeText(this, "Failed to load user data: " + userResponse.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("UserInfoActivity", userResponse.getMessage());
+                Toast.makeText(this, userResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

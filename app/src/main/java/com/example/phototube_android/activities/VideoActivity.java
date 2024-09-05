@@ -220,11 +220,10 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
             }
-            Toast.makeText(VideoActivity.this, "You have to be logged in to share", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(VideoActivity.this, "You have to be logged in to share", Toast.LENGTH_SHORT).show();
         });
 
         //edit button
-
         editButton.setOnClickListener(view -> {
             Intent intent = new Intent(VideoActivity.this, EditVideoActivity.class);
             intent.putExtra("videoId", videoId); // Assuming videoId is the ID of the current video
@@ -289,8 +288,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             }
         }
     }
-
-
 
     private void handleLike() {
         if (UserManager.getInstance().isLoggedIn()) {
@@ -365,7 +362,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -411,9 +407,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_home) {
-            // Handle Home click
         } else if (id == R.id.nav_login) {
             startActivity(new Intent(this, LoginActivity.class));
         } else if (id == R.id.nav_register) {
@@ -425,7 +419,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_dark_mode) {
             toggleNightMode();
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

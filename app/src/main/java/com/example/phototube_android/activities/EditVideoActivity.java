@@ -70,7 +70,7 @@ public class EditVideoActivity extends AppCompatActivity {
 
         if (videoId != null) {
             editVideoName.setText(title);
-            selectedVideo.setText(videoUrl);
+            selectedVideo.setText(R.string.choose_video);
             selectedVideo.setVisibility(View.VISIBLE);
             videoInViewModel =  new ViewModelProvider(this).get(VideoInViewModel.class);
         }

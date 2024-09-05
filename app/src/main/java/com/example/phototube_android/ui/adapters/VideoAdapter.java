@@ -53,25 +53,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.filteredVideoList = videos;
 
     }
-
-
-    public void recoverFilteredVideoList(List<Video> videos) {
-        this.filteredVideoList = videos;
-    }
-
     public List<Video> getVideos() {
         return videos;
     }
 
 
-    public List<Video> getFilteredVideoList() {
-        return filteredVideoList;
-    }
-
     //func to add video
     public void addVideoToList(Video video) {
         videos.add(video);
-        //this.getFilteredVideoList().add(video);
         this.notifyDataSetChanged(); // Notify the adapter that data has changed
     }
 
@@ -114,7 +103,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         String formattedDate = formatDate(currentVideo.getDate());
         holder.timeAgoTextView.setText(formattedDate);
 
-// Set click listener for the video thumbnail
+        // Set click listener for the video thumbnail
         holder.thumbnail.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), VideoActivity.class);
             intent.putExtra("videoId", currentVideo.get_id());

@@ -9,15 +9,10 @@ import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.MessageResponse;
 
 public class CommentInRepository {
-
     private CommentInApi commentInApi;
     public CommentInRepository() {
-
         commentInApi = new CommentInApi();
-
-
     }
-
     public void addComment(String videoId, String commentText, MutableLiveData<ApiResponse<Comment>> addCommentData)
     {
         commentInApi.addComment(videoId,commentText,addCommentData);

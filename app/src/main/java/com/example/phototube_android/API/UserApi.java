@@ -2,6 +2,7 @@ package com.example.phototube_android.API;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,9 @@ import com.example.phototube_android.requests.LoginRequest;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,21 +87,33 @@ public class UserApi {
 
         Call<User> call = userServerApi.addUser(usernamePart, passwordPart, displaynamePart, emailPart, genderPart, profileImg);
 
-        call.enqueue(new Callback<User>(){
+        call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    registerLiveData.postValue(new ApiResponse<>
-                            (response.body(), "User register successfully", true));
+                    registerLiveData.postValue(new ApiResponse<>(
+                            response.body(), "User registered successfully", true));
                 } else {
-                    registerLiveData.postValue(new ApiResponse<>
-                            (null, "Username exists", false));
+                    String errorMessage = "Registration failed";
+                    if (response.errorBody() != null) {
+                        try {
+                            // Parse the JSON response to get the error message
+                            String errorJson = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorJson);
+                            errorMessage = jsonObject.getString("message");
+                        } catch (IOException | JSONException e) {
+                            Log.e("RegistrationError", "Error parsing error message", e);
+                        }
+                    }
+                    registerLiveData.postValue(new ApiResponse<>(
+                            null, errorMessage, false));
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                registerLiveData.postValue(new ApiResponse<>
-                        (null, "Error: " + t.getMessage(), false));
+                registerLiveData.postValue(new ApiResponse<>(
+                        null, "Network error: " + t.getMessage(), false));
             }
         });
     }
@@ -140,7 +156,7 @@ public class UserApi {
                     }
                 } else {
                     tokenLiveData.postValue(new ApiResponse<>
-                            (null, "Password or username not good", false));
+                            (null, "Wrong password or username", false));
                 }
             }
             @Override
