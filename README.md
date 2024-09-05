@@ -1,64 +1,47 @@
-# Introduction
+# PhotoTube_Android
 
-We developed an Android application with various activities and adapters to manage videos, comments, and users efficiently. Below is a detailed explanation of the components and flow of our application.
+PhotoTube_Android is the Android-based client for the PhotoTube social media platform, designed to interact seamlessly with the PhotoTube_Server's API endpoints. This mobile application provides an intuitive user interface that allows users to engage with features such as video creation, commenting, user profile customization, and more, directly from their Android devices.
 
-## Project Structure
+## Features
 
-Our project is organized into different managers and adapters to ensure easy access and manipulation of videos, comments, and users.
+### Offline Features
+- **MainActivity**: Displays the first 10 most viewed videos along with an additional 10 randomly selected videos. Videos appear in a shuffled order for fresh user experience each visit.
+- **RegisterActivity**: New users can register by navigating to the 'Register' section, filling in their details, and submitting the form.
+- **LoginActivity**: Existing users can log in by going to the 'Login' section and entering their credentials.
+- **VideoActivity**: Selecting a video will show it in full view with other suggested videos listed alongside.
+- **UserPageActivity**: Clicking on a user's image under a video opens their profile page showcasing all their videos and highlighting the most viewed video.
 
-### Adapters
+### Login Features
+- **VideoActivity**:
+  1. Users can post, delete, and edit comments on videos.
+  2. Users can like or dislike videos.
+  3. Video creators have the option to edit or delete their videos.
+- **UserInfoActivity**: Users can edit their profile details. Access this feature via the Profile section in the navigation menu post-login.
+- **AddVideoActivity**: Authenticated users can upload new videos under their profile.
 
-- **VideoAdapter**: Handles video items in the video list.
-- **CommentsAdapter**: Manages video comments in the comments section.
+## Getting Started
+### Sync and Build the Project:
 
-### List Managers
+After opening the project, allow Android Studio to automatically sync the project with Gradle files. This may take a few moments.
+Build the project by selecting Build -> Make Project to ensure all dependencies are properly downloaded.
 
-- **UserListManager**: Manages the list of users, enabling easy access to user details from anywhere in the app.
-- **CommentsListManager**: Manages the list of comments for each video, allowing for easy editing and deletion.
-- **VideoListManager**: Manages the video list, providing functionalities to save, edit, and delete videos.
 
-### Additional Handlers
+To make full use of PhotoTube_Android, ensure that the PhotoTube_Server is operational, as the app relies on its APIs for backend data.
 
-- **PhotoHandler**: Manages user images, ensuring proper handling and display of user photos.
+### Prerequisites
+- PhotoTube_Server running locally
+- Android Studio and SDK set up for Android development
+- An Android device or emulator
 
-## Activities
+### Installation
 
-We created a separate activity for each screen to ensure a good separation of concerns between different parts of the application.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/romGreen/PhotoTube_Android.git
+   cd PhotoTube_Android
 
-### MainActivity
 
-- **Purpose**: Serves as the main screen displaying the video list.
-- **Features**:
-  - Displays a RecyclerView for videos.
-  - Includes a search option with a filter function.
-  - Provides a left and bottom menu for navigation.
-  - Buttons change according to the user's login status.
+### Run the application:
 
-### VideoActivity
-
-- **Purpose**: Displays a selected video along with its details and comments.
-- **Features**:
-  - Video player with fullscreen option.
-  - Displays video name, author, date, views, like and dislike buttons.
-  - Edit and delete buttons for the video.
-  - Comments section with the ability to add, edit, and delete comments.
-  - Checks user login status to control access to like, dislike, edit, delete, and comments functionalities.
-  - Button to exit fullscreen mode.
-
-### AddVideoActivity
-
-- **Purpose**: Allows logged-in users to add a new video to the video list.
-- **Features**:
-  - Provides a form to input video details.
-  - Uses VideoAdapter to add the video to the list.
-  - Checks in MainActivity if a user is logged in to enable the add video feature.
-
-## Flow of the Application
-
-- **Home Page (MainActivity)**: Displays all videos in the app with a navigation bar on the left and bottom. Users can search for videos using the filter function. The buttons and options available change depending on whether a user is logged in.
-- **Video Page (VideoActivity)**: When a video is selected, this activity shows the video along with its details, comments, and interactive buttons. The access to various functionalities like liking, disliking, editing, and deleting is controlled based on the user's login status.
-- **Add Video Page (AddVideoActivity)**: Logged-in users can navigate to this page to add new videos. The video is added to the list through the VideoAdapter.
-
-## Conclusion
-
-We structured our Android application using best practices to ensure clean separation of concerns and efficient management of videos, comments, and users. The project helped us learn a lot about Android development, managing state, and providing a seamless user experience. We are proud of our work and the learning experience it provided.
+Connect an Android device or set up an emulator through Device Manager.
+Run the app by pressing the 'Run' button in Android Studio.
