@@ -1,4 +1,4 @@
-# PhotoTube_Android
+# PhotoTube_TCP_Android
 
 PhotoTube_Android is the Android-based client for the PhotoTube social media platform, designed to interact seamlessly with the PhotoTube_Server's API endpoints. This mobile application provides an intuitive user interface that allows users to engage with features such as video creation, commenting, user profile customization, and more, directly from their Android devices.
 
@@ -16,6 +16,7 @@ PhotoTube_Android is the Android-based client for the PhotoTube social media pla
   1. Users can post, delete, and edit comments on videos.
   2. Users can like or dislike videos.
   3. Video creators have the option to edit or delete their videos.
+  4. List of recommended videos from the TCP server.
 - **UserInfoActivity**: Users can edit their profile details. Access this feature via the Profile section in the navigation menu post-login.
 - **AddVideoActivity**: Authenticated users can upload new videos under their profile.
 
@@ -26,8 +27,7 @@ After opening the project, allow Android Studio to automatically sync the projec
 Build the project by selecting Build -> Make Project to ensure all dependencies are properly downloaded.
 
 
-To make full use of PhotoTube_Android, ensure that the PhotoTube_Server is operational, as the app relies on its APIs for backend data.
-
+To make full use of PhotoTube_Android, ensure that the [PhotoTube-Server](https://github.com/DavidIzhaki/PhotoTube-Server) is running, as the app relies on its APIs for backend data, and that the [PhotoTube-TCP-Server](https://github.com/DavidIzhaki/PhotoTube-TCP-Server) is operational, as the app depends on its TCP recommendations for videos.
 ### Prerequisites
 - PhotoTube_Server running locally
 - Android Studio and SDK set up for Android development
