@@ -26,7 +26,7 @@ After opening the project, allow Android Studio to automatically sync the projec
 Build the project by selecting Build -> Make Project to ensure all dependencies are properly downloaded.
 
 
-To make full use of PhotoTube_Android, ensure that the PhotoTube_Server is operational, as the app relies on its APIs for backend data.
+To make full use of PhotoTube_Android, ensure that the PhotoTube-Server is operational by following the instructions in the [PhotoTube-Server README](https://github.com/DavidIzhaki/PhotoTube-Server), as the app relies on its APIs for backend data.
 
 ### Prerequisites
 - PhotoTube_Server running locally
