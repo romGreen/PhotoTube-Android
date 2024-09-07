@@ -2,6 +2,7 @@ package com.example.phototube_android.API.Server;
 
 import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.requests.LikeActionRequest;
+import com.example.phototube_android.requests.VideoRecommendationRequest;
 import com.example.phototube_android.requests.VideoUpdateRequest;
 
 import java.util.List;
@@ -46,5 +47,8 @@ public interface VideoServiceApi {
     @PATCH("/api/users/{id}/videos/{pid}/like")
     Call<Video> likeAction(@Path("id") String userId, @Path("pid") String videoId,
                             @Body LikeActionRequest likeRequest);
+
+    @POST("api/videos/recommendations")
+    Call<List<Video>> getRecommendations(@Body VideoRecommendationRequest request);
 
 }

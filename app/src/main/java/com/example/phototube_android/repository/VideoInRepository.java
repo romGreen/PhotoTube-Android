@@ -78,6 +78,12 @@ public class VideoInRepository {
             }).start();
         }
     }
+    public void getRecommendations(String userId, String videoId, OnRecommendationsReceived callback) {
+        videoInApi.getRecommendations(userId, videoId, callback);
+    }
 
+    public interface OnRecommendationsReceived {
+        void onReceived(List<Video> recommendedVideos);
+    }
 
 }

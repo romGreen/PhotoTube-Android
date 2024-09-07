@@ -3,6 +3,7 @@ package com.example.phototube_android.viewmodels;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -19,7 +20,7 @@ public class VideoInViewModel extends AndroidViewModel {
     private MutableLiveData<ApiResponse<List<Video>>> VideoData;
     private VideoInRepository videoRepository;
     private MutableLiveData<ApiResponse<Video>> likeActionLiveData;
-
+    private MutableLiveData<List<Video>> recommendedVideosLiveData = new MutableLiveData<>();
 
 
     public VideoInViewModel(Application application) {
@@ -36,7 +37,9 @@ public class VideoInViewModel extends AndroidViewModel {
     public MutableLiveData<ApiResponse<Video>> getLikeActionLiveData() {
         return likeActionLiveData;
     }
-
+    public LiveData<List<Video>> getRecommendedVideosLiveData() {
+        return recommendedVideosLiveData;
+    }
 
     public void addVideo(String userId, String title, File videoFile) {
         videoRepository.addVideo(userId, title, videoFile);
@@ -56,4 +59,9 @@ public class VideoInViewModel extends AndroidViewModel {
         videoRepository.likeAction(videoId, likeActionRequest,likeActionLiveData);
     }
 
+    public void getRecommendations(String userId, String videoId) {
+        videoRepository.getRecommendations(userId, videoId, recommendedVideos -> {
+            recommendedVideosLiveData.postValue(recommendedVideos);
+        });
+    }
 }

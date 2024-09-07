@@ -42,9 +42,11 @@ import com.example.phototube_android.classes.User;
 import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.requests.LikeActionRequest;
 import com.example.phototube_android.ui.adapters.CommentsAdapter;
+import com.example.phototube_android.ui.adapters.VideoAdapter;
 import com.example.phototube_android.viewmodels.CommentInViewModel;
 import com.example.phototube_android.viewmodels.CommentOffViewModel;
 import com.example.phototube_android.viewmodels.VideoInViewModel;
+import com.example.phototube_android.viewmodels.VideoOffViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.Serializable;
@@ -67,11 +69,14 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
     private String videoId;
     private String videoUrl;
     private VideoInViewModel videoInViewModel;
+    private VideoOffViewModel videoOffViewModel;
     private CommentInViewModel commentInViewModel;
     private CommentOffViewModel commentOffViewModel;
     private LinearLayout loginSection, homeSection,addVideoSection, registerSection;
     private DrawerLayout drawerLayout;
     private Intent intent;
+
+    private String watchUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +124,7 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
         editButton = findViewById(R.id.edit_Video_Button);
         String userId =  intent.getStringExtra("userId");
+        watchUserId = userId;
         if(UserManager.getInstance().isLoggedIn())
         {
             if(Objects.equals(UserManager.getInstance().getUserId(), userId))
@@ -134,8 +140,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
         dislikeButton = findViewById(R.id.dislikeButton);
         likeCountTextView = findViewById(R.id.likeCountTextView);
 
-
-
         List<Video.Like> videoLikes = (List<Video.Like>) intent.getSerializableExtra("videoLikes");
         updateLikes(videoLikes);
 
@@ -147,13 +151,48 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
 
         videoInViewModel = new ViewModelProvider(this).get(VideoInViewModel.class);
         commentInViewModel = new ViewModelProvider(this).get(CommentInViewModel.class);
+        getRecommendations();
         setClickListeners();
         setupNavigationView();
 
         if (UserManager.getInstance().isLoggedIn()) {
             updateUserInfo();
         }
+
     }
+
+    // Handle recommendations
+    private void getRecommendations() {
+        if (UserManager.getInstance().isLoggedIn()) {
+            videoInViewModel.getRecommendations(watchUserId, videoId); // Fetch recommendations
+            videoInViewModel.getRecommendedVideosLiveData().observe(this, recommendedVideos -> {
+                if (recommendedVideos != null) {
+                    VideoAdapter videoAdapter = new VideoAdapter(this, recommendedVideos);
+                    RecyclerView recommendedRecyclerView = findViewById(R.id.recommendedRecyclerView);
+                    recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recommendedRecyclerView.setAdapter(videoAdapter);
+                } else {
+                    Toast.makeText(this, "Failed to get recommended videos", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // Fetch videos from videoOffViewModel if the user is not logged in
+            videoOffViewModel = new ViewModelProvider(this).get(VideoOffViewModel.class);
+            videoOffViewModel.getVideos();
+            videoOffViewModel.getVideoData().observe(this, videoList -> {
+                if (videoList.isSuccess()) {
+                    VideoAdapter videoAdapter = new VideoAdapter(this, videoList.getData());
+                    videoAdapter.restoreOriginalList(); // Restore the list initially
+                    RecyclerView recommendedRecyclerView = findViewById(R.id.recommendedRecyclerView);
+                    recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recommendedRecyclerView.setAdapter(videoAdapter);
+                } else {
+                    Toast.makeText(this, "Failed to load videos", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 
     private void getComments()
     {
@@ -402,7 +441,6 @@ public class VideoActivity extends AppCompatActivity implements NavigationView.O
             Glide.with(this).load("http://10.0.2.2:" + user.getProfileImg()).into(userImage);
         }
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

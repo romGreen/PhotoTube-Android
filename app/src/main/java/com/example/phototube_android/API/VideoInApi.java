@@ -11,7 +11,9 @@ import com.example.phototube_android.classes.Video;
 import com.example.phototube_android.db.dao.VideoDao;
 import com.example.phototube_android.entities.TokenInterceptor;
 import com.example.phototube_android.entities.UserManager;
+import com.example.phototube_android.repository.VideoInRepository;
 import com.example.phototube_android.requests.LikeActionRequest;
+import com.example.phototube_android.requests.VideoRecommendationRequest;
 import com.example.phototube_android.requests.VideoUpdateRequest;
 import com.example.phototube_android.response.ApiResponse;
 import com.example.phototube_android.response.TokenResponse;
@@ -251,6 +253,26 @@ public class VideoInApi {
         });
     }
 
+    public void getRecommendations(String userId, String videoId, VideoInRepository.OnRecommendationsReceived callback) {
+        // Prepare the request body
+        VideoRecommendationRequest request = new VideoRecommendationRequest(userId, videoId);
 
+        Call<List<Video>> call = videoServiceApi.getRecommendations(request);
+        call.enqueue(new Callback<List<Video>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Video>> call, @NonNull Response<List<Video>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onReceived(response.body());
+                } else {
+                    callback.onReceived(null);  // Handle error case
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Video>> call, @NonNull Throwable t) {
+                callback.onReceived(null);  // Handle failure
+            }
+        });
+    }
 
 }
